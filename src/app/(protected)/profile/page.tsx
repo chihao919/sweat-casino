@@ -15,12 +15,14 @@ import { createClient } from "@/lib/supabase/client";
 import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
-import { ExternalLink, RefreshCw, Unlink, User } from "lucide-react";
+import { Camera, ExternalLink, RefreshCw, Unlink, User } from "lucide-react";
 
-// Strava OAuth URL — client_id should come from env
-const STRAVA_OAUTH_URL = `https://www.strava.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-  typeof window !== "undefined" ? `${window.location.origin}/api/strava/callback` : ""
-)}&response_type=code&scope=read,activity:read_all`;
+function getStravaOAuthUrl() {
+  const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
+  const redirectUri = process.env.NEXT_PUBLIC_STRAVA_REDIRECT_URI
+    || (typeof window !== "undefined" ? `${window.location.origin}/api/strava/callback` : "");
+  return `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=read,activity:read_all`;
+}
 
 interface ProfileStats {
   totalDistance: number;
@@ -115,6 +117,7 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -204,6 +207,40 @@ export default function ProfilePage() {
     }
   }
 
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("請選擇圖片檔案");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("圖片大小不能超過 2MB");
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/profile/avatar", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (res.ok) {
+      const { avatar_url } = await res.json();
+      toast.success("頭像已更新！");
+      setProfile((prev) => (prev ? { ...prev, avatar_url } : prev));
+    } else {
+      const { error } = await res.json();
+      toast.error("頭像上傳失敗：" + (error || "未知錯誤"));
+    }
+    setIsUploadingAvatar(false);
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -236,12 +273,32 @@ export default function ProfilePage() {
       {/* Profile card */}
       <Card className="border-neutral-800 bg-neutral-900">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
-          <Avatar className="size-20 ring-2 ring-red-600 ring-offset-2 ring-offset-neutral-900">
-            <AvatarImage src={profile.avatar_url ?? undefined} />
-            <AvatarFallback className="bg-neutral-800 text-2xl font-black text-white">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="size-20 ring-2 ring-red-600 ring-offset-2 ring-offset-neutral-900">
+              <AvatarImage src={profile.avatar_url ?? undefined} />
+              <AvatarFallback className="bg-neutral-800 text-2xl font-black text-white">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <label
+              htmlFor="avatar-upload"
+              className="absolute -bottom-1 -right-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white shadow-lg hover:bg-red-500 transition-colors"
+            >
+              {isUploadingAvatar ? (
+                <RefreshCw className="size-4 animate-spin" />
+              ) : (
+                <Camera className="size-4" />
+              )}
+            </label>
+            <input
+              id="avatar-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarUpload}
+              disabled={isUploadingAvatar}
+            />
+          </div>
 
           <div className="text-center">
             <h2 className="text-xl font-black text-white">
@@ -336,7 +393,7 @@ export default function ProfilePage() {
               <p className="text-xs text-neutral-400">
                 連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
-              <a href={STRAVA_OAUTH_URL}>
+              <a href={getStravaOAuthUrl()}>
                 <Button className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]">
                   <ExternalLink className="mr-2 size-4" />
                   連結 Strava

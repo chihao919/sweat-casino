@@ -13,6 +13,10 @@ interface StravaTokenResponse {
   expires_at: number
   athlete: {
     id: number
+    profile: string       // URL to athlete's profile picture
+    profile_medium: string // medium-size profile picture
+    firstname: string
+    lastname: string
   }
 }
 
@@ -84,6 +88,7 @@ export async function exchangeStravaCode(code: string): Promise<StravaTokens> {
     refresh_token: data.refresh_token,
     expires_at: data.expires_at,
     athlete_id: data.athlete.id,
+    profile_url: data.athlete.profile,
   };
 }
 

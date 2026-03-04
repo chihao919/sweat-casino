@@ -64,17 +64,32 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Use admin client to bypass RLS when writing tokens to the profile
     const adminClient = createAdminClient();
 
+    // Build update payload, include avatar if Strava provides one
+    const updatePayload: Record<string, unknown> = {
+      strava_athlete_id: String(tokens.athlete_id),
+      strava_access_token: tokens.access_token,
+      strava_refresh_token: tokens.refresh_token,
+      strava_token_expires_at: new Date(tokens.expires_at * 1000).toISOString(),
+      is_strava_connected: true,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Auto-set avatar from Strava profile picture if user has none
+    if (tokens.profile_url) {
+      const { data: existingProfile } = await adminClient
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (!existingProfile?.avatar_url) {
+        updatePayload.avatar_url = tokens.profile_url;
+      }
+    }
+
     const { error: updateError } = await adminClient
       .from("profiles")
-      .update({
-        strava_athlete_id: String(tokens.athlete_id),
-        strava_access_token: tokens.access_token,
-        strava_refresh_token: tokens.refresh_token,
-        // expires_at from Strava is a Unix timestamp (seconds); store as ISO string
-        strava_token_expires_at: new Date(tokens.expires_at * 1000).toISOString(),
-        is_strava_connected: true,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("id", user.id);
 
     if (updateError) {
