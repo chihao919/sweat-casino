@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { replyMessage } from "@/lib/line/client";
+import { replyMessage, QUICK_REPLY_BUTTONS, LineMessage } from "@/lib/line/client";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
@@ -85,14 +85,11 @@ async function handleEvent(event: LineEvent) {
         text: [
           "🎰 汗水賭場 Bot 已加入！",
           "",
-          "在群組裡 @我 就能查詢資訊，例如：",
-          "  @RunRun 報名",
-          "  @RunRun 排行",
-          "  @RunRun 隊伍",
-          "  @RunRun 規則",
+          "在群組裡 @我 或點下方按鈕查詢：",
           "",
           "📱 報名連結：https://runrun-plum.vercel.app/login",
         ].join("\n"),
+        quickReply: { items: QUICK_REPLY_BUTTONS },
       },
     ]);
     return;
@@ -118,13 +115,28 @@ async function handleEvent(event: LineEvent) {
   const reply = await getCommandReply(commandText);
 
   if (reply) {
-    await replyMessage(event.replyToken, [{ type: "text", text: reply }]);
-  } else if (isDirectMessage) {
-    // In DM, always reply with help if command not recognized
     await replyMessage(event.replyToken, [
       {
         type: "text",
-        text: "🎰 我不太懂你的意思～\n\n試試這些指令：報名、隊伍、排行、規則、help",
+        text: reply,
+        quickReply: { items: QUICK_REPLY_BUTTONS },
+      },
+    ]);
+  } else if (isDirectMessage) {
+    await replyMessage(event.replyToken, [
+      {
+        type: "text",
+        text: "🎰 我不太懂你的意思～\n\n點下方按鈕或輸入指令：報名、隊伍、排行、規則",
+        quickReply: { items: QUICK_REPLY_BUTTONS },
+      },
+    ]);
+  } else if (isGroupChat) {
+    // In group, if @mentioned but command not recognized, show buttons
+    await replyMessage(event.replyToken, [
+      {
+        type: "text",
+        text: "🎰 你找我嗎？點下方按鈕查詢吧！",
+        quickReply: { items: QUICK_REPLY_BUTTONS },
       },
     ]);
   }

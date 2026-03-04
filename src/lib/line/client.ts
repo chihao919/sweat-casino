@@ -8,14 +8,55 @@ function getAccessToken(): string {
   return token;
 }
 
-interface LineMessage {
+interface QuickReplyItem {
+  type: "action";
+  action: {
+    type: "message" | "uri";
+    label: string;
+    text?: string;
+    uri?: string;
+  };
+}
+
+export interface LineMessage {
   type: "text" | "flex" | "image";
   text?: string;
   altText?: string;
   contents?: Record<string, unknown>;
   originalContentUrl?: string;
   previewImageUrl?: string;
+  quickReply?: {
+    items: QuickReplyItem[];
+  };
 }
+
+/** Standard quick reply buttons appended to every bot response */
+export const QUICK_REPLY_BUTTONS: QuickReplyItem[] = [
+  {
+    type: "action",
+    action: { type: "message", label: "📊 報名人數", text: "@RunRun 報名" },
+  },
+  {
+    type: "action",
+    action: { type: "message", label: "⚔️ 隊伍分數", text: "@RunRun 隊伍" },
+  },
+  {
+    type: "action",
+    action: { type: "message", label: "🏆 排行榜", text: "@RunRun 排行" },
+  },
+  {
+    type: "action",
+    action: { type: "message", label: "📖 規則", text: "@RunRun 規則" },
+  },
+  {
+    type: "action",
+    action: {
+      type: "uri",
+      label: "📱 開啟網站",
+      uri: "https://runrun-plum.vercel.app",
+    },
+  },
+];
 
 /**
  * Push a message to a specific user or group.
@@ -83,8 +124,7 @@ export async function broadcastMessage(
 }
 
 /**
- * Get the group ID from a group event source.
- * Useful for storing the group ID for future push messages.
+ * Get the group summary info.
  */
 export async function getGroupSummary(
   groupId: string
