@@ -34,6 +34,7 @@ import {
   PoolSide,
 } from "@/types";
 import { Plus, Dices } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 // ── New Bet form state
 interface NewBetFormState {
@@ -318,6 +319,8 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export default function BettingPage() {
+  const searchParams = useSearchParams();
+  const defaultTab = searchParams.get("tab") === "pools" ? "pools" : "my-bets";
   const [bets, setBets] = useState<PersonalBet[]>([]);
   const [pools, setPools] = useState<BettingPool[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -380,7 +383,7 @@ export default function BettingPage() {
 
   return (
     <div className="space-y-4">
-      <Tabs defaultValue="my-bets">
+      <Tabs defaultValue={defaultTab}>
         <TabsList className="w-full border border-neutral-800 bg-neutral-900">
           <TabsTrigger
             value="my-bets"

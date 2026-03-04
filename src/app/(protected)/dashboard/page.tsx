@@ -13,6 +13,7 @@ import { Activity, Profile, Season } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, differenceInDays, parseISO } from "date-fns";
 import { Zap, Timer, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // ── Placeholder data for team comparison (would come from API in production)
 const PLACEHOLDER_TEAM_STATS = {
@@ -116,6 +117,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [season, setSeason] = useState<Season | null>(null);
@@ -214,7 +216,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 gap-3">
         <Button
           className="h-14 flex-col gap-1 bg-red-600 font-bold text-white hover:bg-red-700"
-          onClick={() => {}}
+          onClick={() => router.push("/betting")}
         >
           <span className="text-lg">🎲</span>
           <span className="text-xs">跟自己對賭</span>
@@ -222,7 +224,7 @@ export default function DashboardPage() {
         <Button
           variant="outline"
           className="h-14 flex-col gap-1 border-neutral-700 bg-neutral-900 font-bold text-white hover:border-neutral-600 hover:bg-neutral-800"
-          onClick={() => {}}
+          onClick={() => router.push("/betting?tab=pools")}
         >
           <span className="text-lg">🏊</span>
           <span className="text-xs">加入賭池</span>
