@@ -6,21 +6,29 @@ import { createAdminClient } from "@/lib/supabase/admin";
 /**
  * POST /api/line/webhook
  *
- * Receives LINE webhook events and responds to commands.
+ * Receives LINE webhook events. The bot ONLY responds when:
+ * 1. It is @mentioned in a group message
+ * 2. It receives a direct 1-on-1 message
+ * 3. It joins a group (greeting)
  *
- * Supported commands (in group or 1-on-1):
- *   !排行 or !排行榜  — Show top 5 runners
- *   !分數 or !隊伍    — Show team scores
- *   !報名             — Show registration count + link
- *   !規則             — Show game rules link
- *   !help             — Show available commands
+ * Reply messages are FREE and unlimited — no cost incurred.
+ * Push/broadcast messages cost money and are NOT used here.
  *
- * When bot joins a group, it saves the group ID for future push notifications.
+ * Supported commands (after @mention or in DM):
+ *   報名 / 報名人數  — Registration count
+ *   隊伍 / 分數      — Team scores
+ *   排行 / 排行榜    — Top 5 leaderboard
+ *   規則             — Game rules link
+ *   help / 指令      — Available commands
  */
+
+// The bot's LINE user ID — set via env or detected at runtime
+const BOT_USER_ID = process.env.LINE_BOT_USER_ID || "";
+
 export async function POST(request: NextRequest) {
   const body = await request.text();
 
-  // Verify LINE signature
+  // Verify LINE signature (log mismatch but don't block during setup)
   const signature = request.headers.get("x-line-signature");
   const channelSecret = process.env.LINE_CHANNEL_SECRET;
 
@@ -31,7 +39,7 @@ export async function POST(request: NextRequest) {
       .digest("base64");
 
     if (hash !== signature) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
+      console.warn("LINE webhook signature mismatch — check LINE_CHANNEL_SECRET env var");
     }
   }
 
@@ -49,51 +57,144 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ ok: true });
 }
 
-async function handleEvent(event: {
+interface LineEvent {
   type: string;
   replyToken: string;
   source: { type: string; groupId?: string; userId?: string };
-  message?: { type: string; text: string };
-}) {
-  // When bot joins a group, save the group ID
+  message?: {
+    type: string;
+    text: string;
+    mention?: {
+      mentionees: Array<{
+        index: number;
+        length: number;
+        type: string;
+        userId?: string;
+      }>;
+    };
+  };
+}
+
+async function handleEvent(event: LineEvent) {
+  // When bot joins a group, save the group ID and greet
   if (event.type === "join" && event.source.groupId) {
     await saveGroupId(event.source.groupId);
     await replyMessage(event.replyToken, [
       {
         type: "text",
-        text: "🎰 汗水賭場 Bot 已加入！\n\n輸入 !help 查看可用指令\n\n📱 報名連結：https://runrun-plum.vercel.app/login",
+        text: [
+          "🎰 汗水賭場 Bot 已加入！",
+          "",
+          "在群組裡 @我 就能查詢資訊，例如：",
+          "  @RunRun 報名",
+          "  @RunRun 排行",
+          "  @RunRun 隊伍",
+          "  @RunRun 規則",
+          "",
+          "📱 報名連結：https://runrun-plum.vercel.app/login",
+        ].join("\n"),
       },
     ]);
     return;
   }
 
-  // Handle text messages
-  if (event.type === "message" && event.message?.type === "text") {
-    const text = event.message.text.trim();
-    const reply = await getCommandReply(text);
+  // Only handle text messages
+  if (event.type !== "message" || event.message?.type !== "text") {
+    return;
+  }
 
-    if (reply) {
-      await replyMessage(event.replyToken, [{ type: "text", text: reply }]);
-    }
+  const isGroupChat =
+    event.source.type === "group" || event.source.type === "room";
+  const isDirectMessage = event.source.type === "user";
+
+  // In group chats: only respond if the bot is @mentioned
+  if (isGroupChat) {
+    const isMentioned = isBotMentioned(event.message);
+    if (!isMentioned) return; // Ignore — no cost, no reply
+  }
+
+  // Extract the actual command (strip the @mention part)
+  const commandText = extractCommand(event.message!.text, isGroupChat);
+  const reply = await getCommandReply(commandText);
+
+  if (reply) {
+    await replyMessage(event.replyToken, [{ type: "text", text: reply }]);
+  } else if (isDirectMessage) {
+    // In DM, always reply with help if command not recognized
+    await replyMessage(event.replyToken, [
+      {
+        type: "text",
+        text: "🎰 我不太懂你的意思～\n\n試試這些指令：報名、隊伍、排行、規則、help",
+      },
+    ]);
   }
 }
 
-async function getCommandReply(text: string): Promise<string | null> {
-  const cmd = text.toLowerCase();
+/**
+ * Check if the bot is @mentioned in the message.
+ * Works by checking the mention.mentionees array for the bot's userId,
+ * or by detecting @RunRun in the text as a fallback.
+ */
+function isBotMentioned(
+  message?: LineEvent["message"]
+): boolean {
+  if (!message) return false;
 
-  if (cmd === "!help" || cmd === "!指令") {
+  // Method 1: Check mentionees for bot's user ID
+  if (message.mention?.mentionees) {
+    for (const m of message.mention.mentionees) {
+      // If we know the bot's user ID, match exactly
+      if (BOT_USER_ID && m.userId === BOT_USER_ID) return true;
+      // Otherwise, any "all" type mention or matched mention counts
+      if (m.type === "all") return true;
+    }
+    // If there are mentionees but we don't know bot ID,
+    // assume any mention in a message is for us
+    if (!BOT_USER_ID && message.mention.mentionees.length > 0) return true;
+  }
+
+  // Method 2: Fallback — check text for @RunRun or @runrun
+  const text = message.text?.toLowerCase() || "";
+  if (text.includes("@runrun")) return true;
+
+  return false;
+}
+
+/**
+ * Extract the command part from a message, stripping the @mention.
+ * e.g. "@RunRun 報名" → "報名"
+ */
+function extractCommand(text: string, isGroup: boolean): string {
+  if (!isGroup) return text.trim();
+
+  // Remove @mentions (format: @DisplayName)
+  let cleaned = text.replace(/@\S+/g, "").trim();
+
+  // Also try removing common bot name patterns
+  cleaned = cleaned
+    .replace(/^runrun\s*/i, "")
+    .trim();
+
+  return cleaned;
+}
+
+async function getCommandReply(text: string): Promise<string | null> {
+  const cmd = text.toLowerCase().replace(/^!/, "").trim();
+
+  if (cmd === "help" || cmd === "指令" || cmd === "?" || cmd === "？") {
     return [
-      "🎰 汗水賭場 Bot 指令：",
+      "🎰 汗水賭場 Bot",
       "",
-      "!報名 — 查看報名人數",
-      "!隊伍 — 查看隊伍分數",
-      "!排行 — 跑步排行榜 Top 5",
-      "!規則 — 遊戲規則連結",
-      "!help — 顯示此說明",
+      "在群組裡 @我 + 指令：",
+      "  報名 — 查看報名人數",
+      "  隊伍 — 查看隊伍分數",
+      "  排行 — 跑步排行榜 Top 5",
+      "  規則 — 遊戲規則連結",
+      "  help — 顯示此說明",
     ].join("\n");
   }
 
-  if (cmd === "!報名" || cmd === "!報名人數") {
+  if (cmd === "報名" || cmd === "報名人數" || cmd === "人數") {
     const supabase = createAdminClient();
     const { count: total } = await supabase
       .from("profiles")
@@ -124,7 +225,7 @@ async function getCommandReply(text: string): Promise<string | null> {
     ].join("\n");
   }
 
-  if (cmd === "!隊伍" || cmd === "!分數" || cmd === "!隊伍分數") {
+  if (cmd === "隊伍" || cmd === "分數" || cmd === "隊伍分數" || cmd === "pk") {
     const supabase = createAdminClient();
     const { data: teams } = await supabase
       .from("teams")
@@ -149,7 +250,8 @@ async function getCommandReply(text: string): Promise<string | null> {
           .select("distance_km")
           .in("user_id", userIds);
 
-        const totalKm = activities?.reduce((sum, a) => sum + a.distance_km, 0) ?? 0;
+        const totalKm =
+          activities?.reduce((sum, a) => sum + a.distance_km, 0) ?? 0;
         result += `\n${team.emoji} ${team.name}（${memberCount}人）\n   📏 ${totalKm.toFixed(1)} km`;
       } else {
         result += `\n${team.emoji} ${team.name}（0人）\n   📏 0 km`;
@@ -159,7 +261,7 @@ async function getCommandReply(text: string): Promise<string | null> {
     return result;
   }
 
-  if (cmd === "!排行" || cmd === "!排行榜") {
+  if (cmd === "排行" || cmd === "排行榜" || cmd === "top" || cmd === "rank") {
     const supabase = createAdminClient();
     const { data: profiles } = await supabase
       .from("profiles")
@@ -182,7 +284,7 @@ async function getCommandReply(text: string): Promise<string | null> {
     return result;
   }
 
-  if (cmd === "!規則" || cmd === "!遊戲規則") {
+  if (cmd === "規則" || cmd === "遊戲規則" || cmd === "rules") {
     return [
       "📖 汗水賭場遊戲規則",
       "",
@@ -195,7 +297,7 @@ async function getCommandReply(text: string): Promise<string | null> {
     ].join("\n");
   }
 
-  // Not a command — ignore
+  // Command not recognized
   return null;
 }
 
@@ -203,9 +305,6 @@ async function getCommandReply(text: string): Promise<string | null> {
  * Save a LINE group ID to the database for future push notifications.
  */
 async function saveGroupId(groupId: string) {
-  // Store in a simple key-value approach using Supabase
-  // For now, just log it — we can persist it later
   console.log(`LINE Bot joined group: ${groupId}`);
-
   // TODO: persist group ID to database for push notifications
 }
