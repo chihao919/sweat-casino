@@ -1,134 +1,108 @@
 # Sweat Casino (汗水賭場) - Implementation Plan
 
 ## Tech Stack
-- **Framework**: Next.js 14 (App Router) + TypeScript
+- **Framework**: Next.js 16 (App Router) + TypeScript
 - **Database**: Supabase (PostgreSQL + Auth + Realtime)
 - **Styling**: Tailwind CSS + shadcn/ui
 - **State**: Zustand
 - **Deploy**: Vercel
 - **APIs**: Strava (activity sync), OpenWeatherMap (weather bonuses)
 
+## URLs & Resources
+- **Production**: https://runrun-plum.vercel.app
+- **GitHub**: https://github.com/chihao919/sweat-casino
+- **Supabase Project**: sxtjcwurleltqocjwmuw (RunRun, Tokyo region)
+- **Supabase Dashboard**: https://supabase.com/dashboard/project/sxtjcwurleltqocjwmuw
+- **Vercel Project**: stevens-projects-f4d96467/runrun
+
 ## Env Vars
 ```
-NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
-NEXT_PUBLIC_APP_URL
-STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_WEBHOOK_VERIFY_TOKEN
-OPENWEATHERMAP_API_KEY
-CRON_SECRET
+NEXT_PUBLIC_SUPABASE_URL ✅ 已設定
+NEXT_PUBLIC_SUPABASE_ANON_KEY ✅ 已設定
+SUPABASE_SERVICE_ROLE_KEY ✅ 已設定
+NEXT_PUBLIC_APP_URL ✅ 已設定
+CRON_SECRET ✅ 已設定
+STRAVA_CLIENT_ID ❌ 待填
+STRAVA_CLIENT_SECRET ❌ 待填
+STRAVA_WEBHOOK_VERIFY_TOKEN ❌ 待填
+OPENWEATHERMAP_API_KEY ❌ 待填
 ```
 
 ---
 
-## Phase 1: Project Setup & Auth ✅ PARTIALLY DONE
+## Phase 1: Project Setup & Auth ✅ DONE
 - [x] Initialize Next.js project (TypeScript, Tailwind, App Router, src/)
 - [x] Install deps: @supabase/supabase-js, @supabase/ssr, shadcn/ui, zustand, lucide-react, date-fns, recharts
 - [x] Create .env.example and .env.local
-- [x] Install shadcn/ui components (button, card, input, label, tabs, badge, dialog, select, sonner, progress, sheet, separator, avatar, dropdown-menu, form, textarea, skeleton, table)
-- [ ] Create directory structure
-- [ ] Supabase clients: client.ts, server.ts, middleware.ts, admin.ts
-- [ ] middleware.ts to protect (protected) route group
-- [ ] Auth pages: /login, /register, /auth/callback
-- [ ] Base layout: Header + mobile BottomNav
+- [x] Install shadcn/ui components
+- [x] Supabase clients: client.ts, server.ts, middleware.ts, admin.ts
+- [x] middleware.ts to protect (protected) route group
+- [x] Auth pages: /login, /register, /auth/callback
+- [x] Base layout: Header + mobile BottomNav
 
-## Phase 2: Database Schema
-4 SQL migrations in order:
-- [ ] **Migration 1**: seasons, teams, weather_records
-- [ ] **Migration 2**: profiles (extends auth.users), activities
-- [ ] **Migration 3**: sc_transactions, personal_bets, betting_pools, pool_entries, weekly_snapshots
-- [ ] **Migration 4**: DB functions (handle_new_user, process_sc_transaction, calculate_team_activity_rate) + RLS policies
+## Phase 2: Database Schema ✅ DONE
+- [x] Migration 1: seasons, teams, weather_records
+- [x] Migration 2: profiles, activities
+- [x] Migration 3: sc_transactions, personal_bets, betting_pools, pool_entries, weekly_snapshots
+- [x] Migration 4: DB functions + RLS policies
+- [x] All 4 migrations pushed to remote Supabase
 
-### Key Tables
-| Table | Purpose |
-|-------|---------|
-| seasons | 3-month season periods with config JSON |
-| teams | Red Bulls / White Bears (color/emoji) |
-| weather_records | OpenWeatherMap snapshots per activity |
-| profiles | extends auth.users, Strava tokens, team, $SC balance |
-| activities | running data from Strava, $SC earned |
-| sc_transactions | immutable ledger of all $SC movements |
-| personal_bets | "bet on yourself" goals with stakes |
-| betting_pools | public prediction markets |
-| pool_entries | individual positions in pools |
-| weekly_snapshots | aggregated weekly stats per team |
+### Database Data
+- [x] Teams seeded: Red Bulls (🐂) + White Bears (🐻‍❄️)
+- [x] Season 1: Genesis created (2026/3/1 ~ 2026/5/31, active)
 
-## Phase 3: Teams & $SC Engine
-- [ ] Team Assignment (src/lib/teams/assignment.ts) - auto-assign to smaller team
-- [ ] $SC Engine (src/lib/sc/engine.ts) - calculateSCEarned(distanceKm, weatherMultiplier, config)
-- [ ] Survival Tax (src/lib/sc/survival-tax.ts) - weekly deduction if < 5km
-- [ ] Activity Rate (src/lib/teams/activity-rate.ts) - Adjusted Score = Total KM * (Active / Total)
-- [ ] Profile page (team, balance, stats)
-- [ ] Wallet page (transaction history)
+## Phase 3: Teams & $SC Engine ✅ DONE
+- [x] Team Assignment (src/lib/teams/assignment.ts)
+- [x] $SC Engine (src/lib/sc/engine.ts)
+- [x] Survival Tax (src/lib/sc/survival-tax.ts)
+- [x] Activity Rate (src/lib/teams/activity-rate.ts)
 
-## Phase 4: Strava Integration
-- [ ] OAuth Flow: authorize -> callback -> store tokens
-- [ ] Webhook: GET (hub.challenge) + POST (activity events)
-- [ ] Activity Pipeline: Webhook -> Fetch -> Weather -> Calculate $SC -> Insert -> Update bets
-- [ ] Mock System (src/lib/strava/mock.ts) - fake activities for dev
-- [ ] Manual Sync endpoint
-- [ ] Strava Connect Button component
+## Phase 4: Strava Integration ✅ DONE (code only, needs API keys)
+- [x] OAuth Flow code (src/lib/strava/auth.ts)
+- [x] Webhook endpoint (src/app/api/strava/webhook/route.ts)
+- [x] Activity Pipeline code
+- [x] Mock System (src/lib/strava/mock.ts)
+- [x] Strava callback route
+- [ ] **TODO**: Register Strava API app and fill keys
+- [ ] **TODO**: Register webhook with production URL
 
-### Files
-- src/lib/strava/auth.ts - OAuth helpers
-- src/lib/strava/client.ts - API client with token refresh
-- src/lib/strava/webhook.ts - webhook validation & processing
-- src/app/api/strava/webhook/route.ts - webhook endpoint
-- src/app/api/strava/callback/route.ts - OAuth callback
-- src/app/api/mock/activity/route.ts - dev-only mock injection
+## Phase 5: Weather Bonus System ✅ DONE (code only, needs API key)
+- [x] OpenWeatherMap Client (src/lib/weather/client.ts)
+- [x] Bonus Logic (src/lib/weather/bonus.ts)
+- [ ] **TODO**: Get OpenWeatherMap API key
 
-## Phase 5: Weather Bonus System
-- [ ] OpenWeatherMap Client (src/lib/weather/client.ts)
-- [ ] Bonus Logic (src/lib/weather/bonus.ts)
-  - Heavy rain (502-504): 1.5x
-  - Thunderstorm (200-232): 1.5x
-  - Extreme heat (>35°C) or cold (<0°C): 1.5x
-  - Strong wind (>10 m/s): 1.5x
-  - Snow (600-622): 1.5x
-  - Multiple conditions do NOT stack (max 1.5x)
-- [ ] Weather Badge component
+## Phase 6: Betting Market ✅ DONE
+- [x] Personal Bets logic + API route
+- [x] Public Pools logic + API route
+- [x] Odds calculation + display helpers
 
-## Phase 6: Betting Market
-### Personal Bets ("Bet on Yourself")
-- [ ] User sets target (distance/count), timeframe, stake
-- [ ] Odds auto-calculated from history (1.5x-5.0x)
-- [ ] Stake deducted immediately; success = stake * odds
-- [ ] Progress updated on each new activity
-- [ ] Cron resolves expired bets
+## Phase 7: Dashboard & Real-time ✅ DONE
+- [x] Realtime Hooks (use-realtime.ts)
+- [x] Team VS Panel component
+- [x] Live Ticker (marquee animation)
+- [x] Weekly Chart (recharts BarChart)
+- [x] Leaderboard page (Distance / $SC / Streak tabs)
+- [x] Season Progress bar
 
-### Public Pools (Pari-mutuel, 0% house cut)
-- [ ] Anyone creates pool (e.g., "Red Team > 500km this week?")
-- [ ] Users go Long or Short with $SC
-- [ ] Odds = total_pool / position_total (dynamic)
-- [ ] Cron resolves at resolve_date
-
-### Files
-- src/lib/betting/personal.ts, pools.ts, odds.ts
-- src/app/api/betting/personal/route.ts, pools/route.ts
-- Components: PersonalBetForm, PersonalBetCard, PoolCard, PoolEntryForm, OddsDisplay
-
-## Phase 7: Dashboard & Real-time
-- [ ] Realtime Hooks - subscribe to Supabase channels
-- [ ] Team VS Panel - animated Red vs White comparison
-- [ ] Live Ticker - stock-market scrolling banner
-- [ ] Weekly Chart - bar chart of daily distance (recharts)
-- [ ] Leaderboard - tabs: Distance / $SC / Streak, team filter
-- [ ] Season Progress - progress bar + countdown
-
-## Phase 8: Polish & Deploy
-- [ ] Mobile-first responsive, PWA manifest
-- [ ] Error boundaries, loading skeletons, toast notifications
-- [ ] Vercel deploy, env vars, cron jobs (vercel.json)
-- [ ] Register Strava webhook with production URL
-- [ ] Security audit: no leaked keys, RLS correct, cron routes check CRON_SECRET
+## Phase 8: Polish & Deploy ✅ PARTIALLY DONE
+- [x] Mobile-first responsive design
+- [x] Dark theme with casino aesthetic
+- [x] Vercel deployed + env vars configured
+- [x] Cron jobs configured (daily schedule for Hobby plan)
+- [x] Supabase Auth redirect URLs configured
+- [ ] **TODO**: PWA manifest
+- [ ] **TODO**: Error boundaries
+- [ ] **TODO**: Loading skeletons (some done)
 
 ---
 
-## Cron Jobs (vercel.json)
+## Cron Jobs (vercel.json - adjusted for Hobby plan)
 | Job | Schedule | Purpose |
 |-----|----------|---------|
-| survival-tax | Monday 00:00 | Weekly tax on inactive users |
-| pool-resolution | Hourly | Resolve expired pools |
-| bet-resolution | Hourly | Resolve expired personal bets |
-| weekly-snapshot | Sunday 23:59 | Aggregate weekly team stats |
+| survival-tax | Daily Mon 00:00 | Weekly tax on inactive users |
+| pool-resolution | Daily 00:00 | Resolve expired pools |
+| bet-resolution | Daily 00:00 | Resolve expired personal bets |
+| weekly-snapshot | Daily Mon 00:00 | Aggregate weekly team stats |
 | season-check | Daily 00:00 | Season start/end lifecycle |
 
 ---
@@ -143,66 +117,24 @@ CRON_SECRET
 
 ---
 
-## Directory Structure
-```
-src/
-├── app/
-│   ├── layout.tsx              # Root layout
-│   ├── page.tsx                # Landing / redirect
-│   ├── login/page.tsx
-│   ├── register/page.tsx
-│   ├── auth/callback/route.ts
-│   ├── (protected)/
-│   │   ├── layout.tsx          # Protected layout with nav
-│   │   ├── dashboard/page.tsx
-│   │   ├── profile/page.tsx
-│   │   ├── wallet/page.tsx
-│   │   ├── betting/page.tsx
-│   │   └── leaderboard/page.tsx
-│   └── api/
-│       ├── strava/webhook/route.ts
-│       ├── strava/callback/route.ts
-│       ├── mock/activity/route.ts
-│       ├── betting/personal/route.ts
-│       ├── betting/pools/route.ts
-│       └── cron/
-│           ├── survival-tax/route.ts
-│           ├── pool-resolution/route.ts
-│           ├── bet-resolution/route.ts
-│           ├── weekly-snapshot/route.ts
-│           └── season-check/route.ts
-├── components/
-│   ├── ui/                     # shadcn/ui
-│   ├── layout/                 # Header, BottomNav
-│   ├── dashboard/              # TeamVS, Ticker, Chart
-│   ├── betting/                # BetForm, PoolCard, etc.
-│   └── teams/                  # TeamBadge, etc.
-├── hooks/
-│   ├── use-realtime.ts
-│   └── use-profile.ts
-├── lib/
-│   ├── supabase/               # client, server, middleware, admin
-│   ├── strava/                 # auth, client, webhook, mock
-│   ├── weather/                # client, bonus
-│   ├── sc/                     # engine, survival-tax
-│   ├── teams/                  # assignment, activity-rate
-│   └── betting/                # personal, pools, odds
-├── types/
-│   └── index.ts                # All TypeScript types
-└── middleware.ts                # Route protection
-```
+## Project Stats
+- **Source files**: 70+ (TypeScript/TSX/CSS)
+- **Lines of code**: 15,000+
+- **App routes**: 20
+- **SQL migrations**: 4 files
+- **Build**: ✅ Passes
 
-## Current Progress
-- Next.js project initialized ✅
-- Dependencies installed ✅
-- shadcn/ui components installed ✅
-- .env.example and .env.local created ✅
-- Directory structure created ✅
-- Phase 1: Supabase clients + Auth + Middleware + Auth pages ✅
-- Phase 2: Database SQL migrations (4 files) ✅
-- Phase 3: Types + Core logic (SC engine, teams, weather, strava, betting) ✅
-- Phase 4-7: UI layout + Protected pages + Components ✅
-- API Routes (Strava webhook, Betting, Cron jobs) ✅
-- vercel.json with cron schedules ✅
-- **BUILD PASSED** ✅ (70 source files, 8268 lines, 20 routes)
-- Next step: Set up Supabase project, configure env vars, deploy to Vercel
+---
+
+## Known Issues / Next Steps
+1. Vercel 部署端暫時有 internal error（build 成功但 deploy 階段失敗），前一版仍在線
+2. 需要 Strava API keys 才能啟用跑步同步功能
+3. 需要 OpenWeatherMap API key 才能啟用天氣加成
+4. Types (src/types/index.ts) 與部分 API routes 的欄位名稱可能有些許不一致（例如 pool 的 side_a/side_b vs long/short），需要在實際測試時統一
+5. 前端頁面資料抓取目前用 useEffect + supabase client，可考慮改用 Server Components 或 React Query
+6. `middleware.ts` 使用的是已 deprecated 的 middleware convention，Next.js 16 建議改用 proxy
+
+## Git Info
+- Branch: main
+- Last commit: feat: configure Supabase auth redirects and init config
+- Remote: origin -> https://github.com/chihao919/sweat-casino.git
