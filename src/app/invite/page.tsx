@@ -212,13 +212,19 @@ export default function InvitePage() {
             </Button>
           </Link>
 
+          <Link href="/setup">
+            <Button variant="outline" className="h-14 w-full text-lg font-bold">
+              ⌚ 已加入？設定教學
+            </Button>
+          </Link>
+
           <div className="flex gap-3">
             <Link href="/players" className="flex-1">
               <Button
                 variant="outline"
                 className="h-12 w-full"
               >
-                👀 查看報名名單
+                👀 報名名單
               </Button>
             </Link>
             <Link href="/guide" className="flex-1">
