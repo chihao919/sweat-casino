@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { replyMessage, QUICK_REPLY_BUTTONS, LineMessage } from "@/lib/line/client";
+import { replyMessage, QUICK_REPLY_BUTTONS } from "@/lib/line/client";
+import { menuCard, dataCard } from "@/lib/line/templates";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
@@ -82,15 +83,9 @@ async function handleEvent(event: LineEvent) {
     await replyMessage(event.replyToken, [
       {
         type: "text",
-        text: [
-          "🎰 汗水賭場 Bot 已加入！",
-          "",
-          "在群組裡 @我 或點下方按鈕查詢：",
-          "",
-          "📱 報名連結：https://runrun-plum.vercel.app/login",
-        ].join("\n"),
-        quickReply: { items: QUICK_REPLY_BUTTONS },
+        text: "🎰 汗水賭場 Bot 已加入！\n\n在群組裡 @我 或點下方按鈕查詢 👇",
       },
+      menuCard(),
     ]);
     return;
   }
@@ -115,30 +110,12 @@ async function handleEvent(event: LineEvent) {
   const reply = await getCommandReply(commandText);
 
   if (reply) {
-    await replyMessage(event.replyToken, [
-      {
-        type: "text",
-        text: reply,
-        quickReply: { items: QUICK_REPLY_BUTTONS },
-      },
-    ]);
-  } else if (isDirectMessage) {
-    await replyMessage(event.replyToken, [
-      {
-        type: "text",
-        text: "🎰 我不太懂你的意思～\n\n點下方按鈕或輸入指令：報名、隊伍、排行、規則",
-        quickReply: { items: QUICK_REPLY_BUTTONS },
-      },
-    ]);
-  } else if (isGroupChat) {
-    // In group, if @mentioned but command not recognized, show buttons
-    await replyMessage(event.replyToken, [
-      {
-        type: "text",
-        text: "🎰 你找我嗎？點下方按鈕查詢吧！",
-        quickReply: { items: QUICK_REPLY_BUTTONS },
-      },
-    ]);
+    // Send data as Flex card with follow-up buttons
+    const title = extractTitle(commandText);
+    await replyMessage(event.replyToken, [dataCard(title, reply)]);
+  } else {
+    // Command not recognized — show menu card with buttons
+    await replyMessage(event.replyToken, [menuCard()]);
   }
 }
 
@@ -311,6 +288,17 @@ async function getCommandReply(text: string): Promise<string | null> {
 
   // Command not recognized
   return null;
+}
+
+/** Map command text to a display title for the Flex card header */
+function extractTitle(cmd: string): string {
+  const c = cmd.toLowerCase().replace(/^!/, "").trim();
+  if (c.includes("報名")) return "📊 報名人數";
+  if (c.includes("隊伍") || c.includes("分數")) return "⚔️ 隊伍對戰";
+  if (c.includes("排行")) return "🏆 排行榜";
+  if (c.includes("規則")) return "📖 遊戲規則";
+  if (c.includes("help") || c.includes("指令")) return "🎰 指令列表";
+  return "🎰 汗水賭場";
 }
 
 /**
