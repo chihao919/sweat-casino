@@ -30,8 +30,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Redirect authenticated users away from auth pages
-  if (user && isPublicRoute && pathname !== "/auth/callback") {
+  // Redirect authenticated users away from auth pages (login/register only)
+  const AUTH_ONLY_ROUTES = ["/login", "/register"];
+  const isAuthRoute = AUTH_ONLY_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
+  if (user && isAuthRoute) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
