@@ -135,7 +135,7 @@ export default function InvitePage() {
         </div>
 
         {/* How to set up watch */}
-        <div className="mt-10">
+        <div id="setup" className="mt-10 scroll-mt-6">
           <h2 className="text-center text-3xl font-black">
             ⌚ 手錶設定超簡單
           </h2>
@@ -198,6 +198,12 @@ export default function InvitePage() {
                     用 Google 帳號登入網站，按「連結 Strava」授權。
                     <span className="text-green-600 dark:text-green-400 font-semibold"> 之後跑步完成就自動計分！</span>
                   </p>
+                  <Link
+                    href="/login"
+                    className="mt-2 inline-block text-base font-semibold text-red-500 dark:text-red-400 underline"
+                  >
+                    👉 點此登入並串聯 Strava
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -212,11 +218,11 @@ export default function InvitePage() {
             </Button>
           </Link>
 
-          <Link href="/setup">
+          <a href="#setup">
             <Button variant="outline" className="h-14 w-full text-lg font-bold">
               ⌚ 已加入？設定教學
             </Button>
-          </Link>
+          </a>
 
           <div className="flex gap-3">
             <Link href="/players" className="flex-1">

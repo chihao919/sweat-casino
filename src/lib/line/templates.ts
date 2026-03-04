@@ -79,7 +79,7 @@ export function menuCard() {
             margin: "sm",
           },
           makeUriButton("🎰  立即加入", `${APP_URL}/login`, "#dc2626"),
-          makeUriButton("⌚  如何設定", `${APP_URL}/setup`, "#0ea5e9"),
+          makeUriButton("⌚  如何設定", `${APP_URL}/invite#setup`, "#0ea5e9"),
           makeUriButton("👀  查看報名人數", `${APP_URL}/players`, "#6366f1"),
           makeUriButton("📣  邀請朋友（宣傳頁）", `${APP_URL}/invite`, "#16a34a"),
           makeUriButton("📱  開啟網站", APP_URL, "#0ea5e9"),
@@ -133,7 +133,7 @@ export function dataCard(title: string, bodyText: string) {
         spacing: "sm",
         contents: [
           makeUriButton("🎰 加入", `${APP_URL}/login`, "#dc2626"),
-          makeUriButton("⌚ 設定教學", `${APP_URL}/setup`, "#0ea5e9"),
+          makeUriButton("⌚ 設定教學", `${APP_URL}/invite#setup`, "#0ea5e9"),
           makeUriButton("📣 宣傳頁", `${APP_URL}/invite`, "#16a34a"),
         ],
         paddingAll: "12px",
