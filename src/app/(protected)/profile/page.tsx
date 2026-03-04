@@ -415,7 +415,7 @@ export default function ProfilePage() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="display-name" className="text-xs text-neutral-400">
-              顯示名稱
+              顯示名稱（建議跟 LINE 名稱一致，方便辨識）
             </Label>
             <div className="flex gap-2">
               <Input

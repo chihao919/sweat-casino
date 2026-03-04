@@ -186,7 +186,7 @@ export default function SetupPage() {
               👤 設定你的暱稱
             </CardTitle>
             <CardDescription className="text-zinc-400">
-              這是其他玩家在排行榜和賭局中看到的名稱
+              建議跟 LINE 名稱一致，方便大家辨識你是誰！
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
