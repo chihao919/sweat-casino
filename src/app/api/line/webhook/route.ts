@@ -80,13 +80,27 @@ async function handleEvent(event: LineEvent) {
   // When bot joins a group, save the group ID and greet
   if (event.type === "join" && event.source.groupId) {
     await saveGroupId(event.source.groupId);
-    await replyMessage(event.replyToken, [
-      {
-        type: "text",
-        text: "🎰 汗水賭場 Bot 已加入！\n\n在群組裡 @我 或點下方按鈕查詢 👇",
-      },
-      menuCard(),
-    ]);
+    try {
+      await replyMessage(event.replyToken, [
+        {
+          type: "text",
+          text: "🎰 汗水賭場 Bot 已加入！\n\n在群組裡 @我 或點下方按鈕查詢 👇",
+        },
+        menuCard(),
+      ]);
+    } catch {
+      // Fallback to simple text if Flex fails
+      try {
+        await replyMessage(event.replyToken, [
+          {
+            type: "text",
+            text: "🎰 汗水賭場 Bot 已加入！\n\n輸入：報名、隊伍、排行、規則\n📱 https://runrun-plum.vercel.app",
+          },
+        ]);
+      } catch {
+        // Token expired — ignore
+      }
+    }
     return;
   }
 
@@ -114,13 +128,26 @@ async function handleEvent(event: LineEvent) {
   const commandText = extractCommand(rawText, isGroupChat);
   const reply = await getCommandReply(commandText);
 
-  if (reply) {
-    // Send data as Flex card with follow-up buttons
-    const title = extractTitle(commandText);
-    await replyMessage(event.replyToken, [dataCard(title, reply)]);
-  } else {
-    // Command not recognized — show menu card with buttons
-    await replyMessage(event.replyToken, [menuCard()]);
+  try {
+    if (reply) {
+      const title = extractTitle(commandText);
+      await replyMessage(event.replyToken, [dataCard(title, reply)]);
+    } else {
+      await replyMessage(event.replyToken, [menuCard()]);
+    }
+  } catch (err) {
+    // If Flex Message fails, fall back to simple text reply
+    const errMsg = err instanceof Error ? err.message : "";
+    console.error("Flex reply failed, trying text fallback:", errMsg);
+
+    if (!errMsg.includes("Invalid reply token")) {
+      try {
+        const fallbackText = reply || "🎰 汗水賭場\n\n輸入：報名、隊伍、排行、規則";
+        await replyMessage(event.replyToken, [{ type: "text", text: fallbackText }]);
+      } catch {
+        // Reply token already used or expired — ignore
+      }
+    }
   }
 }
 
