@@ -5,7 +5,7 @@ import { updateSession } from "@/lib/supabase/middleware";
  * Routes that are always accessible without authentication.
  * All other routes require a valid session.
  */
-const PUBLIC_ROUTES = ["/login", "/register", "/auth/callback"];
+const PUBLIC_ROUTES = ["/login", "/register", "/auth/callback", "/guide"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
