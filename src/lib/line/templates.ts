@@ -4,11 +4,40 @@
  * Flex Messages render as rich card UI visible to ALL group members.
  */
 
+const APP_URL = "https://runrun-plum.vercel.app";
+
+function makeUriButton(label: string, uri: string, color?: string) {
+  return {
+    type: "button" as const,
+    action: {
+      type: "uri" as const,
+      label,
+      uri,
+    },
+    style: "primary" as const,
+    color: color || "#0ea5e9",
+    height: "sm" as const,
+  };
+}
+
+function makeTextButton(label: string, text: string) {
+  return {
+    type: "button" as const,
+    action: {
+      type: "message" as const,
+      label,
+      text,
+    },
+    style: "secondary" as const,
+    height: "sm" as const,
+  };
+}
+
 /** Button card shown when bot is @mentioned or joins a group */
 export function menuCard() {
   return {
     type: "flex" as const,
-    altText: "🎰 汗水賭場 — 點選功能按鈕",
+    altText: "🎰 汗水賭場 — 點選按鈕",
     contents: {
       type: "bubble",
       size: "kilo",
@@ -25,7 +54,7 @@ export function menuCard() {
           },
           {
             type: "text",
-            text: "點選按鈕查詢資訊",
+            text: "用汗水下注，讓跑步變成一場賭局",
             size: "xs",
             color: "#ffcccc",
           },
@@ -38,21 +67,9 @@ export function menuCard() {
         layout: "vertical",
         spacing: "sm",
         contents: [
-          makeButton("📊  查看報名人數", "報名"),
-          makeButton("⚔️  查看隊伍分數", "隊伍"),
-          makeButton("🏆  查看排行榜", "排行"),
-          makeButton("📖  查看遊戲規則", "規則"),
-          {
-            type: "button",
-            action: {
-              type: "uri",
-              label: "📱  開啟網站",
-              uri: "https://runrun-plum.vercel.app",
-            },
-            style: "primary",
-            color: "#0ea5e9",
-            height: "sm",
-          },
+          makeUriButton("🎰  立即加入", `${APP_URL}/login`, "#dc2626"),
+          makeUriButton("⌚  如何設定", `${APP_URL}/setup`, "#0ea5e9"),
+          makeUriButton("📣  邀請朋友（宣傳頁）", `${APP_URL}/invite`, "#16a34a"),
         ],
         paddingAll: "12px",
       },
@@ -102,25 +119,12 @@ export function dataCard(title: string, bodyText: string) {
         layout: "vertical",
         spacing: "sm",
         contents: [
-          makeButton("📊 報名", "報名"),
-          makeButton("⚔️ 隊伍", "隊伍"),
-          makeButton("🏆 排行", "排行"),
+          makeUriButton("🎰 加入", `${APP_URL}/login`, "#dc2626"),
+          makeUriButton("⌚ 設定教學", `${APP_URL}/setup`, "#0ea5e9"),
+          makeUriButton("📣 宣傳頁", `${APP_URL}/invite`, "#16a34a"),
         ],
         paddingAll: "12px",
       },
     },
-  };
-}
-
-function makeButton(label: string, text: string) {
-  return {
-    type: "button" as const,
-    action: {
-      type: "message" as const,
-      label,
-      text,
-    },
-    style: "secondary" as const,
-    height: "sm" as const,
   };
 }
