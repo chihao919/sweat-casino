@@ -1,8 +1,7 @@
 /**
  * LINE Flex Message templates for the Sweat Casino bot.
  *
- * Flex Messages render as rich card UI visible to ALL group members,
- * unlike Quick Reply buttons which only show to the sender.
+ * Flex Messages render as rich card UI visible to ALL group members.
  */
 
 /** Button card shown when bot is @mentioned or joins a group */
@@ -24,6 +23,12 @@ export function menuCard() {
             size: "lg",
             color: "#ffffff",
           },
+          {
+            type: "text",
+            text: "點選按鈕查詢資訊",
+            size: "xs",
+            color: "#ffcccc",
+          },
         ],
         backgroundColor: "#dc2626",
         paddingAll: "16px",
@@ -31,46 +36,17 @@ export function menuCard() {
       body: {
         type: "box",
         layout: "vertical",
-        contents: [
-          {
-            type: "text",
-            text: "點選下方按鈕查詢資訊：",
-            size: "sm",
-            color: "#999999",
-            margin: "none",
-          },
-        ],
-        paddingAll: "12px",
-        paddingBottom: "4px",
-      },
-      footer: {
-        type: "box",
-        layout: "vertical",
         spacing: "sm",
         contents: [
-          {
-            type: "box",
-            layout: "horizontal",
-            spacing: "sm",
-            contents: [
-              makeButton("📊 報名人數", "@RunRun 報名"),
-              makeButton("⚔️ 隊伍分數", "@RunRun 隊伍"),
-            ],
-          },
-          {
-            type: "box",
-            layout: "horizontal",
-            spacing: "sm",
-            contents: [
-              makeButton("🏆 排行榜", "@RunRun 排行"),
-              makeButton("📖 遊戲規則", "@RunRun 規則"),
-            ],
-          },
+          makeButton("📊  查看報名人數", "報名"),
+          makeButton("⚔️  查看隊伍分數", "隊伍"),
+          makeButton("🏆  查看排行榜", "排行"),
+          makeButton("📖  查看遊戲規則", "規則"),
           {
             type: "button",
             action: {
               type: "uri",
-              label: "📱 開啟網站",
+              label: "📱  開啟網站",
               uri: "https://runrun-plum.vercel.app",
             },
             style: "primary",
@@ -85,10 +61,10 @@ export function menuCard() {
 }
 
 /** Response card with data + buttons for follow-up */
-export function dataCard(title: string, body: string) {
+export function dataCard(title: string, bodyText: string) {
   return {
     type: "flex" as const,
-    altText: `${title}\n${body}`,
+    altText: `${title}\n${bodyText}`,
     contents: {
       type: "bubble",
       size: "kilo",
@@ -113,23 +89,22 @@ export function dataCard(title: string, body: string) {
         contents: [
           {
             type: "text",
-            text: body,
+            text: bodyText,
             size: "sm",
             color: "#333333",
             wrap: true,
-            whiteSpace: "pre-wrap",
           },
         ],
         paddingAll: "16px",
       },
       footer: {
         type: "box",
-        layout: "horizontal",
+        layout: "vertical",
         spacing: "sm",
         contents: [
-          makeButton("📊 報名", "@RunRun 報名"),
-          makeButton("⚔️ 隊伍", "@RunRun 隊伍"),
-          makeButton("🏆 排行", "@RunRun 排行"),
+          makeButton("📊 報名", "報名"),
+          makeButton("⚔️ 隊伍", "隊伍"),
+          makeButton("🏆 排行", "排行"),
         ],
         paddingAll: "12px",
       },
@@ -139,14 +114,13 @@ export function dataCard(title: string, body: string) {
 
 function makeButton(label: string, text: string) {
   return {
-    type: "button",
+    type: "button" as const,
     action: {
-      type: "message",
+      type: "message" as const,
       label,
       text,
     },
-    style: "secondary",
-    height: "sm",
-    flex: 1,
+    style: "secondary" as const,
+    height: "sm" as const,
   };
 }

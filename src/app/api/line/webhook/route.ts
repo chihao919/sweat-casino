@@ -97,16 +97,21 @@ async function handleEvent(event: LineEvent) {
 
   const isGroupChat =
     event.source.type === "group" || event.source.type === "room";
-  const isDirectMessage = event.source.type === "user";
 
-  // In group chats: only respond if the bot is @mentioned
-  if (isGroupChat) {
+  const rawText = event.message!.text.trim();
+
+  // Known commands that buttons send directly (no @mention needed)
+  const directCommands = ["報名", "隊伍", "分數", "排行", "排行榜", "規則", "help", "指令"];
+  const isDirectCommand = directCommands.includes(rawText);
+
+  // In group chats: respond if @mentioned OR if it's a known direct command (from button tap)
+  if (isGroupChat && !isDirectCommand) {
     const isMentioned = isBotMentioned(event.message);
     if (!isMentioned) return; // Ignore — no cost, no reply
   }
 
   // Extract the actual command (strip the @mention part)
-  const commandText = extractCommand(event.message!.text, isGroupChat);
+  const commandText = extractCommand(rawText, isGroupChat);
   const reply = await getCommandReply(commandText);
 
   if (reply) {
