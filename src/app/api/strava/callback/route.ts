@@ -4,21 +4,22 @@ import { exchangeStravaCode } from "@/lib/strava/auth";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://runrun-plum.vercel.app";
 
 /**
+ * GET /api/strava/callback
+ *
  * Handles the OAuth callback redirect from Strava.
  *
- * Flow:
- *  1. Extract the authorization code from the query string.
- *  2. Exchange it for access/refresh tokens via the Strava API.
- *  3. Persist the tokens and athlete ID on the authenticated user's profile.
- *  4. Redirect the user back to /profile with a success or error flag.
+ * User identification strategy:
+ *  1. Try reading from session cookie (normal flow)
+ *  2. Fall back to state parameter (handles cross-site cookie loss)
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const state = searchParams.get("state"); // Contains user ID
 
   // User denied access on the Strava consent screen
   if (error || !code) {
@@ -28,7 +29,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    // Identify the currently authenticated user via the session cookie
+    // Strategy 1: Try session cookie
+    let userId: string | null = null;
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,12 +50,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       }
     );
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      userId = user.id;
+    }
 
-    if (authError || !user) {
+    // Strategy 2: Fall back to state parameter
+    if (!userId && state) {
+      // Validate that this user ID actually exists in profiles
+      const adminClient = createAdminClient();
+      const { data: profile } = await adminClient
+        .from("profiles")
+        .select("id")
+        .eq("id", state)
+        .single();
+
+      if (profile) {
+        userId = state;
+      }
+    }
+
+    if (!userId) {
+      console.error("[strava/callback] Could not identify user. Cookie and state both failed.");
       return NextResponse.redirect(
         `${APP_URL}/profile?strava_error=not_authenticated`
       );
@@ -79,7 +98,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const { data: existingProfile } = await adminClient
         .from("profiles")
         .select("avatar_url")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       if (!existingProfile?.avatar_url) {
@@ -90,7 +109,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { error: updateError } = await adminClient
       .from("profiles")
       .update(updatePayload)
-      .eq("id", user.id);
+      .eq("id", userId);
 
     if (updateError) {
       console.error("[strava/callback] Failed to update profile:", updateError);
