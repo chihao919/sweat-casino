@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import {
   Card,
@@ -79,9 +80,17 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-center text-xs text-zinc-600">
-          登入即代表你同意用汗水下注 💦
-        </p>
+        <div className="mt-6 text-center space-y-2">
+          <Link
+            href="/guide"
+            className="block text-sm font-medium text-red-400 hover:text-red-300 hover:underline"
+          >
+            📖 遊戲規則與新手指南
+          </Link>
+          <p className="text-xs text-zinc-600">
+            登入即代表你同意用汗水下注 💦
+          </p>
+        </div>
       </div>
     </div>
   );
