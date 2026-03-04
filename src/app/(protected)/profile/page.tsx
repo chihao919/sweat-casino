@@ -393,12 +393,13 @@ export default function ProfilePage() {
               <p className="text-xs text-neutral-400">
                 連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
-              <a href={getStravaOAuthUrl()}>
-                <Button className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]">
-                  <ExternalLink className="mr-2 size-4" />
-                  連結 Strava
-                </Button>
-              </a>
+              <Button
+                className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]"
+                onClick={() => { window.location.href = getStravaOAuthUrl(); }}
+              >
+                <ExternalLink className="mr-2 size-4" />
+                連結 Strava
+              </Button>
             </>
           )}
         </CardContent>
