@@ -34,7 +34,7 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
         {/* Header */}
         <div className="border-b border-neutral-800 px-4 py-3">
           <p className="text-[11px] uppercase tracking-widest text-neutral-500 font-semibold">
-            This Week — Team Battle
+            本週 — 隊伍對決
           </p>
         </div>
 
@@ -54,17 +54,17 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
               <p className="text-3xl font-black tabular-nums text-white leading-none">
                 {formatKm(redTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-neutral-500">km this week</p>
+              <p className="text-xs text-neutral-500">本週公里數</p>
             </div>
 
             <p className="text-xs text-neutral-500">
-              {redTeam.activityCount} activities
+              {redTeam.activityCount} 次活動
             </p>
 
             {/* Leading indicator */}
             {redIsLeading && totalKm > 0 && (
               <span className="animate-pulse rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-400">
-                Leading
+                領先中
               </span>
             )}
           </div>
@@ -89,16 +89,16 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
               <p className="text-3xl font-black tabular-nums text-white leading-none">
                 {formatKm(whiteTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-neutral-500">km this week</p>
+              <p className="text-xs text-neutral-500">本週公里數</p>
             </div>
 
             <p className="text-xs text-neutral-500">
-              {whiteTeam.activityCount} activities
+              {whiteTeam.activityCount} 次活動
             </p>
 
             {!redIsLeading && totalKm > 0 && (
               <span className="animate-pulse rounded-full bg-neutral-400/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-neutral-300">
-                Leading
+                領先中
               </span>
             )}
           </div>

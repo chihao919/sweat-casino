@@ -16,17 +16,17 @@ import { Zap, Timer, TrendingUp } from "lucide-react";
 
 // ── Placeholder data for team comparison (would come from API in production)
 const PLACEHOLDER_TEAM_STATS = {
-  red: { name: "Red Bulls", emoji: "🐂", weeklyKm: 0, activityCount: 0 },
-  white: { name: "White Bears", emoji: "🐻‍❄️", weeklyKm: 0, activityCount: 0 },
+  red: { name: "紅牛隊", emoji: "🐂", weeklyKm: 0, activityCount: 0 },
+  white: { name: "白熊隊", emoji: "🐻‍❄️", weeklyKm: 0, activityCount: 0 },
 };
 
 // ── Live ticker items placeholder
 const TICKER_ITEMS = [
-  "🏃 Alex ran 10.5 km and earned $52.50 SC",
-  "🎰 Pool 'Red Bulls win this week' just closed with $2,400 SC",
-  "⚡ Weather bonus active! 1.5x multiplier for running in rain",
-  "🏆 Sam just hit a 7-day streak!",
-  "💸 Jamie placed $50 SC on going Over 30 km this week",
+  "🏃 Alex 跑了 10.5 公里，獲得 $52.50 SC",
+  "🎰 賭池「紅牛隊本週獲勝」剛以 $2,400 SC 結算",
+  "⚡ 天氣加成啟動！雨天跑步獲得 1.5 倍獎勵",
+  "🏆 Sam 達成 7 天連續跑步！",
+  "💸 Jamie 下注 $50 SC 賭本週超過 30 公里",
 ];
 
 function SeasonProgressCard({ season }: { season: Season | null }) {
@@ -44,9 +44,9 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
     <Card className="border-neutral-800 bg-neutral-900">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
-          <span>Season Progress — {season.name}</span>
+          <span>賽季進度 — {season.name}</span>
           <Badge variant="outline" className="border-green-700 bg-green-950/50 text-green-400 text-xs">
-            Active
+            進行中
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -56,7 +56,7 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
           <span>{format(start, "MMM d")}</span>
           <span className="font-medium text-neutral-300">
             <Timer className="mr-1 inline size-3" />
-            {daysLeft > 0 ? `${daysLeft} days left` : "Season ended"}
+            {daysLeft > 0 ? `剩餘 ${daysLeft} 天` : "賽季已結束"}
           </span>
           <span>{format(end, "MMM d")}</span>
         </div>
@@ -107,7 +107,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
         <p className="text-sm font-bold text-green-400">+{formatSC(activity.sc_earned)}</p>
         {activity.weather_multiplier > 1 && (
           <p className="text-[10px] text-yellow-500">
-            {activity.weather_multiplier}x weather
+            {activity.weather_multiplier}x 天氣加成
           </p>
         )}
       </div>
@@ -202,7 +202,7 @@ export default function DashboardPage() {
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
             <TrendingUp className="size-4" />
-            My Last 7 Days
+            近 7 天跑量
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -217,7 +217,7 @@ export default function DashboardPage() {
           onClick={() => {}}
         >
           <span className="text-lg">🎲</span>
-          <span className="text-xs">Bet on Yourself</span>
+          <span className="text-xs">跟自己對賭</span>
         </Button>
         <Button
           variant="outline"
@@ -225,7 +225,7 @@ export default function DashboardPage() {
           onClick={() => {}}
         >
           <span className="text-lg">🏊</span>
-          <span className="text-xs">Join Pool</span>
+          <span className="text-xs">加入賭池</span>
         </Button>
       </div>
 
@@ -233,16 +233,16 @@ export default function DashboardPage() {
       <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="pb-1">
           <CardTitle className="text-sm font-semibold text-neutral-300">
-            Recent Activities
+            最近活動
           </CardTitle>
         </CardHeader>
         <CardContent className="divide-y divide-neutral-800">
           {recentActivities.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-8">
               <span className="text-3xl">🏃</span>
-              <p className="text-sm text-neutral-400">No activities yet.</p>
+              <p className="text-sm text-neutral-400">還沒有活動紀錄</p>
               <p className="text-xs text-neutral-600">
-                Connect Strava or log a manual run to get started.
+                連結 Strava 或手動記錄跑步來開始吧！
               </p>
             </div>
           ) : (

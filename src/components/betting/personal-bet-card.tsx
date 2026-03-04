@@ -13,27 +13,27 @@ interface PersonalBetCardProps {
 
 const statusConfig: Record<BetStatus, { label: string; className: string }> = {
   [BetStatus.PENDING]: {
-    label: "Active",
+    label: "進行中",
     className: "bg-blue-500/20 text-blue-400 border-blue-500/30",
   },
   [BetStatus.WON]: {
-    label: "Won",
+    label: "贏了",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
   },
   [BetStatus.LOST]: {
-    label: "Lost",
+    label: "輸了",
     className: "bg-red-500/20 text-red-400 border-red-500/30",
   },
   [BetStatus.CANCELLED]: {
-    label: "Cancelled",
+    label: "已取消",
     className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
   },
 };
 
 const betTypeLabel: Record<BetType, string> = {
-  [BetType.OVER]: "Over",
-  [BetType.UNDER]: "Under",
-  [BetType.EXACT]: "Exact",
+  [BetType.OVER]: "看多",
+  [BetType.UNDER]: "看空",
+  [BetType.EXACT]: "精準",
 };
 
 function calculateProgressPercent(current: number, target: number): number {
@@ -78,17 +78,17 @@ export function PersonalBetCard({ bet }: PersonalBetCardProps) {
         {/* Stats grid */}
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">Stake</p>
+            <p className="text-[11px] uppercase tracking-wide text-neutral-500">賭注</p>
             <p className="mt-0.5 text-sm font-bold text-white">{formatSC(bet.stake)}</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">Odds</p>
+            <p className="text-[11px] uppercase tracking-wide text-neutral-500">賠率</p>
             <div className="mt-0.5">
               <OddsDisplay odds={bet.odds} size="sm" />
             </div>
           </div>
           <div className="text-center">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">Payout</p>
+            <p className="text-[11px] uppercase tracking-wide text-neutral-500">派彩</p>
             <p className="mt-0.5 text-sm font-bold text-green-400">
               {formatSC(bet.potential_payout)}
             </p>
@@ -97,7 +97,7 @@ export function PersonalBetCard({ bet }: PersonalBetCardProps) {
 
         {/* Time remaining (only shown for active bets) */}
         {bet.status === BetStatus.PENDING && (
-          <p className="text-right text-xs text-neutral-500">Ends {timeRemaining}</p>
+          <p className="text-right text-xs text-neutral-500">剩餘時間：{timeRemaining}</p>
         )}
       </CardContent>
     </Card>

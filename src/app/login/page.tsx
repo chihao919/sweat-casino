@@ -35,18 +35,18 @@ export default function LoginPage() {
         {/* App title */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-black tracking-tight text-white">
-            Sweat Casino 🎰
+            汗水賭場 🎰
           </h1>
           <p className="mt-2 text-sm text-zinc-400">
-            Gamified running with behavioral economics
+            用汗水下注，讓跑步變成一場賭局
           </p>
         </div>
 
         <Card className="border-zinc-800 bg-zinc-900 shadow-2xl shadow-red-950/20">
           <CardHeader className="pb-4 text-center">
-            <CardTitle className="text-xl text-white">Get Started</CardTitle>
+            <CardTitle className="text-xl text-white">開始遊戲</CardTitle>
             <CardDescription className="text-zinc-400">
-              Sign in with your Google account to join the game
+              使用 Google 帳號登入，加入汗水賭局
             </CardDescription>
           </CardHeader>
 
@@ -74,13 +74,13 @@ export default function LoginPage() {
                   fill="#EA4335"
                 />
               </svg>
-              {isLoading ? "Redirecting..." : "Continue with Google"}
+              {isLoading ? "跳轉中..." : "使用 Google 登入"}
             </Button>
           </CardContent>
         </Card>
 
         <p className="mt-6 text-center text-xs text-zinc-600">
-          By signing in, you agree to bet your sweat 💦
+          登入即代表你同意用汗水下注 💦
         </p>
       </div>
     </div>

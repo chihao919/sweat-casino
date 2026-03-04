@@ -133,18 +133,18 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
       <DialogTrigger asChild>
         <Button className="bg-red-600 font-semibold text-white hover:bg-red-700" size="sm">
           <Plus className="mr-1.5 size-4" />
-          New Bet
+          新增賭注
         </Button>
       </DialogTrigger>
 
       <DialogContent className="border-neutral-800 bg-neutral-900 text-white">
         <DialogHeader>
-          <DialogTitle className="text-lg font-black">Place a Personal Bet</DialogTitle>
+          <DialogTitle className="text-lg font-black">跟自己對賭</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">Bet Type</Label>
+            <Label className="text-xs text-neutral-400">賭注類型</Label>
             <Select
               value={form.betType}
               onValueChange={(v) => setForm((f) => ({ ...f, betType: v as BetType }))}
@@ -153,20 +153,20 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="border-neutral-800 bg-neutral-900 text-white">
-                <SelectItem value={BetType.OVER}>Over — I will run MORE than target</SelectItem>
-                <SelectItem value={BetType.UNDER}>Under — I will run LESS than target</SelectItem>
-                <SelectItem value={BetType.EXACT}>Exact — I will hit exactly the target</SelectItem>
+                <SelectItem value={BetType.OVER}>看多 — 我會跑超過目標距離</SelectItem>
+                <SelectItem value={BetType.UNDER}>看空 — 我會跑不到目標距離</SelectItem>
+                <SelectItem value={BetType.EXACT}>精準 — 我會跑到剛好目標距離</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">Target Distance (km)</Label>
+            <Label className="text-xs text-neutral-400">目標距離 (km)</Label>
             <Input
               type="number"
               step="0.1"
               min="0.1"
-              placeholder="e.g. 30"
+              placeholder="例如 30"
               value={form.targetKm}
               onChange={(e) => setForm((f) => ({ ...f, targetKm: e.target.value }))}
               className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
@@ -174,12 +174,12 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">Stake Amount ($SC)</Label>
+            <Label className="text-xs text-neutral-400">賭注金額 ($SC)</Label>
             <Input
               type="number"
               step="1"
               min="1"
-              placeholder="e.g. 50"
+              placeholder="例如 50"
               value={form.stakeAmount}
               onChange={(e) => setForm((f) => ({ ...f, stakeAmount: e.target.value }))}
               className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
@@ -191,7 +191,7 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
             disabled={isSubmitting}
             className="w-full bg-red-600 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
           >
-            {isSubmitting ? "Placing bet..." : "Place Bet 🎲"}
+            {isSubmitting ? "下注中..." : "下注 🎲"}
           </Button>
         </form>
       </DialogContent>
@@ -274,20 +274,20 @@ function CreatePoolDialog({ onCreated }: { onCreated: () => void }) {
           size="sm"
         >
           <Plus className="mr-1.5 size-4" />
-          Create Pool
+          建立賭池
         </Button>
       </DialogTrigger>
 
       <DialogContent className="border-neutral-800 bg-neutral-900 text-white">
         <DialogHeader>
-          <DialogTitle className="text-lg font-black">Create Betting Pool</DialogTitle>
+          <DialogTitle className="text-lg font-black">建立賭池</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">Pool Title</Label>
+            <Label className="text-xs text-neutral-400">賭池標題</Label>
             <Input
-              placeholder="e.g. Who wins this week?"
+              placeholder="例如：這週誰會贏？"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
@@ -298,7 +298,7 @@ function CreatePoolDialog({ onCreated }: { onCreated: () => void }) {
             disabled={isSubmitting}
             className="w-full bg-red-600 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
           >
-            {isSubmitting ? "Creating..." : "Create Pool"}
+            {isSubmitting ? "建立中..." : "建立賭池"}
           </Button>
         </form>
       </DialogContent>
@@ -386,13 +386,13 @@ export default function BettingPage() {
             value="my-bets"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
           >
-            My Bets
+            我的賭注
           </TabsTrigger>
           <TabsTrigger
             value="pools"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
           >
-            Betting Pools
+            公開賭池
           </TabsTrigger>
         </TabsList>
 
@@ -400,13 +400,13 @@ export default function BettingPage() {
         <TabsContent value="my-bets" className="mt-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-neutral-300">
-              Active Bets ({activeBets.length})
+              進行中 ({activeBets.length})
             </h2>
             <NewBetDialog onCreated={fetchData} />
           </div>
 
           {activeBets.length === 0 ? (
-            <EmptyState message="No active bets. Place a bet on your own performance!" />
+            <EmptyState message="還沒有下注，快來跟自己對賭吧！" />
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {activeBets.map((bet) => (
@@ -418,7 +418,7 @@ export default function BettingPage() {
           {completedBets.length > 0 && (
             <>
               <h2 className="pt-2 text-sm font-semibold text-neutral-300">
-                Completed ({completedBets.length})
+                已結束 ({completedBets.length})
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {completedBets.map((bet) => (
@@ -433,13 +433,13 @@ export default function BettingPage() {
         <TabsContent value="pools" className="mt-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-neutral-300">
-              Open Pools ({openPools.length})
+              開放中 ({openPools.length})
             </h2>
             <CreatePoolDialog onCreated={fetchData} />
           </div>
 
           {openPools.length === 0 ? (
-            <EmptyState message="No open pools right now. Create one!" />
+            <EmptyState message="目前沒有開放的賭池，快來建立一個吧！" />
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {openPools.map((pool) => (
@@ -451,7 +451,7 @@ export default function BettingPage() {
           {otherPools.length > 0 && (
             <>
               <h2 className="pt-2 text-sm font-semibold text-neutral-300">
-                Past Pools ({otherPools.length})
+                過往賭池 ({otherPools.length})
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {otherPools.map((pool) => (

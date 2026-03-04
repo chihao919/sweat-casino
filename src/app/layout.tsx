@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sweat Casino",
-  description: "Gamified running with behavioral economics",
+  title: "汗水賭場 Sweat Casino",
+  description: "用汗水下注，讓跑步變成一場賭局",
 };
 
 export default function RootLayout({

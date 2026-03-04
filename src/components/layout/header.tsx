@@ -35,11 +35,11 @@ interface HeaderProps {
 }
 
 const mobileNavLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
-  { href: "/betting", label: "Betting", icon: Dices },
-  { href: "/wallet", label: "Wallet", icon: Wallet },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/dashboard", label: "首頁", icon: LayoutDashboard },
+  { href: "/leaderboard", label: "排行榜", icon: Trophy },
+  { href: "/betting", label: "下注", icon: Dices },
+  { href: "/wallet", label: "錢包", icon: Wallet },
+  { href: "/profile", label: "我的", icon: User },
 ];
 
 function getInitials(profile: Profile): string {
@@ -63,7 +63,7 @@ export function Header({ profile }: HeaderProps) {
     const supabase = createClient();
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error("Failed to sign out. Please try again.");
+      toast.error("登出失敗，請再試一次。");
       return;
     }
     router.push("/login");
@@ -82,7 +82,7 @@ export function Header({ profile }: HeaderProps) {
           className="flex items-center gap-2 text-lg font-black tracking-tight text-white hover:opacity-80 transition-opacity"
         >
           <span>🎰</span>
-          <span>Sweat Casino</span>
+          <span>汗水賭場</span>
         </Link>
 
         {/* Center: Team badge (hidden on mobile, shown md+) */}
@@ -138,14 +138,14 @@ export function Header({ profile }: HeaderProps) {
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="flex cursor-pointer items-center gap-2">
                       <User className="size-4" />
-                      Profile
+                      個人資料
                     </Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link href="/wallet" className="flex cursor-pointer items-center gap-2">
                       <Wallet className="size-4" />
-                      Wallet
+                      錢包
                     </Link>
                   </DropdownMenuItem>
 
@@ -156,7 +156,7 @@ export function Header({ profile }: HeaderProps) {
                     className="flex cursor-pointer items-center gap-2 text-red-400 focus:text-red-400"
                   >
                     <LogOut className="size-4" />
-                    Sign Out
+                    登出
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -179,7 +179,7 @@ export function Header({ profile }: HeaderProps) {
             <SheetContent side="left" className="w-64 border-neutral-800 bg-neutral-950 p-0">
               <SheetHeader className="border-b border-neutral-800 px-5 py-4">
                 <SheetTitle className="text-left text-lg font-black text-white">
-                  🎰 Sweat Casino
+                  🎰 汗水賭場
                 </SheetTitle>
                 {teamInfo && (
                   <div className="pt-1">

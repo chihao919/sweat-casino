@@ -12,11 +12,11 @@ interface NavTab {
 }
 
 const tabs: NavTab[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
-  { href: "/betting", label: "Betting", icon: Dices },
-  { href: "/wallet", label: "Wallet", icon: Wallet },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/dashboard", label: "首頁", icon: LayoutDashboard },
+  { href: "/leaderboard", label: "排行榜", icon: Trophy },
+  { href: "/betting", label: "下注", icon: Dices },
+  { href: "/wallet", label: "錢包", icon: Wallet },
+  { href: "/profile", label: "我的", icon: User },
 ];
 
 interface BottomNavProps {

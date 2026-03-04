@@ -92,9 +92,9 @@ function LeaderboardRow({
       {/* Name + team */}
       <div className="min-w-0 flex-1">
         <p className={cn("truncate text-sm font-semibold", isCurrentUser ? "text-red-300" : "text-white")}>
-          {entry.profile.display_name ?? entry.profile.username ?? "Athlete"}
+          {entry.profile.display_name ?? entry.profile.username ?? "選手"}
           {isCurrentUser && (
-            <span className="ml-1.5 text-[10px] font-normal text-neutral-500">(you)</span>
+            <span className="ml-1.5 text-[10px] font-normal text-neutral-500">（我）</span>
           )}
         </p>
         {teamInfo && (
@@ -226,7 +226,7 @@ export default function LeaderboardPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="size-5 text-yellow-500" />
-          <h1 className="text-lg font-black text-white">Leaderboard</h1>
+          <h1 className="text-lg font-black text-white">排行榜</h1>
         </div>
 
         {/* Weekly / All-time toggle */}
@@ -242,7 +242,7 @@ export default function LeaderboardPage() {
                   : "text-neutral-400 hover:text-white"
               )}
             >
-              {period}
+              {period === "weekly" ? "本週" : "總累計"}
             </button>
           ))}
         </div>
@@ -267,7 +267,7 @@ export default function LeaderboardPage() {
                 : "bg-neutral-900 text-neutral-400 hover:text-white"
             )}
           >
-            {f === "all" ? "All Teams" : f === "red" ? "🐂 Red Bulls" : "🐻‍❄️ White Bears"}
+            {f === "all" ? "全部" : f === "red" ? "🐂 紅牛隊" : "🐻‍❄️ 白熊隊"}
           </Button>
         ))}
       </div>
@@ -279,19 +279,19 @@ export default function LeaderboardPage() {
             value="distance"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
           >
-            Distance
+            距離
           </TabsTrigger>
           <TabsTrigger
             value="sc-earned"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
           >
-            $SC Earned
+            賺取 $SC
           </TabsTrigger>
           <TabsTrigger
             value="streak"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
           >
-            Streak
+            連續天數
           </TabsTrigger>
         </TabsList>
 
@@ -299,7 +299,7 @@ export default function LeaderboardPage() {
           {sortedByDistance.length === 0 ? (
             <Card className="border-neutral-800 bg-neutral-900">
               <CardContent className="py-10 text-center text-sm text-neutral-500">
-                No data yet for this period.
+                暫無資料
               </CardContent>
             </Card>
           ) : (
@@ -310,7 +310,7 @@ export default function LeaderboardPage() {
                   entry={entry}
                   rank={idx + 1}
                   value={entry.totalKm.toFixed(1)}
-                  unit="km"
+                  unit="公里"
                   isCurrentUser={entry.profile.id === currentUserId}
                 />
               ))}
@@ -322,7 +322,7 @@ export default function LeaderboardPage() {
           {sortedBySC.length === 0 ? (
             <Card className="border-neutral-800 bg-neutral-900">
               <CardContent className="py-10 text-center text-sm text-neutral-500">
-                No data yet for this period.
+                暫無資料
               </CardContent>
             </Card>
           ) : (
@@ -333,7 +333,7 @@ export default function LeaderboardPage() {
                   entry={entry}
                   rank={idx + 1}
                   value={formatSC(entry.totalSCEarned)}
-                  unit="earned"
+                  unit="已賺取"
                   isCurrentUser={entry.profile.id === currentUserId}
                 />
               ))}
@@ -345,7 +345,7 @@ export default function LeaderboardPage() {
           {sortedByStreak.length === 0 ? (
             <Card className="border-neutral-800 bg-neutral-900">
               <CardContent className="py-10 text-center text-sm text-neutral-500">
-                No data yet for this period.
+                暫無資料
               </CardContent>
             </Card>
           ) : (
@@ -356,7 +356,7 @@ export default function LeaderboardPage() {
                   entry={entry}
                   rank={idx + 1}
                   value={String(entry.currentStreak)}
-                  unit="day streak"
+                  unit="天連續"
                   isCurrentUser={entry.profile.id === currentUserId}
                 />
               ))}

@@ -35,35 +35,35 @@ const typeConfig: Record<
   { label: string; className: string }
 > = {
   [TransactionType.SIGNUP_BONUS]: {
-    label: "Signup Bonus",
+    label: "註冊獎勵",
     className: "bg-purple-500/20 text-purple-400 border-purple-500/30",
   },
   [TransactionType.ACTIVITY_EARNED]: {
-    label: "Activity Reward",
+    label: "跑步獎勵",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
   },
   [TransactionType.SURVIVAL_TAX]: {
-    label: "Survival Tax",
+    label: "生存稅",
     className: "bg-red-500/20 text-red-400 border-red-500/30",
   },
   [TransactionType.BET_PLACED]: {
-    label: "Bet Placed",
+    label: "下注扣款",
     className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
   },
   [TransactionType.BET_WON]: {
-    label: "Bet Won",
+    label: "下注派彩",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
   },
   [TransactionType.BET_REFUND]: {
-    label: "Bet Refund",
+    label: "下注退款",
     className: "bg-blue-500/20 text-blue-400 border-blue-500/30",
   },
   [TransactionType.POOL_ENTRY]: {
-    label: "Pool Entry",
+    label: "賭池投入",
     className: "bg-orange-500/20 text-orange-400 border-orange-500/30",
   },
   [TransactionType.POOL_PAYOUT]: {
-    label: "Pool Payout",
+    label: "賭池派彩",
     className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   },
 };
@@ -178,7 +178,7 @@ export default function WalletPage() {
           </div>
           <div className="text-center">
             <p className="text-xs uppercase tracking-widest text-neutral-500">
-              Current Balance
+              目前餘額
             </p>
             <p className="mt-1 text-5xl font-black tabular-nums text-white">
               {profile ? formatSC(profile.sc_balance) : "$0.00 SC"}
@@ -191,17 +191,17 @@ export default function WalletPage() {
       <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="text-sm font-semibold text-neutral-300">
-            Transaction History
+            交易紀錄
           </CardTitle>
           <Select value={filter} onValueChange={handleFilterChange}>
             <SelectTrigger className="h-8 w-32 border-neutral-700 bg-neutral-800 text-xs text-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="border-neutral-800 bg-neutral-900 text-neutral-200">
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="rewards">Rewards</SelectItem>
-              <SelectItem value="bets">Bets</SelectItem>
-              <SelectItem value="tax">Tax</SelectItem>
+              <SelectItem value="all">全部</SelectItem>
+              <SelectItem value="rewards">獎勵</SelectItem>
+              <SelectItem value="bets">下注</SelectItem>
+              <SelectItem value="tax">稅</SelectItem>
             </SelectContent>
           </Select>
         </CardHeader>
@@ -210,23 +210,23 @@ export default function WalletPage() {
           {paginatedTransactions.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-10">
               <Coins className="size-8 text-neutral-700" />
-              <p className="text-sm text-neutral-500">No transactions yet.</p>
+              <p className="text-sm text-neutral-500">暫無交易紀錄。</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-neutral-800 hover:bg-transparent">
-                    <TableHead className="text-xs text-neutral-500">Date</TableHead>
-                    <TableHead className="text-xs text-neutral-500">Type</TableHead>
+                    <TableHead className="text-xs text-neutral-500">日期</TableHead>
+                    <TableHead className="text-xs text-neutral-500">類型</TableHead>
                     <TableHead className="hidden text-xs text-neutral-500 sm:table-cell">
-                      Description
+                      說明
                     </TableHead>
                     <TableHead className="text-right text-xs text-neutral-500">
-                      Amount
+                      金額
                     </TableHead>
                     <TableHead className="hidden text-right text-xs text-neutral-500 sm:table-cell">
-                      Balance After
+                      餘額
                     </TableHead>
                   </TableRow>
                 </TableHeader>

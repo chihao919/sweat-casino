@@ -20,19 +20,19 @@ const poolTypeLabel: Record<PoolType, string> = {
 
 const statusConfig: Record<PoolStatus, { label: string; className: string }> = {
   [PoolStatus.OPEN]: {
-    label: "Open",
+    label: "開放中",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
   },
   [PoolStatus.LOCKED]: {
-    label: "Locked",
+    label: "已關閉",
     className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
   },
   [PoolStatus.SETTLED]: {
-    label: "Settled",
+    label: "已結算",
     className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
   },
   [PoolStatus.CANCELLED]: {
-    label: "Cancelled",
+    label: "已取消",
     className: "bg-red-500/20 text-red-400 border-red-500/30",
   },
 };
@@ -124,11 +124,11 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
         {/* Pool total and resolve time */}
         <div className="flex items-center justify-between border-t border-neutral-800 pt-3">
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">Total Pool</p>
+            <p className="text-[11px] uppercase tracking-wide text-neutral-500">總賭池</p>
             <p className="text-sm font-bold text-white">{formatSC(pool.total_pool)}</p>
           </div>
           <div className="text-right">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">Resolves</p>
+            <p className="text-[11px] uppercase tracking-wide text-neutral-500">結算</p>
             <p className="text-xs text-neutral-300">{resolveTime}</p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
             className="w-full bg-red-600 font-semibold text-white hover:bg-red-700"
             size="sm"
           >
-            Join Pool
+            加入賭池
           </Button>
         )}
       </CardContent>

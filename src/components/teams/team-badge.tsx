@@ -41,7 +41,7 @@ export function TeamBadge({ team, size = "md", className }: TeamBadgeProps) {
         )}
       >
         <span className={cn("rounded-full bg-neutral-600", dotSizeClasses[size])} />
-        No Team
+        未加入隊伍
       </span>
     );
   }

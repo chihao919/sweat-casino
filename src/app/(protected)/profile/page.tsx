@@ -256,7 +256,7 @@ export default function ProfilePage() {
             <TeamBadge team={teamInfo} size="lg" />
           ) : (
             <Badge variant="outline" className="border-neutral-700 text-neutral-400">
-              No Team Assigned
+              未分配隊伍
             </Badge>
           )}
         </CardContent>
@@ -265,27 +265,27 @@ export default function ProfilePage() {
       {/* Stats grid */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
-          Statistics
+          統計數據
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <StatCard
-            label="Total Distance"
+            label="總距離"
             value={stats.totalDistance.toFixed(1)}
             unit="km"
           />
-          <StatCard label="Activities" value={stats.totalActivities} />
+          <StatCard label="總活動數" value={stats.totalActivities} />
           <StatCard
-            label="Current Streak"
+            label="目前連續"
             value={`${stats.currentStreak}🔥`}
-            unit="days"
+            unit="天"
           />
           <StatCard
-            label="Longest Streak"
+            label="最長連續"
             value={stats.longestStreak}
-            unit="days"
+            unit="天"
           />
           <StatCard
-            label="$SC Balance"
+            label="$SC 餘額"
             value={formatSC(profile.sc_balance)}
           />
         </div>
@@ -295,12 +295,12 @@ export default function ProfilePage() {
       <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
-            <span>Strava Connection</span>
+            <span>Strava 連結</span>
             {isStravaConnected ? (
-              <Badge className="bg-green-900/50 text-green-400 border-green-700">Connected</Badge>
+              <Badge className="bg-green-900/50 text-green-400 border-green-700">已連結</Badge>
             ) : (
               <Badge variant="outline" className="border-neutral-700 text-neutral-500">
-                Not Connected
+                未連結
               </Badge>
             )}
           </CardTitle>
@@ -328,19 +328,18 @@ export default function ProfilePage() {
                 onClick={handleDisconnectStrava}
               >
                 <Unlink className="mr-2 size-4" />
-                Disconnect Strava
+                解除連結 Strava
               </Button>
             </>
           ) : (
             <>
               <p className="text-xs text-neutral-400">
-                Connect your Strava account to automatically sync your running activities and earn
-                $SC.
+                連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
               <a href={STRAVA_OAUTH_URL}>
                 <Button className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]">
                   <ExternalLink className="mr-2 size-4" />
-                  Connect Strava
+                  連結 Strava
                 </Button>
               </a>
             </>
@@ -353,20 +352,20 @@ export default function ProfilePage() {
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
             <User className="size-4" />
-            Edit Profile
+            編輯個人資料
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="display-name" className="text-xs text-neutral-400">
-              Display Name
+              顯示名稱
             </Label>
             <div className="flex gap-2">
               <Input
                 id="display-name"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Your public name"
+                placeholder="您的公開名稱"
                 className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500 focus-visible:ring-red-600"
               />
               <Button
@@ -374,7 +373,7 @@ export default function ProfilePage() {
                 disabled={isSaving || displayName === profile.display_name}
                 className="bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
               >
-                {isSaving ? <RefreshCw className="size-4 animate-spin" /> : "Save"}
+                {isSaving ? <RefreshCw className="size-4 animate-spin" /> : "儲存"}
               </Button>
             </div>
           </div>
@@ -382,9 +381,9 @@ export default function ProfilePage() {
           <Separator className="bg-neutral-800" />
 
           <div className="space-y-1">
-            <Label className="text-xs text-neutral-400">Email</Label>
+            <Label className="text-xs text-neutral-400">電子郵件</Label>
             <p className="text-sm text-neutral-300">{userEmail || "—"}</p>
-            <p className="text-xs text-neutral-600">Email cannot be changed here.</p>
+            <p className="text-xs text-neutral-600">電子郵件無法在此變更。</p>
           </div>
         </CardContent>
       </Card>
