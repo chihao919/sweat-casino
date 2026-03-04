@@ -126,7 +126,7 @@ export default function InvitePage() {
                 <div>
                   <p className="text-lg font-bold text-green-600 dark:text-green-400">不跑就扣錢！生存淘汰稅</p>
                   <p className="text-base text-muted-foreground">
-                    每週跑不到 5km？扣 5% $SC！逼你出門動起來
+                    每週跑不到 20km？扣 5% $SC！逼你出門動起來
                   </p>
                 </div>
               </div>

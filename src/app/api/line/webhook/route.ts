@@ -311,7 +311,7 @@ async function getCommandReply(text: string): Promise<string | null> {
       "",
       "🏃 每跑 1 公里 = 10 $SC",
       "🌧️ 惡劣天氣跑步 = 1.5 倍獎勵",
-      "💀 每週跑不到 5km 扣 5% $SC",
+      "💀 每週跑不到 20km 扣 5% $SC",
       "⚔️ 紅白兩隊 PK，看誰更強！",
       "",
       "📱 完整規則：https://runrun-plum.vercel.app/guide",
