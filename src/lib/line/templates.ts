@@ -67,9 +67,22 @@ export function menuCard() {
         layout: "vertical",
         spacing: "sm",
         contents: [
+          {
+            type: "text",
+            text: "加入後即開始累積汗水幣 $SC\n目前為測試階段，歡迎回報數據問題！",
+            size: "xs",
+            color: "#888888",
+            wrap: true,
+          },
+          {
+            type: "separator",
+            margin: "sm",
+          },
           makeUriButton("🎰  立即加入", `${APP_URL}/login`, "#dc2626"),
           makeUriButton("⌚  如何設定", `${APP_URL}/setup`, "#0ea5e9"),
+          makeUriButton("👀  查看報名人數", `${APP_URL}/players`, "#6366f1"),
           makeUriButton("📣  邀請朋友（宣傳頁）", `${APP_URL}/invite`, "#16a34a"),
+          makeUriButton("📱  開啟網站", APP_URL, "#0ea5e9"),
         ],
         paddingAll: "12px",
       },
