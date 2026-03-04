@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { assignTeam } from "@/lib/teams/assignment";
 import { Header } from "@/components/layout/header";
@@ -47,6 +48,13 @@ export default async function ProtectedLayout({
     }
   }
 
+  // Redirect new users (no display name) to onboarding — skip if already on /setup
+  const headersList = await headers();
+  const currentPath = headersList.get("x-pathname") || "";
+  if (!profile.display_name && !currentPath.startsWith("/setup")) {
+    redirect("/setup");
+  }
+
   // Determine team color for BottomNav active indicator
   const teamColor: "red" | "white" | null = profile.team
     ? profile.team.name.toLowerCase().includes("red")
@@ -55,7 +63,7 @@ export default async function ProtectedLayout({
     : null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-950">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header profile={profile} />
 
       {/* Main content — add bottom padding on mobile to avoid BottomNav overlap */}

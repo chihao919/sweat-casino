@@ -35,6 +35,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // Pass current pathname to server components via header
+  response.headers.set("x-pathname", pathname);
   return response;
 }
 

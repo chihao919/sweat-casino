@@ -62,7 +62,9 @@
       "NotebookEdit(*)",
       "Bash(npx:*)",
       "Bash(python3:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "mcp__puppeteer__puppeteer_navigate",
+      "mcp__puppeteer__puppeteer_screenshot"
     ],
     "deny": [
       "Read(**/.env*)",

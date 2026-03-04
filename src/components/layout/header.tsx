@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TeamBadge } from "@/components/teams/team-badge";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/client";
 import { formatSC } from "@/lib/sc/engine";
 import { Profile } from "@/types";
@@ -74,7 +75,7 @@ export function Header({ profile }: HeaderProps) {
   const balanceDisplay = profile ? formatSC(profile.sc_balance) : "$0.00 SC";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-800 bg-neutral-950/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-screen-lg items-center justify-between px-4">
         {/* Left: Logo */}
         <Link
@@ -92,8 +93,9 @@ export function Header({ profile }: HeaderProps) {
           </div>
         )}
 
-        {/* Right: Balance + Avatar */}
-        <div className="flex items-center gap-3">
+        {/* Right: Balance + Theme + Avatar */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {profile && (
             <>
               {/* SC Balance chip */}
