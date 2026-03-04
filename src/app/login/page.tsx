@@ -28,25 +28,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-6">
       {/* Subtle casino ambient glow */}
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.15)_0%,_transparent_60%)]" />
 
-      <div className="relative w-full max-w-sm">
+      <div className="relative w-full max-w-md">
         {/* App title */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-black tracking-tight text-white">
+        <div className="mb-10 text-center">
+          <h1 className="text-5xl sm:text-6xl font-black tracking-tight text-white">
             汗水賭場 🎰
           </h1>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-4 text-lg sm:text-xl text-zinc-400">
             用汗水下注，讓跑步變成一場賭局
           </p>
         </div>
 
         <Card className="border-zinc-800 bg-zinc-900 shadow-2xl shadow-red-950/20">
           <CardHeader className="pb-4 text-center">
-            <CardTitle className="text-xl text-white">開始遊戲</CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardTitle className="text-2xl text-white">開始遊戲</CardTitle>
+            <CardDescription className="text-base text-zinc-400">
               使用 Google 帳號登入，加入汗水賭局
             </CardDescription>
           </CardHeader>
@@ -55,9 +55,9 @@ export default function LoginPage() {
             <Button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full bg-white text-zinc-900 font-semibold hover:bg-zinc-100 focus-visible:ring-red-600 disabled:opacity-50 h-12 text-base"
+              className="w-full bg-white text-zinc-900 font-semibold hover:bg-zinc-100 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg"
             >
-              <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
+              <svg className="mr-3 h-6 w-6" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
                   fill="#4285F4"
@@ -80,14 +80,14 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        <div className="mt-6 text-center space-y-2">
+        <div className="mt-8 text-center space-y-3">
           <Link
             href="/guide"
-            className="block text-sm font-medium text-red-400 hover:text-red-300 hover:underline"
+            className="block text-base font-medium text-red-400 hover:text-red-300 hover:underline"
           >
             📖 遊戲規則與新手指南
           </Link>
-          <p className="text-xs text-zinc-600">
+          <p className="text-sm text-zinc-600">
             登入即代表你同意用汗水下注 💦
           </p>
         </div>
