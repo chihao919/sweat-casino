@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -12,8 +12,27 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Detect if the page is opened inside an in-app browser (LINE, Facebook, Instagram, etc.).
+ * Google blocks OAuth sign-in from embedded webviews for security.
+ */
+function isInAppBrowser(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || navigator.vendor || "";
+  // Common in-app browser identifiers
+  return /Line|FBAV|FBAN|Instagram|Twitter|MicroMessenger|WeChat|Snapchat|Pinterest|TikTok/i.test(
+    ua
+  );
+}
+
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [inAppBrowser, setInAppBrowser] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setInAppBrowser(isInAppBrowser());
+  }, []);
 
   async function handleGoogleLogin() {
     setIsLoading(true);
@@ -25,6 +44,12 @@ export default function LoginPage() {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
+  }
+
+  function handleCopyUrl() {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -43,6 +68,26 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Warning for in-app browsers */}
+        {inAppBrowser && (
+          <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-950/40 p-5 text-center">
+            <p className="text-lg font-bold text-amber-400">
+              ⚠️ 請使用外部瀏覽器開啟
+            </p>
+            <p className="mt-2 text-sm text-amber-200/80">
+              Google 登入不支援 App 內建瀏覽器（LINE、Facebook 等）。
+              <br />
+              請複製連結，用 Safari 或 Chrome 開啟。
+            </p>
+            <Button
+              onClick={handleCopyUrl}
+              className="mt-4 w-full bg-amber-600 text-white font-semibold hover:bg-amber-500 h-12 text-base"
+            >
+              {copied ? "✅ 已複製！" : "📋 複製連結"}
+            </Button>
+          </div>
+        )}
+
         <Card className="border-zinc-800 bg-zinc-900 shadow-2xl shadow-red-950/20">
           <CardHeader className="pb-4 text-center">
             <CardTitle className="text-2xl text-white">開始遊戲</CardTitle>
@@ -54,7 +99,7 @@ export default function LoginPage() {
           <CardContent className="pb-8">
             <Button
               onClick={handleGoogleLogin}
-              disabled={isLoading}
+              disabled={isLoading || inAppBrowser}
               className="w-full bg-white text-zinc-900 font-semibold hover:bg-zinc-100 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg"
             >
               <svg className="mr-3 h-6 w-6" viewBox="0 0 24 24">
