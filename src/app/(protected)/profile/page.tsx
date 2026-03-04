@@ -393,12 +393,13 @@ export default function ProfilePage() {
               <p className="text-xs text-neutral-400">
                 連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
-              <Button asChild className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]">
-                <a href={`/api/strava/connect?user_id=${profile.id}`}>
-                  <ExternalLink className="mr-2 size-4" />
-                  連結 Strava
-                </a>
-              </Button>
+              <a
+                href={`/api/strava/connect?user_id=${profile.id}`}
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402] transition-colors"
+              >
+                <ExternalLink className="size-4" />
+                連結 Strava
+              </a>
             </>
           )}
         </CardContent>
