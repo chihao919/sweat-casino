@@ -85,10 +85,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Build update payload, include avatar if Strava provides one
     const updatePayload: Record<string, unknown> = {
-      strava_athlete_id: String(tokens.athlete_id),
+      strava_athlete_id: tokens.athlete_id,
       strava_access_token: tokens.access_token,
       strava_refresh_token: tokens.refresh_token,
-      strava_token_expires_at: new Date(tokens.expires_at * 1000).toISOString(),
+      strava_token_expires_at: tokens.expires_at,
       is_strava_connected: true,
       updated_at: new Date().toISOString(),
     };

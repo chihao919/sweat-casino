@@ -375,7 +375,7 @@ export default function ProfilePage() {
                 <div className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2">
                   <p className="text-xs text-neutral-500">Token expires</p>
                   <p className="text-sm text-neutral-300">
-                    {format(parseISO(profile.strava_token_expires_at), "MMM d, yyyy HH:mm")}
+                    {format(new Date(Number(profile.strava_token_expires_at) * 1000), "MMM d, yyyy HH:mm")}
                   </p>
                 </div>
               )}
