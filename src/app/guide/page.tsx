@@ -139,6 +139,51 @@ export default function GuidePage() {
             <h2 className="text-2xl font-bold">遊戲規則</h2>
           </div>
 
+          {/* Strava Integration */}
+          <Card className="mb-4 border-orange-900/50 bg-gradient-to-r from-orange-950/30 to-zinc-900">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                <svg className="h-5 w-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
+                </svg>
+                Strava 連結 — 自動追蹤你的跑步
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-zinc-400">
+              <p>
+                汗水賭場透過{" "}
+                <span className="font-semibold text-orange-400">Strava</span>{" "}
+                自動同步你的跑步數據。連結後每次跑完步，系統會自動：
+              </p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
+                  <Footprints className="mx-auto h-5 w-5 text-orange-400" />
+                  <p className="mt-1 text-sm font-medium text-white">記錄跑量</p>
+                  <p className="text-xs text-zinc-500">距離、時間、配速</p>
+                </div>
+                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
+                  <CloudRain className="mx-auto h-5 w-5 text-blue-400" />
+                  <p className="mt-1 text-sm font-medium text-white">查詢天氣</p>
+                  <p className="text-xs text-zinc-500">判定是否有天氣加成</p>
+                </div>
+                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
+                  <Coins className="mx-auto h-5 w-5 text-yellow-400" />
+                  <p className="mt-1 text-sm font-medium text-white">發放 $SC</p>
+                  <p className="text-xs text-zinc-500">即時入帳到錢包</p>
+                </div>
+              </div>
+              <div className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950/50 p-3">
+                <p className="text-sm font-medium text-white">📱 如何連結？</p>
+                <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">
+                  <li>下載 <span className="text-orange-400">Strava</span> App（免費）並註冊帳號</li>
+                  <li>登入汗水賭場後，到「<span className="text-white">個人資料</span>」頁面</li>
+                  <li>點擊「<span className="text-orange-400">連結 Strava</span>」按鈕，授權即完成</li>
+                  <li>之後用 Strava 記錄跑步，$SC 自動到帳！</li>
+                </ol>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid gap-4 sm:grid-cols-2">
             {/* SC Economy */}
             <Card className="border-zinc-800 bg-zinc-900">
