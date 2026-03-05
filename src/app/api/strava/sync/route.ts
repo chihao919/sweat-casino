@@ -1,0 +1,232 @@
+import { NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { refreshStravaToken } from "@/lib/strava/auth";
+import { getStravaAthleteActivities } from "@/lib/strava/client";
+import { fetchCurrentWeather } from "@/lib/weather/client";
+import { evaluateWeatherBonus } from "@/lib/weather/bonus";
+import { calculateSCEarned } from "@/lib/sc/engine";
+import { TransactionType } from "@/types";
+
+/**
+ * POST /api/strava/sync
+ *
+ * Manually sync recent Strava activities for the logged-in user.
+ * Pulls activities from the last 7 days and inserts any that are missing.
+ */
+export async function POST(): Promise<NextResponse> {
+  try {
+    // Authenticate user via session cookie
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const adminClient = createAdminClient();
+
+    // Fetch user profile with Strava tokens
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile || !profile.strava_access_token) {
+      return NextResponse.json(
+        { error: "Strava not connected" },
+        { status: 400 }
+      );
+    }
+
+    // Refresh token if expired
+    let accessToken: string = profile.strava_access_token;
+    const expiresAt = profile.strava_token_expires_at
+      ? Number(profile.strava_token_expires_at) * 1000
+      : 0;
+
+    if (Date.now() >= expiresAt) {
+      const freshTokens = await refreshStravaToken(profile.strava_refresh_token);
+      accessToken = freshTokens.access_token;
+
+      await adminClient
+        .from("profiles")
+        .update({
+          strava_access_token: freshTokens.access_token,
+          strava_refresh_token: freshTokens.refresh_token,
+          strava_token_expires_at: freshTokens.expires_at,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", profile.id);
+    }
+
+    // Get active season
+    const { data: season } = await adminClient
+      .from("seasons")
+      .select("*")
+      .eq("is_active", true)
+      .single();
+
+    if (!season) {
+      return NextResponse.json(
+        { error: "No active season" },
+        { status: 400 }
+      );
+    }
+
+    // Fetch activities from the last 7 days
+    const sevenDaysAgo = Math.floor((Date.now() - 7 * 86400000) / 1000);
+    const stravaActivities = await getStravaAthleteActivities(
+      accessToken,
+      sevenDaysAgo
+    );
+
+    // Filter to runs only
+    const runs = stravaActivities.filter(
+      (a) => (a.type || a.sport_type) === "Run"
+    );
+
+    // Get existing strava_activity_ids to avoid duplicates
+    const { data: existingActivities } = await adminClient
+      .from("activities")
+      .select("strava_activity_id")
+      .eq("user_id", user.id);
+
+    const existingIds = new Set(
+      (existingActivities || []).map((a) => a.strava_activity_id)
+    );
+
+    let synced = 0;
+    const config = season.config;
+
+    for (const run of runs) {
+      if (existingIds.has(String(run.id))) continue;
+
+      const distanceKm = run.distance / 1000;
+      const pacePerKm =
+        distanceKm > 0 ? run.moving_time / 60 / distanceKm : 0;
+
+      // Weather check (optional)
+      let weatherMultiplier = 1.0;
+      let weatherCode: number | null = null;
+      let weatherDescription: string | null = null;
+      let temperature: number | null = null;
+      let windSpeed: number | null = null;
+
+      const [startLat, startLng] = run.start_latlng ?? [null, null];
+
+      if (startLat != null && startLng != null) {
+        try {
+          const weather = await fetchCurrentWeather(startLat, startLng);
+          const bonus = evaluateWeatherBonus(
+            weather.weather_code,
+            weather.temperature,
+            weather.wind_speed
+          );
+          weatherMultiplier = bonus.multiplier;
+          weatherCode = weather.weather_code;
+          weatherDescription = weather.weather_description;
+          temperature = weather.temperature;
+          windSpeed = weather.wind_speed;
+        } catch {
+          // Weather is optional
+        }
+      }
+
+      const scEarned = calculateSCEarned(distanceKm, weatherMultiplier, config);
+
+      // Insert activity
+      const { data: activity, error: activityError } = await adminClient
+        .from("activities")
+        .insert({
+          user_id: user.id,
+          season_id: season.id,
+          strava_activity_id: String(run.id),
+          distance_km: distanceKm,
+          duration_seconds: run.moving_time,
+          pace_per_km: pacePerKm,
+          activity_date: run.start_date,
+          weather_code: weatherCode,
+          weather_description: weatherDescription,
+          temperature,
+          wind_speed: windSpeed,
+          weather_multiplier: weatherMultiplier,
+          sc_earned: scEarned,
+          is_manual: false,
+        })
+        .select("id")
+        .single();
+
+      if (activityError || !activity) continue;
+
+      // Record $SC transaction
+      await adminClient.rpc("process_sc_transaction", {
+        p_user_id: user.id,
+        p_season_id: season.id,
+        p_type: TransactionType.ACTIVITY_EARNED,
+        p_amount: scEarned,
+        p_reference_id: activity.id,
+        p_description: `Earned ${scEarned} $SC for ${distanceKm.toFixed(2)} km run`,
+      });
+
+      synced++;
+    }
+
+    // Update profile aggregate stats
+    if (synced > 0) {
+      const { data: allActivities } = await adminClient
+        .from("activities")
+        .select("distance_km")
+        .eq("user_id", user.id);
+
+      const totalDistance = (allActivities || []).reduce(
+        (sum, a) => sum + a.distance_km,
+        0
+      );
+
+      await adminClient
+        .from("profiles")
+        .update({
+          total_distance_km: totalDistance,
+          total_activities: (allActivities || []).length,
+          last_active_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+    }
+
+    return NextResponse.json({
+      synced,
+      message: synced > 0
+        ? `Synced ${synced} new activities`
+        : "No new activities to sync",
+    });
+  } catch (err) {
+    console.error("[strava/sync] Error:", err);
+    return NextResponse.json(
+      { error: "Sync failed" },
+      { status: 500 }
+    );
+  }
+}

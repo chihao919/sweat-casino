@@ -86,7 +86,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { data: profile, error: profileError } = await adminClient
       .from("profiles")
       .select("*")
-      .eq("strava_athlete_id", String(body.owner_id))
+      .eq("strava_athlete_id", body.owner_id)
       .single();
 
     if (profileError || !profile) {
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     let accessToken: string = profile.strava_access_token;
 
     const expiresAt = profile.strava_token_expires_at
-      ? new Date(profile.strava_token_expires_at).getTime()
+      ? Number(profile.strava_token_expires_at) * 1000
       : 0;
 
     if (Date.now() >= expiresAt) {
@@ -113,9 +113,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           .update({
             strava_access_token: freshTokens.access_token,
             strava_refresh_token: freshTokens.refresh_token,
-            strava_token_expires_at: new Date(
-              freshTokens.expires_at * 1000
-            ).toISOString(),
+            strava_token_expires_at: freshTokens.expires_at,
             updated_at: new Date().toISOString(),
           })
           .eq("id", profile.id);

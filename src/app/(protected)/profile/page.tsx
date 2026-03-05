@@ -118,6 +118,7 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -379,6 +380,25 @@ export default function ProfilePage() {
                   </p>
                 </div>
               )}
+              <Button
+                className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]"
+                disabled={isSyncing}
+                onClick={async () => {
+                  setIsSyncing(true);
+                  const res = await fetch("/api/strava/sync", { method: "POST" });
+                  const data = await res.json();
+                  if (res.ok) {
+                    toast.success(data.synced > 0 ? `已同步 ${data.synced} 筆活動！` : "沒有新活動需要同步");
+                    if (data.synced > 0) window.location.reload();
+                  } else {
+                    toast.error("同步失敗：" + (data.error || "未知錯誤"));
+                  }
+                  setIsSyncing(false);
+                }}
+              >
+                <RefreshCw className={`mr-2 size-4 ${isSyncing ? "animate-spin" : ""}`} />
+                {isSyncing ? "同步中..." : "同步 Strava 活動"}
+              </Button>
               <Button
                 variant="outline"
                 className="w-full border-red-900 text-red-400 hover:bg-red-950 hover:text-red-300"
