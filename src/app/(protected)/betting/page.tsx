@@ -35,6 +35,7 @@ import {
 } from "@/types";
 import { Plus, Dices, Heart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 // ── New Bet form state
 interface NewBetFormState {
@@ -382,6 +383,14 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export default function BettingPage() {
+  return (
+    <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full rounded-lg bg-neutral-800" /></div>}>
+      <BettingPageContent />
+    </Suspense>
+  );
+}
+
+function BettingPageContent() {
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get("tab") === "pools" ? "pools" : "my-bets";
   const [bets, setBets] = useState<PersonalBet[]>([]);
