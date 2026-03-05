@@ -143,11 +143,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             "process_sc_transaction",
             {
               p_user_id: entry.user_id,
-              p_season_id: pool.season_id,
-              p_type: TransactionType.POOL_PAYOUT,
               p_amount: payout,
-              p_reference_id: entry.id,
+              p_type: TransactionType.POOL_PAYOUT,
               p_description: `Pool payout: won ${payout} $SC from pool "${pool.title}"`,
+              p_reference_id: entry.id,
             }
           );
 

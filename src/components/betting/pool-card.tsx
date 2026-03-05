@@ -12,29 +12,29 @@ interface PoolCardProps {
   onJoin?: (pool: BettingPool) => void;
 }
 
-const poolTypeLabel: Record<PoolType, string> = {
-  [PoolType.TEAM_WIN]: "Team Win",
-  [PoolType.PERSONAL_KM]: "Personal KM",
-  [PoolType.WEEKLY_STREAK]: "Weekly Streak",
+// Support both frontend enum and DB actual values
+const poolTypeLabel: Record<string, string> = {
+  [PoolType.TEAM_WIN]: "隊伍對決",
+  [PoolType.PERSONAL_KM]: "個人里程",
+  [PoolType.WEEKLY_STREAK]: "週連續",
+  team_distance: "隊伍里程",
+  team_activity: "隊伍活動",
+  individual: "個人",
+  custom: "自訂",
 };
 
-const statusConfig: Record<PoolStatus, { label: string; className: string }> = {
-  [PoolStatus.OPEN]: {
-    label: "開放中",
-    className: "bg-green-500/20 text-green-400 border-green-500/30",
-  },
-  [PoolStatus.LOCKED]: {
-    label: "已關閉",
-    className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  },
-  [PoolStatus.SETTLED]: {
-    label: "已結算",
-    className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
-  },
-  [PoolStatus.CANCELLED]: {
-    label: "已取消",
-    className: "bg-red-500/20 text-red-400 border-red-500/30",
-  },
+const statusConfig: Record<string, { label: string; className: string }> = {
+  open:      { label: "開放中", className: "bg-green-500/20 text-green-400 border-green-500/30" },
+  locked:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
+  closed:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
+  settled:   { label: "已結算", className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
+  resolved:  { label: "已結算", className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
+  cancelled: { label: "已取消", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+};
+
+const DEFAULT_STATUS = {
+  label: "未知",
+  className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
 };
 
 function calculateOdds(total: number, side: number): number {
@@ -44,8 +44,12 @@ function calculateOdds(total: number, side: number): number {
 }
 
 export function PoolCard({ pool, onJoin }: PoolCardProps) {
-  const status = statusConfig[pool.status];
-  const resolveTime = formatDistanceToNow(new Date(pool.resolve_at), { addSuffix: true });
+  const status = statusConfig[pool.status] || DEFAULT_STATUS;
+  // Support both frontend type (resolve_at) and DB type (resolve_date)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resolveDate = (pool as any).resolve_date as string | undefined;
+  const poolResolveDate = pool.resolve_at || resolveDate || pool.created_at;
+  const resolveTime = formatDistanceToNow(new Date(poolResolveDate), { addSuffix: true });
   const total = pool.side_a_total + pool.side_b_total;
 
   // Calculate proportional widths for the long/short bar
@@ -65,7 +69,7 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
                 variant="outline"
                 className="border-neutral-700 text-xs text-neutral-400"
               >
-                {poolTypeLabel[pool.pool_type]}
+                {poolTypeLabel[pool.pool_type] || pool.pool_type}
               </Badge>
               <Badge
                 variant="outline"

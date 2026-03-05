@@ -437,8 +437,8 @@ function BettingPageContent() {
 
   const activeBets = bets.filter((b) => b.status === BetStatus.PENDING || b.status === ("active" as BetStatus));
   const completedBets = bets.filter((b) => b.status !== BetStatus.PENDING && b.status !== ("active" as BetStatus));
-  const openPools = pools.filter((p) => p.status === PoolStatus.OPEN);
-  const otherPools = pools.filter((p) => p.status !== PoolStatus.OPEN);
+  const openPools = pools.filter((p) => p.status === PoolStatus.OPEN || p.status === ("open" as PoolStatus));
+  const otherPools = pools.filter((p) => p.status !== PoolStatus.OPEN && p.status !== ("open" as PoolStatus));
 
   if (isLoading) {
     return (

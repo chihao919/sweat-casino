@@ -221,10 +221,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       "process_sc_transaction",
       {
         p_user_id: user.id,
-        p_season_id: season.id,
-        p_type: TransactionType.BET_PLACED,
         p_amount: -body.stake,
-        p_reference_id: null,
+        p_type: TransactionType.BET_STAKE,
         p_description: `Bet stake: ${body.stake} $SC on ${body.betType} ${body.targetValue} km`,
       }
     );

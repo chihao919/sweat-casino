@@ -11,29 +11,26 @@ interface PersonalBetCardProps {
   bet: PersonalBet;
 }
 
-const statusConfig: Record<BetStatus, { label: string; className: string }> = {
-  [BetStatus.PENDING]: {
-    label: "進行中",
-    className: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  },
-  [BetStatus.WON]: {
-    label: "贏了",
-    className: "bg-green-500/20 text-green-400 border-green-500/30",
-  },
-  [BetStatus.LOST]: {
-    label: "輸了",
-    className: "bg-red-500/20 text-red-400 border-red-500/30",
-  },
-  [BetStatus.CANCELLED]: {
-    label: "已取消",
-    className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
-  },
+const statusConfig: Record<string, { label: string; className: string }> = {
+  pending: { label: "進行中", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  active:  { label: "進行中", className: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  won:     { label: "贏了",   className: "bg-green-500/20 text-green-400 border-green-500/30" },
+  lost:    { label: "輸了",   className: "bg-red-500/20 text-red-400 border-red-500/30" },
+  cancelled: { label: "已取消", className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
 };
 
-const betTypeLabel: Record<BetType, string> = {
+const DEFAULT_STATUS = {
+  label: "未知",
+  className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
+};
+
+// Map both frontend enum and DB actual values
+const betTypeLabel: Record<string, string> = {
   [BetType.OVER]: "看多",
   [BetType.UNDER]: "看空",
   [BetType.EXACT]: "精準",
+  distance: "看多",
+  count: "次數",
 };
 
 function calculateProgressPercent(current: number, target: number): number {
@@ -42,15 +39,19 @@ function calculateProgressPercent(current: number, target: number): number {
 }
 
 export function PersonalBetCard({ bet }: PersonalBetCardProps) {
-  const status = statusConfig[bet.status];
+  const status = statusConfig[bet.status] || DEFAULT_STATUS;
   const progressPercent = calculateProgressPercent(bet.current_value, bet.target_value);
-  const timeRemaining = formatDistanceToNow(new Date(bet.period_end), { addSuffix: true });
+  // Support both frontend type (period_end) and DB type (end_date)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const endDate = (bet as any).end_date as string | undefined;
+  const betEndDate = bet.period_end || endDate || bet.created_at;
+  const timeRemaining = formatDistanceToNow(new Date(betEndDate), { addSuffix: true });
 
   return (
     <Card className="border-neutral-800 bg-neutral-900">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-semibold text-neutral-200">
-          {betTypeLabel[bet.bet_type]} {bet.target_value.toFixed(1)} km
+          {betTypeLabel[bet.bet_type] || bet.bet_type} {bet.target_value.toFixed(1)} km
         </CardTitle>
         <Badge
           variant="outline"
@@ -96,7 +97,7 @@ export function PersonalBetCard({ bet }: PersonalBetCardProps) {
         </div>
 
         {/* Time remaining (only shown for active bets) */}
-        {bet.status === BetStatus.PENDING && (
+        {(bet.status === BetStatus.PENDING || bet.status === ("active" as BetStatus)) && (
           <p className="text-right text-xs text-neutral-500">剩餘時間：{timeRemaining}</p>
         )}
       </CardContent>

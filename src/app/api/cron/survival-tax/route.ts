@@ -97,10 +97,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         "process_sc_transaction",
         {
           p_user_id: profile.id,
-          p_season_id: season.id,
-          p_type: TransactionType.SURVIVAL_TAX,
           p_amount: -taxAmount,
-          p_reference_id: null,
+          p_type: TransactionType.SURVIVAL_TAX,
           p_description: `Weekly survival tax: ran ${weeklyKm.toFixed(2)} km (min: ${minKmForExemption} km)`,
         }
       );

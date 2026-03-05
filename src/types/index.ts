@@ -9,13 +9,17 @@
 
 export enum TransactionType {
   SIGNUP_BONUS = "signup_bonus",
-  ACTIVITY_EARNED = "activity_earned",
+  ACTIVITY_REWARD = "activity_reward",
+  WEATHER_BONUS = "weather_bonus",
   SURVIVAL_TAX = "survival_tax",
-  BET_PLACED = "bet_placed",
-  BET_WON = "bet_won",
+  BET_STAKE = "bet_stake",
+  BET_PAYOUT = "bet_payout",
   BET_REFUND = "bet_refund",
   POOL_ENTRY = "pool_entry",
   POOL_PAYOUT = "pool_payout",
+  POOL_REFUND = "pool_refund",
+  SEASON_BONUS = "season_bonus",
+  MANUAL_ADJUSTMENT = "manual_adjustment",
 }
 
 export enum BetType {

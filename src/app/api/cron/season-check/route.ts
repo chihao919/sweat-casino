@@ -89,11 +89,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             "process_sc_transaction",
             {
               p_user_id: winner.id,
-              p_season_id: activeSeason.id,
-              p_type: TransactionType.SIGNUP_BONUS, // Reused as a general bonus type
               p_amount: SEASON_WIN_BONUS,
-              p_reference_id: activeSeason.id,
+              p_type: TransactionType.SEASON_BONUS,
               p_description: `Season win bonus: ${SEASON_WIN_BONUS} $SC for winning season "${activeSeason.name}"`,
+              p_reference_id: activeSeason.id,
             }
           );
 

@@ -312,11 +312,10 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       "process_sc_transaction",
       {
         p_user_id: user.id,
-        p_season_id: season.id,
-        p_type: TransactionType.POOL_ENTRY,
         p_amount: -body.amount,
-        p_reference_id: body.poolId,
+        p_type: TransactionType.POOL_ENTRY,
         p_description: `Pool entry: ${body.amount} $SC on side ${body.side} of pool "${pool.title}"`,
+        p_reference_id: body.poolId,
       }
     );
 

@@ -38,19 +38,23 @@ const typeConfig: Record<
     label: "註冊獎勵",
     className: "bg-purple-500/20 text-purple-400 border-purple-500/30",
   },
-  [TransactionType.ACTIVITY_EARNED]: {
+  [TransactionType.ACTIVITY_REWARD]: {
     label: "跑步獎勵",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
+  },
+  [TransactionType.WEATHER_BONUS]: {
+    label: "天氣加成",
+    className: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
   },
   [TransactionType.SURVIVAL_TAX]: {
     label: "生存稅",
     className: "bg-red-500/20 text-red-400 border-red-500/30",
   },
-  [TransactionType.BET_PLACED]: {
+  [TransactionType.BET_STAKE]: {
     label: "下注扣款",
     className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
   },
-  [TransactionType.BET_WON]: {
+  [TransactionType.BET_PAYOUT]: {
     label: "下注派彩",
     className: "bg-green-500/20 text-green-400 border-green-500/30",
   },
@@ -66,12 +70,24 @@ const typeConfig: Record<
     label: "賭池派彩",
     className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   },
+  [TransactionType.POOL_REFUND]: {
+    label: "賭池退款",
+    className: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  },
+  [TransactionType.SEASON_BONUS]: {
+    label: "賽季獎勵",
+    className: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+  },
+  [TransactionType.MANUAL_ADJUSTMENT]: {
+    label: "手動調整",
+    className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
+  },
 };
 
 // Transaction types that represent money going out
 const NEGATIVE_TYPES = new Set<TransactionType>([
   TransactionType.SURVIVAL_TAX,
-  TransactionType.BET_PLACED,
+  TransactionType.BET_STAKE,
   TransactionType.POOL_ENTRY,
 ]);
 
@@ -81,17 +97,20 @@ const filterGroups: Record<FilterType, TransactionType[] | null> = {
   all: null,
   rewards: [
     TransactionType.SIGNUP_BONUS,
-    TransactionType.ACTIVITY_EARNED,
-    TransactionType.BET_WON,
+    TransactionType.ACTIVITY_REWARD,
+    TransactionType.WEATHER_BONUS,
+    TransactionType.BET_PAYOUT,
     TransactionType.BET_REFUND,
     TransactionType.POOL_PAYOUT,
+    TransactionType.SEASON_BONUS,
   ],
   bets: [
-    TransactionType.BET_PLACED,
-    TransactionType.BET_WON,
+    TransactionType.BET_STAKE,
+    TransactionType.BET_PAYOUT,
     TransactionType.BET_REFUND,
     TransactionType.POOL_ENTRY,
     TransactionType.POOL_PAYOUT,
+    TransactionType.POOL_REFUND,
   ],
   tax: [TransactionType.SURVIVAL_TAX],
 };

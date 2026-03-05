@@ -54,11 +54,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             "process_sc_transaction",
             {
               p_user_id: bet.user_id,
-              p_season_id: bet.season_id,
-              p_type: TransactionType.BET_WON,
               p_amount: bet.potential_payout,
-              p_reference_id: bet.id,
+              p_type: TransactionType.BET_PAYOUT,
               p_description: `Bet won: ${bet.potential_payout} $SC payout (${bet.current_value.toFixed(2)} km vs target ${bet.target_value} km)`,
+              p_reference_id: bet.id,
             }
           );
 

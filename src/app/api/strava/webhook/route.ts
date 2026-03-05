@@ -265,11 +265,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // ------------------------------------------------------------------
     await adminClient.rpc("process_sc_transaction", {
       p_user_id: profile.id,
-      p_season_id: season.id,
-      p_type: TransactionType.ACTIVITY_EARNED,
       p_amount: scEarned,
-      p_reference_id: activity.id,
+      p_type: TransactionType.ACTIVITY_REWARD,
       p_description: `Earned ${scEarned} $SC for ${distanceKm.toFixed(2)} km run`,
+      p_reference_id: activity.id,
     });
 
     // Award an additional weather bonus transaction when applicable
@@ -281,11 +280,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (bonusAmount > 0) {
         await adminClient.rpc("process_sc_transaction", {
           p_user_id: profile.id,
-          p_season_id: season.id,
-          p_type: "weather_bonus",
           p_amount: bonusAmount,
-          p_reference_id: weatherRecordId ?? activity.id,
+          p_type: TransactionType.WEATHER_BONUS,
           p_description: `Weather bonus (${weatherBonusReason}) for activity ${activity.id}`,
+          p_reference_id: weatherRecordId ?? activity.id,
         });
       }
     }
@@ -317,11 +315,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (isCompleted) {
           await adminClient.rpc("process_sc_transaction", {
             p_user_id: profile.id,
-            p_season_id: season.id,
-            p_type: TransactionType.BET_WON,
             p_amount: bet.potential_payout,
-            p_reference_id: bet.id,
+            p_type: TransactionType.BET_PAYOUT,
             p_description: `Bet won: ${bet.potential_payout} $SC payout`,
+            p_reference_id: bet.id,
           });
         }
       }

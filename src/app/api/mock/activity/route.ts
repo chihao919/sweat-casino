@@ -172,11 +172,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // ------------------------------------------------------------------
     await adminClient.rpc("process_sc_transaction", {
       p_user_id: body.userId,
-      p_season_id: season.id,
-      p_type: TransactionType.ACTIVITY_EARNED,
       p_amount: scEarned,
-      p_reference_id: activity.id,
+      p_type: TransactionType.ACTIVITY_REWARD,
       p_description: `Mock activity: earned ${scEarned} $SC for ${distanceKm.toFixed(2)} km`,
+      p_reference_id: activity.id,
     });
 
     if (body.withWeatherBonus && weatherRecordId) {
@@ -186,11 +185,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (bonusAmount > 0) {
         await adminClient.rpc("process_sc_transaction", {
           p_user_id: body.userId,
-          p_season_id: season.id,
-          p_type: "weather_bonus",
           p_amount: bonusAmount,
-          p_reference_id: weatherRecordId,
+          p_type: TransactionType.WEATHER_BONUS,
           p_description: `Mock weather bonus (Heavy Rain) for activity ${activity.id}`,
+          p_reference_id: weatherRecordId,
         });
       }
     }

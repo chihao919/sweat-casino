@@ -118,7 +118,12 @@ export async function POST(): Promise<NextResponse> {
     );
 
     let synced = 0;
-    const config = season.config;
+    const config = season.config ?? {
+      sc_per_km: 5,
+      survival_tax_rate: 0.1,
+      survival_tax_min_km: 10,
+      weather_multiplier: 1.5,
+    };
 
     for (const run of runs) {
       if (existingIds.has(String(run.id))) continue;
@@ -183,11 +188,10 @@ export async function POST(): Promise<NextResponse> {
       // Record $SC transaction
       await adminClient.rpc("process_sc_transaction", {
         p_user_id: user.id,
-        p_season_id: season.id,
-        p_type: TransactionType.ACTIVITY_EARNED,
         p_amount: scEarned,
-        p_reference_id: activity.id,
+        p_type: TransactionType.ACTIVITY_REWARD,
         p_description: `Earned ${scEarned} $SC for ${distanceKm.toFixed(2)} km run`,
+        p_reference_id: activity.id,
       });
 
       synced++;
