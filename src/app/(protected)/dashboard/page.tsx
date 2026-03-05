@@ -14,6 +14,10 @@ import { formatSC } from "@/lib/sc/engine";
 import { format, differenceInDays, parseISO } from "date-fns";
 import { Zap, Timer, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { MotivationalBanner } from "@/components/health/motivational-banner";
+import { MilestoneTracker } from "@/components/health/milestone-tracker";
+import { BodyVersionBadge } from "@/components/health/body-version-badge";
+import { ComebackBanner } from "@/components/health/comeback-banner";
 
 // ── Placeholder data for team comparison (would come from API in production)
 const PLACEHOLDER_TEAM_STATS = {
@@ -187,7 +191,21 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      {/* Season progress */}
+      {/* Daily motivational quote */}
+      <MotivationalBanner />
+
+      {/* Comeback bonus (shows only when inactive 3+ days) */}
+      <ComebackBanner activities={activities} />
+
+      {/* Body version + Season progress */}
+      <div className="flex items-center justify-between">
+        <BodyVersionBadge activities={activities} size="sm" />
+        {season && (
+          <span className="text-xs text-neutral-500">
+            {season.name}
+          </span>
+        )}
+      </div>
       <SeasonProgressCard season={season} />
 
       {/* Live ticker */}
@@ -230,6 +248,9 @@ export default function DashboardPage() {
           <span className="text-xs">加入賭池</span>
         </Button>
       </div>
+
+      {/* Health milestones */}
+      <MilestoneTracker activities={activities} />
 
       {/* Recent activities */}
       <Card className="border-neutral-800 bg-neutral-900">

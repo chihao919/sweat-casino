@@ -16,6 +16,8 @@ import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
 import { Camera, ExternalLink, RefreshCw, Unlink, User } from "lucide-react";
+import { BodyVersionBadge } from "@/components/health/body-version-badge";
+import { MilestoneTracker } from "@/components/health/milestone-tracker";
 
 function getStravaOAuthUrl() {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
@@ -320,6 +322,9 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
+      {/* Body version */}
+      <BodyVersionBadge activities={activities} size="lg" />
+
       {/* Stats grid */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
@@ -348,6 +353,9 @@ export default function ProfilePage() {
           />
         </div>
       </div>
+
+      {/* Health milestones */}
+      <MilestoneTracker activities={activities} />
 
       {/* Strava connection */}
       <Card className="border-neutral-800 bg-neutral-900">
