@@ -5,37 +5,37 @@
 
 const MOTIVATIONAL_QUOTES = [
   // Health & body focused
-  { text: "Your body is the only machine that gets better the more you use it.", author: null },
-  { text: "Take care of your body. It's the only place you have to live.", author: "Jim Rohn" },
-  { text: "The body achieves what the mind believes.", author: null },
-  { text: "Health is not about the weight you lose, but the life you gain.", author: null },
-  { text: "A one-hour workout is 4% of your day. No excuses.", author: null },
-  { text: "Sweat is just fat crying.", author: null },
-  { text: "The only bad workout is the one you didn't do.", author: null },
+  { text: "你的身體是唯一越使用越強大的機器。", author: null },
+  { text: "好好照顧你的身體，那是你唯一能住的地方。", author: "Jim Rohn" },
+  { text: "身體能達成的，取決於心智所相信的。", author: null },
+  { text: "健康不是你減掉了多少體重，而是你獲得了多少生命。", author: null },
+  { text: "一小時的運動只佔你一天的 4%，沒有藉口。", author: null },
+  { text: "汗水，是脂肪在哭泣。", author: null },
+  { text: "唯一糟糕的運動，就是你沒做的那一次。", author: null },
 
   // Consistency & discipline
-  { text: "It's not about being the best. It's about being better than yesterday.", author: null },
-  { text: "Small steps every day lead to big changes over time.", author: null },
-  { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
-  { text: "You don't have to be extreme, just consistent.", author: null },
-  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
-  { text: "Don't count the days. Make the days count.", author: "Muhammad Ali" },
+  { text: "不是要成為最好的，而是要比昨天更好。", author: null },
+  { text: "每天一小步，日積月累成大變化。", author: null },
+  { text: "紀律，是在你現在想要的和最終想要的之間做選擇。", author: "Abraham Lincoln" },
+  { text: "你不需要極端，只需要持續。", author: null },
+  { text: "領先的秘訣就是開始行動。", author: "Mark Twain" },
+  { text: "不要數日子，要讓每一天都有意義。", author: "Muhammad Ali" },
 
   // Running specific
-  { text: "Run when you can, walk if you have to, crawl if you must; just never give up.", author: "Dean Karnazes" },
-  { text: "The miracle isn't that I finished. The miracle is that I had the courage to start.", author: "John Bingham" },
-  { text: "Every mile is a gift. Cherish every step.", author: null },
+  { text: "能跑就跑，不行就走，再不行就爬；但絕對不要放棄。", author: "Dean Karnazes" },
+  { text: "奇蹟不是我跑完了全程，奇蹟是我有勇氣踏出第一步。", author: "John Bingham" },
+  { text: "每一公里都是禮物，珍惜每一步。", author: null },
 
   // Fighting entropy / anti-aging
-  { text: "Motion is lotion. The more you move, the better you feel.", author: null },
-  { text: "Exercise is the closest thing to an anti-aging pill.", author: null },
-  { text: "Your future self will thank you for the run you did today.", author: null },
-  { text: "In the war against entropy, every run is a battle won.", author: null },
+  { text: "運動是最好的潤滑劑，動得越多，感覺越好。", author: null },
+  { text: "運動是最接近抗老仙丹的東西。", author: null },
+  { text: "未來的你，會感謝今天去跑步的自己。", author: null },
+  { text: "在對抗熵增的戰爭中，每一次跑步都是一場勝利。", author: null },
 
   // Community & team spirit
-  { text: "Alone we can do so little; together we can do so much.", author: "Helen Keller" },
-  { text: "We rise by lifting others. Your run inspires your team.", author: null },
-  { text: "You are not just running for yourself. You are running for your team.", author: null },
+  { text: "一個人能做的有限，一群人能做的無限。", author: "Helen Keller" },
+  { text: "我們因提攜他人而崛起，你的每一步都在激勵隊友。", author: null },
+  { text: "你不只是為自己而跑，你是為整個團隊而跑。", author: null },
 ];
 
 export interface Quote {

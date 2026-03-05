@@ -26,7 +26,7 @@ export function checkComebackStatus(activities: Activity[]): ComebackStatus {
       isComeback: false,
       inactiveDays: 0,
       bonusMultiplier: 1,
-      message: "Start your first run to begin your journey!",
+      message: "開始你的第一次跑步，展開旅程！",
     };
   }
 
@@ -41,7 +41,7 @@ export function checkComebackStatus(activities: Activity[]): ComebackStatus {
       isComeback: false,
       inactiveDays,
       bonusMultiplier: 1,
-      message: "You're on track! Keep it up!",
+      message: "你正在軌道上，繼續保持！",
     };
   }
 
@@ -50,13 +50,13 @@ export function checkComebackStatus(activities: Activity[]): ComebackStatus {
 
   if (inactiveDays >= 14) {
     bonusMultiplier = 2.0;
-    message = "Welcome back, warrior! 2x bonus on your next run!";
+    message = "歡迎回來，戰士！下一次跑步可獲得 2 倍加成！";
   } else if (inactiveDays >= 7) {
     bonusMultiplier = 1.5;
-    message = "We missed you! 1.5x bonus on your next run!";
+    message = "我們想你了！下一次跑步可獲得 1.5 倍加成！";
   } else {
     bonusMultiplier = 1.2;
-    message = "Good to see you again! 1.2x comeback bonus!";
+    message = "很高興再見到你！回歸獎勵 1.2 倍加成！";
   }
 
   return {

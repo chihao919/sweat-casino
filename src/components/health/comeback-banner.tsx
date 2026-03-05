@@ -21,7 +21,7 @@ export function ComebackBanner({ activities }: ComebackBannerProps) {
         </div>
         <div>
           <p className="text-sm font-bold text-amber-200">
-            {status.bonusMultiplier}x Comeback Bonus!
+            {status.bonusMultiplier}x 回歸加成！
           </p>
           <p className="text-xs text-amber-400/80">
             {status.message}

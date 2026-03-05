@@ -22,10 +22,10 @@ export function MilestoneTracker({ activities }: MilestoneTrackerProps) {
         <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
           <span className="flex items-center gap-2">
             <Target className="size-4 text-emerald-400" />
-            Health Milestones
+            健康里程碑
           </span>
           <span className="text-xs font-normal text-neutral-500">
-            {achievedCount}/{milestones.length} achieved
+            已達成 {achievedCount}/{milestones.length}
           </span>
         </CardTitle>
       </CardHeader>
@@ -38,7 +38,7 @@ export function MilestoneTracker({ activities }: MilestoneTrackerProps) {
                 <span className="text-lg">{nextMilestone.icon}</span>
                 <div>
                   <p className="text-sm font-semibold text-emerald-200">
-                    Next: {nextMilestone.label}
+                    下一個：{nextMilestone.label}
                   </p>
                   <p className="text-xs text-emerald-400/70">
                     {nextMilestone.description}

@@ -17,7 +17,7 @@ export function BodyVersionBadge({ activities, size = "sm" }: BodyVersionBadgePr
       <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-800/50 bg-cyan-950/40 px-2.5 py-1">
         <Cpu className="size-3 text-cyan-400" />
         <span className="text-xs font-mono font-bold text-cyan-300">
-          Body {version.display}
+          身體 {version.display}
         </span>
       </div>
     );
@@ -31,7 +31,7 @@ export function BodyVersionBadge({ activities, size = "sm" }: BodyVersionBadgePr
         </div>
         <div>
           <p className="font-mono text-xl font-black text-cyan-200">
-            Body {version.display}
+            身體 {version.display}
           </p>
           <p className="text-sm font-semibold text-cyan-400">{version.title}</p>
           <p className="text-xs text-cyan-500/70">{version.description}</p>

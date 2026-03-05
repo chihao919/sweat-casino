@@ -26,8 +26,8 @@ export function calculateBodyVersion(activities: Activity[]): BodyVersion {
       minor: 0,
       patch: 0,
       display: "v1.0.0",
-      title: "Uninitialized",
-      description: "Start running to boot up your system",
+      title: "未初始化",
+      description: "開始跑步來啟動你的系統",
     };
   }
 
@@ -66,10 +66,10 @@ interface VersionMeta {
 }
 
 function getVersionMeta(major: number): VersionMeta {
-  if (major <= 1) return { title: "Boot Sequence", description: "System initializing..." };
-  if (major === 2) return { title: "Beta Release", description: "Building healthy habits" };
-  if (major === 3) return { title: "Stable Build", description: "Consistency is your superpower" };
-  if (major === 4) return { title: "Performance Edition", description: "Your body is optimized" };
-  if (major === 5) return { title: "Pro Version", description: "Elite-level discipline" };
-  return { title: "Legendary OS", description: "You are the algorithm" };
+  if (major <= 1) return { title: "開機程序", description: "系統初始化中..." };
+  if (major === 2) return { title: "測試版", description: "正在建立健康習慣" };
+  if (major === 3) return { title: "穩定版", description: "持續就是你的超能力" };
+  if (major === 4) return { title: "效能版", description: "你的身體已經優化" };
+  if (major === 5) return { title: "專業版", description: "頂級自律者" };
+  return { title: "傳奇系統", description: "你就是演算法本身" };
 }
