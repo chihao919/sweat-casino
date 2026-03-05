@@ -33,7 +33,7 @@ import {
   PoolStatus,
   PoolSide,
 } from "@/types";
-import { Plus, Dices } from "lucide-react";
+import { Plus, Dices, Heart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 // ── New Bet form state
@@ -55,13 +55,69 @@ interface JoinPoolFormState {
   amount: string;
 }
 
+function UnderBetBlockDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="border-emerald-900/50 bg-neutral-900 text-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-lg font-black text-emerald-300">
+            <Heart className="size-5 text-emerald-400" />
+            我們不接受看空自己
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 pt-2">
+          <div className="rounded-lg border border-emerald-900/40 bg-emerald-950/30 p-4 space-y-3">
+            <p className="text-sm leading-relaxed text-emerald-100">
+              在汗水賭場，我們相信每一個人都有超越自己的潛力。
+            </p>
+            <p className="text-sm leading-relaxed text-emerald-100">
+              賭自己會失敗？這不是我們的風格。
+            </p>
+            <p className="text-sm font-semibold leading-relaxed text-emerald-200">
+              與其懷疑自己，不如降低目標，然後全力以赴去達成它。
+              就算只跑了 1 公里，那也是昨天的你做不到的事。
+            </p>
+          </div>
+          <div className="rounded-lg bg-neutral-800/50 p-3">
+            <p className="text-center text-xs text-neutral-400">
+              「奇蹟不是我跑完了全程，奇蹟是我有勇氣踏出第一步。」
+            </p>
+            <p className="text-center text-xs text-neutral-500 mt-1">— John Bingham</p>
+          </div>
+          <Button
+            onClick={() => onOpenChange(false)}
+            className="w-full bg-emerald-600 font-semibold text-white hover:bg-emerald-700"
+          >
+            好，我選擇相信自己
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function NewBetDialog({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
+  const [showUnderBlock, setShowUnderBlock] = useState(false);
   const [form, setForm] = useState<NewBetFormState>(DEFAULT_BET_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  function handleBetTypeChange(v: string) {
+    if (v === BetType.UNDER) {
+      setShowUnderBlock(true);
+      return;
+    }
+    setForm((f) => ({ ...f, betType: v as BetType }));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (form.betType === BetType.UNDER) {
+      setShowUnderBlock(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     const supabase = createClient();
@@ -97,7 +153,7 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
     }
 
     // Calculate simple odds (placeholder — real odds would come from server)
-    const odds = form.betType === BetType.OVER ? 1.8 : form.betType === BetType.UNDER ? 2.1 : 3.0;
+    const odds = form.betType === BetType.OVER ? 1.8 : 3.0;
 
     const now = new Date();
     const periodEnd = new Date(now);
@@ -130,73 +186,77 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-red-600 font-semibold text-white hover:bg-red-700" size="sm">
-          <Plus className="mr-1.5 size-4" />
-          新增賭注
-        </Button>
-      </DialogTrigger>
+    <>
+      <UnderBetBlockDialog open={showUnderBlock} onOpenChange={setShowUnderBlock} />
 
-      <DialogContent className="border-neutral-800 bg-neutral-900 text-white">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-black">跟自己對賭</DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-          <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">賭注類型</Label>
-            <Select
-              value={form.betType}
-              onValueChange={(v) => setForm((f) => ({ ...f, betType: v as BetType }))}
-            >
-              <SelectTrigger className="border-neutral-700 bg-neutral-800 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="border-neutral-800 bg-neutral-900 text-white">
-                <SelectItem value={BetType.OVER}>看多 — 我會跑超過目標距離</SelectItem>
-                <SelectItem value={BetType.UNDER}>看空 — 我會跑不到目標距離</SelectItem>
-                <SelectItem value={BetType.EXACT}>精準 — 我會跑到剛好目標距離</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">目標距離 (km)</Label>
-            <Input
-              type="number"
-              step="0.1"
-              min="0.1"
-              placeholder="例如 30"
-              value={form.targetKm}
-              onChange={(e) => setForm((f) => ({ ...f, targetKm: e.target.value }))}
-              className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-xs text-neutral-400">賭注金額 ($SC)</Label>
-            <Input
-              type="number"
-              step="1"
-              min="1"
-              placeholder="例如 50"
-              value={form.stakeAmount}
-              onChange={(e) => setForm((f) => ({ ...f, stakeAmount: e.target.value }))}
-              className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
-            />
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-red-600 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
-          >
-            {isSubmitting ? "下注中..." : "下注 🎲"}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button className="bg-red-600 font-semibold text-white hover:bg-red-700" size="sm">
+            <Plus className="mr-1.5 size-4" />
+            新增賭注
           </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+
+        <DialogContent className="border-neutral-800 bg-neutral-900 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-black">跟自己對賭</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label className="text-xs text-neutral-400">賭注類型</Label>
+              <Select
+                value={form.betType}
+                onValueChange={handleBetTypeChange}
+              >
+                <SelectTrigger className="border-neutral-700 bg-neutral-800 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="border-neutral-800 bg-neutral-900 text-white">
+                  <SelectItem value={BetType.OVER}>看多 — 我會跑超過目標距離</SelectItem>
+                  <SelectItem value={BetType.UNDER}>看空 — 我會跑不到目標距離</SelectItem>
+                  <SelectItem value={BetType.EXACT}>精準 — 我會跑到剛好目標距離</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs text-neutral-400">目標距離 (km)</Label>
+              <Input
+                type="number"
+                step="0.1"
+                min="0.1"
+                placeholder="例如 30"
+                value={form.targetKm}
+                onChange={(e) => setForm((f) => ({ ...f, targetKm: e.target.value }))}
+                className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs text-neutral-400">賭注金額 ($SC)</Label>
+              <Input
+                type="number"
+                step="1"
+                min="1"
+                placeholder="例如 50"
+                value={form.stakeAmount}
+                onChange={(e) => setForm((f) => ({ ...f, stakeAmount: e.target.value }))}
+                className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-red-600 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {isSubmitting ? "下注中..." : "下注 🎲"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
