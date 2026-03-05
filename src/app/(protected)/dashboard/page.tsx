@@ -50,12 +50,15 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
           <span>賽季進度 — {season.name}</span>
-          <Badge variant="outline" className="border-green-700 bg-green-950/50 text-green-400 text-xs">
-            進行中
+          <Badge variant="outline" className="border-yellow-700 bg-yellow-950/50 text-yellow-400 text-xs">
+            系統測試期
           </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
+        <p className="text-xs text-yellow-400/80">
+          目前為系統測試階段，資料與積分可能會在正式上線時重置。歡迎回報任何問題！
+        </p>
         <Progress value={percent} className="h-2 bg-neutral-800 [&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-orange-500" />
         <div className="flex justify-between text-xs text-neutral-500">
           <span>{format(start, "MMM d")}</span>
