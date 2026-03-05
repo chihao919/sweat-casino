@@ -1,11 +1,17 @@
 import { BetType, PersonalBet } from "@/types";
 
-// Odds boundaries — ensures bets are never trivial or impossibly risky
-const MIN_ODDS = 1.5;
-const MAX_ODDS = 5.0;
+// Odds boundaries
+const MIN_ODDS = 1.05;
+const MAX_ODDS = 10.0;
 
-// Scaling factor applied before clamping; rewards ambitious targets
-const ODDS_SCALE_FACTOR = 1.5;
+// Quadratic coefficient: controls how steeply odds rise with difficulty
+// odds = 1.0 + QUAD_K * ratio²
+// At ratio=1.0 (target=average): odds = 1.0 + 1.0 = 2.0x
+// At ratio=0.5 (easy):           odds = 1.0 + 0.25 = 1.25x  (barely profitable)
+// At ratio=1.5 (ambitious):      odds = 1.0 + 2.25 = 3.25x
+// At ratio=2.0 (very hard):      odds = 1.0 + 4.0  = 5.0x
+// At ratio=3.0 (extreme):        odds = 1.0 + 9.0  = 10.0x  (capped)
+const QUAD_K = 1.0;
 
 /**
  * Clamps a value to the inclusive range [min, max].
@@ -15,25 +21,32 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 /**
- * Calculates the odds for a personal performance bet.
+ * Calculates the odds for a personal performance bet using a quadratic curve.
  *
- * Odds scale with how ambitious the target is relative to the user's average.
- * Setting a target that matches the average yields the minimum odds (~1.5x),
- * while very aggressive targets approach the ceiling of 5.0x.
+ * The ratio = targetValue / averageValue represents how ambitious the goal is.
+ * Odds grow quadratically: odds = 1.0 + QUAD_K * ratio²
  *
- * Formula: clamp(targetValue / averageValue * 1.5, 1.5, 5.0)
+ * This means:
+ * - Easy targets (ratio < 1): low odds, you might lose money after fees
+ * - Average targets (ratio ≈ 1): ~2.0x, fair return
+ * - Hard targets (ratio > 1): odds grow fast, rewarding ambitious goals
  *
- * The betType parameter is available for future differentiation between
- * OVER / UNDER / EXACT odds — currently all use the same formula.
+ * Examples (assuming average = 10km):
+ *   1km  → ratio=0.1 → 1.01x (almost no reward, likely net loss)
+ *   5km  → ratio=0.5 → 1.25x
+ *  10km  → ratio=1.0 → 2.00x
+ *  15km  → ratio=1.5 → 3.25x
+ *  20km  → ratio=2.0 → 5.00x
+ *  30km  → ratio=3.0 → 10.0x (max)
  */
 export function calculateOdds(
   targetValue: number,
   averageValue: number,
   betType: BetType
 ): number {
-  // Avoid division by zero; treat zero average as minimum odds scenario
+  // Avoid division by zero; treat zero average as if target is ambitious
   if (averageValue <= 0) {
-    return MIN_ODDS;
+    return clamp(1.0 + QUAD_K * (targetValue > 0 ? 4 : 1), MIN_ODDS, MAX_ODDS);
   }
 
   // UNDER bets use the inverse ratio because a lower target is harder to miss
@@ -42,7 +55,7 @@ export function calculateOdds(
       ? averageValue / targetValue
       : targetValue / averageValue;
 
-  const raw = ratio * ODDS_SCALE_FACTOR;
+  const raw = 1.0 + QUAD_K * ratio * ratio;
   return Math.round(clamp(raw, MIN_ODDS, MAX_ODDS) * 100) / 100;
 }
 
