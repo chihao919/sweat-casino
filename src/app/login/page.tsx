@@ -29,9 +29,16 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [inAppBrowser, setInAppBrowser] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     setInAppBrowser(isInAppBrowser());
+
+    // Check if redirected back with an error
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "auth_callback_failed") {
+      setAuthError("Google 登入失敗，請再試一次。如果持續失敗，請確認使用 Safari 或 Chrome 瀏覽器開啟。");
+    }
   }, []);
 
   async function handleGoogleLogin() {
@@ -67,6 +74,13 @@ export default function LoginPage() {
             用汗水下注，讓跑步變成一場賭局
           </p>
         </div>
+
+        {/* Auth error message */}
+        {authError && (
+          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-950/40 p-5 text-center">
+            <p className="text-sm text-red-200">{authError}</p>
+          </div>
+        )}
 
         {/* Warning for in-app browsers */}
         {inAppBrowser && (
