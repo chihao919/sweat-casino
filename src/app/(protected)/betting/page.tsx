@@ -155,22 +155,25 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
     // Calculate simple odds (placeholder — real odds would come from server)
     const odds = form.betType === BetType.OVER ? 1.8 : 3.0;
 
+    // Map frontend bet type to DB bet_type ('distance' for over/exact)
+    const dbBetType = "distance";
+
     const now = new Date();
-    const periodEnd = new Date(now);
-    periodEnd.setDate(periodEnd.getDate() + 7);
+    const endDate = new Date(now);
+    endDate.setDate(endDate.getDate() + 7);
 
     const { error } = await supabase.from("personal_bets").insert({
       user_id: user.id,
       season_id: season.id,
-      bet_type: form.betType,
+      bet_type: dbBetType,
       target_value: targetValue,
       current_value: 0,
       stake,
       odds,
       potential_payout: parseFloat((stake * odds).toFixed(2)),
-      status: BetStatus.PENDING,
-      period_start: now.toISOString(),
-      period_end: periodEnd.toISOString(),
+      status: "active",
+      start_date: now.toISOString(),
+      end_date: endDate.toISOString(),
     });
 
     if (error) {
@@ -423,8 +426,8 @@ export default function BettingPage() {
     toast.info(`Joining pool: ${pool.title} — feature coming soon!`);
   }
 
-  const activeBets = bets.filter((b) => b.status === BetStatus.PENDING);
-  const completedBets = bets.filter((b) => b.status !== BetStatus.PENDING);
+  const activeBets = bets.filter((b) => b.status === BetStatus.PENDING || b.status === ("active" as BetStatus));
+  const completedBets = bets.filter((b) => b.status !== BetStatus.PENDING && b.status !== ("active" as BetStatus));
   const openPools = pools.filter((p) => p.status === PoolStatus.OPEN);
   const otherPools = pools.filter((p) => p.status !== PoolStatus.OPEN);
 
