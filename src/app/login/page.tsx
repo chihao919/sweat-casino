@@ -37,7 +37,12 @@ export default function LoginPage() {
     // Check if redirected back with an error
     const params = new URLSearchParams(window.location.search);
     if (params.get("error") === "auth_callback_failed") {
-      setAuthError("Google 登入失敗，請再試一次。如果持續失敗，請確認使用 Safari 或 Chrome 瀏覽器開啟。");
+      const reason = params.get("reason");
+      setAuthError(
+        reason || "Google 登入失敗，請再試一次。如果持續失敗，請確認使用 Safari 或 Chrome 瀏覽器開啟。"
+      );
+      // Clean up URL so the error doesn't persist on refresh
+      window.history.replaceState({}, "", "/login");
     }
   }, []);
 
