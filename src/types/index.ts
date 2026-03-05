@@ -231,7 +231,7 @@ export interface StravaTokens {
   access_token: string
   refresh_token: string
   expires_at: number
-  athlete_id: number
+  athlete_id?: number
   profile_url?: string
 }
 

@@ -126,12 +126,12 @@ export async function refreshStravaToken(
     );
   }
 
-  const data = (await response.json()) as StravaTokenResponse;
+  const data = (await response.json()) as Partial<StravaTokenResponse>;
 
   return {
-    access_token: data.access_token,
-    refresh_token: data.refresh_token,
-    expires_at: data.expires_at,
-    athlete_id: data.athlete.id,
+    access_token: data.access_token!,
+    refresh_token: data.refresh_token!,
+    expires_at: data.expires_at!,
+    athlete_id: data.athlete?.id,
   };
 }
