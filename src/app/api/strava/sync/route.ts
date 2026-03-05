@@ -223,9 +223,10 @@ export async function POST(): Promise<NextResponse> {
         : "No new activities to sync",
     });
   } catch (err) {
-    console.error("[strava/sync] Error:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[strava/sync] Error:", message);
     return NextResponse.json(
-      { error: "Sync failed" },
+      { error: message },
       { status: 500 }
     );
   }
