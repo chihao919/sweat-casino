@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Trophy, Dices, Wallet, User } from "lucide-react";
+import { LayoutDashboard, Trophy, Dices, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavTab {
@@ -15,7 +15,7 @@ const tabs: NavTab[] = [
   { href: "/dashboard", label: "首頁", icon: LayoutDashboard },
   { href: "/leaderboard", label: "排行榜", icon: Trophy },
   { href: "/betting", label: "下注", icon: Dices },
-  { href: "/wallet", label: "錢包", icon: Wallet },
+  { href: "/shop", label: "商城", icon: ShoppingBag },
   { href: "/profile", label: "我的", icon: User },
 ];
 
