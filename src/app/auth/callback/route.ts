@@ -19,25 +19,45 @@ export async function GET(request: NextRequest) {
   const errorDescription = searchParams.get("error_description");
   const next = searchParams.get("next") ?? "/dashboard";
 
+  // Build debug context for troubleshooting
+  const debugCtx: Record<string, string> = {
+    step: "init",
+    hasCode: String(!!code),
+    hasError: String(!!errorParam),
+    origin,
+    params: JSON.stringify(Object.fromEntries(searchParams)),
+  };
+
+  function redirectToLoginWithError(reason: string, step: string) {
+    debugCtx.step = step;
+    debugCtx.reason = reason;
+    console.error("[auth/callback]", JSON.stringify(debugCtx));
+    return NextResponse.redirect(
+      `${origin}/login?error=auth_callback_failed&reason=${encodeURIComponent(reason)}&debug_step=${encodeURIComponent(step)}`
+    );
+  }
+
   // If Supabase/Google returned an error directly
   if (errorParam) {
-    console.error("[auth/callback] OAuth provider error:", errorParam, errorDescription);
     const reason = errorDescription || errorParam;
-    return NextResponse.redirect(
-      `${origin}/login?error=auth_callback_failed&reason=${encodeURIComponent(reason)}`
-    );
+    return redirectToLoginWithError(reason, "oauth_provider_error");
   }
 
   if (code) {
     try {
+      debugCtx.step = "exchange_start";
       const supabase = await createClient();
       const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (!error) {
+        debugCtx.step = "exchange_success";
+        console.log("[auth/callback] Success:", JSON.stringify(debugCtx));
         return NextResponse.redirect(`${origin}${next}`);
       }
 
-      console.error("[auth/callback] exchangeCodeForSession failed:", error.message, error.status);
+      debugCtx.step = "exchange_failed";
+      debugCtx.errorMessage = error.message;
+      debugCtx.errorStatus = String(error.status);
 
       // PKCE verifier missing — most common cause of "卡住"
       const isPKCEError =
@@ -47,22 +67,21 @@ export async function GET(request: NextRequest) {
         error.message.includes("both auth code and code verifier");
 
       if (isPKCEError) {
-        return NextResponse.redirect(
-          `${origin}/login?error=auth_callback_failed&reason=${encodeURIComponent(
-            "Cookie 遺失導致驗證失敗。請用 Safari 或 Chrome 重新開啟頁面，避免使用 LINE/Facebook 內建瀏覽器。"
-          )}`
+        return redirectToLoginWithError(
+          "Cookie 遺失導致驗證失敗 (PKCE)。請用 Safari 或 Chrome 重新開啟頁面，避免使用 LINE/Facebook 內建瀏覽器。",
+          "pkce_error"
         );
       }
 
-      return NextResponse.redirect(
-        `${origin}/login?error=auth_callback_failed&reason=${encodeURIComponent(error.message)}`
-      );
+      return redirectToLoginWithError(error.message, "exchange_error");
     } catch (err) {
-      console.error("[auth/callback] unexpected error:", err);
-      return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+      const message = err instanceof Error ? err.message : String(err);
+      return redirectToLoginWithError(message, "exchange_exception");
     }
   }
 
-  console.error("[auth/callback] no code param in URL. Params:", Object.fromEntries(searchParams));
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+  return redirectToLoginWithError(
+    "未收到授權碼。可能是 Google 登入被取消或瀏覽器攔截了重定向。",
+    "no_code"
+  );
 }

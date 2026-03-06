@@ -38,9 +38,12 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("error") === "auth_callback_failed") {
       const reason = params.get("reason");
-      setAuthError(
-        reason || "Google 登入失敗，請再試一次。如果持續失敗，請確認使用 Safari 或 Chrome 瀏覽器開啟。"
-      );
+      const debugStep = params.get("debug_step");
+      const errorDetail = [
+        reason || "Google 登入失敗，請再試一次。如果持續失敗，請確認使用 Safari 或 Chrome 瀏覽器開啟。",
+        debugStep ? `\n[Debug: step=${debugStep}]` : "",
+      ].join("");
+      setAuthError(errorDetail);
       // Clean up URL so the error doesn't persist on refresh
       window.history.replaceState({}, "", "/login");
     }
@@ -48,14 +51,20 @@ export default function LoginPage() {
 
   async function handleGoogleLogin() {
     setIsLoading(true);
+    setAuthError(null);
     const supabase = createClient();
 
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
+
+    if (error) {
+      setIsLoading(false);
+      setAuthError(`登入啟動失敗: ${error.message}\n[Debug: step=signInWithOAuth, ua=${navigator.userAgent.slice(0, 80)}]`);
+    }
   }
 
   function handleCopyUrl() {
@@ -82,8 +91,18 @@ export default function LoginPage() {
 
         {/* Auth error message */}
         {authError && (
-          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-950/40 p-5 text-center">
-            <p className="text-sm text-red-200">{authError}</p>
+          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-950/40 p-5">
+            <p className="text-sm text-red-200 text-center whitespace-pre-line">{authError}</p>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(authError);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="mt-3 w-full rounded-lg bg-red-900/50 py-2 text-xs text-red-300 hover:bg-red-900/70 transition-colors"
+            >
+              {copied ? "已複製錯誤訊息" : "複製錯誤訊息 (回報用)"}
+            </button>
           </div>
         )}
 
