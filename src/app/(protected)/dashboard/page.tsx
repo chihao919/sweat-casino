@@ -18,6 +18,8 @@ import { MotivationalBanner } from "@/components/health/motivational-banner";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { ComebackBanner } from "@/components/health/comeback-banner";
+import { TodayCelebration } from "@/components/dashboard/today-celebration";
+import { PoweredByStrava } from "@/components/strava/powered-by-strava";
 
 // ── Placeholder data for team comparison (would come from API in production)
 const PLACEHOLDER_TEAM_STATS = {
@@ -107,7 +109,7 @@ function ActivityRow({ activity }: { activity: Activity }) {
             {activity.distance_km.toFixed(2)} km run
           </p>
           <p className="text-xs text-neutral-500">
-            {format(parseISO(activity.activity_date), "MMM d, yyyy")}
+            {format(parseISO(activity.start_date), "MMM d, yyyy")}
           </p>
         </div>
       </div>
@@ -151,7 +153,7 @@ export default function DashboardPage() {
             .from("activities")
             .select("*")
             .eq("user_id", user.id)
-            .order("activity_date", { ascending: false })
+            .order("start_date", { ascending: false })
             .limit(20),
           supabase
             .from("seasons")
@@ -194,6 +196,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
+      {/* Today's run celebration (shows only when user ran today) */}
+      <TodayCelebration activities={activities} />
+
       {/* Daily motivational quote */}
       <MotivationalBanner />
 
@@ -258,8 +263,9 @@ export default function DashboardPage() {
       {/* Recent activities */}
       <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="pb-1">
-          <CardTitle className="text-sm font-semibold text-neutral-300">
-            最近活動
+          <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
+            <span>最近活動</span>
+            <PoweredByStrava />
           </CardTitle>
         </CardHeader>
         <CardContent className="divide-y divide-neutral-800">

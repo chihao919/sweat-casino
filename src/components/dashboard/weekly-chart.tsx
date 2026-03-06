@@ -41,7 +41,7 @@ function buildLast7DaysData(activities: Activity[]): ChartDataPoint[] {
   return Array.from({ length: 7 }, (_, i) => {
     const date = subDays(today, 6 - i);
     const dayActivities = activities.filter((a) =>
-      isSameDay(new Date(a.activity_date), date)
+      isSameDay(new Date(a.start_date), date)
     );
     const totalKm = dayActivities.reduce((sum, a) => sum + a.distance_km, 0);
     return {

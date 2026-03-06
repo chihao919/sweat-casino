@@ -97,8 +97,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         .from("activities")
         .select("user_id, distance_km")
         .eq("season_id", season.id)
-        .gte("activity_date", weekStart)
-        .lte("activity_date", weekEnd)
+        .gte("start_date", weekStart)
+        .lte("start_date", weekEnd)
         .in(
           "user_id",
           // Sub-select: all user ids on this team

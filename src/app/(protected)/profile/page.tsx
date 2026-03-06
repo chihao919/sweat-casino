@@ -18,6 +18,7 @@ import { format, parseISO, differenceInDays } from "date-fns";
 import { Camera, ExternalLink, RefreshCw, Unlink, User } from "lucide-react";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
+import { PoweredByStrava, ConnectWithStrava } from "@/components/strava/powered-by-strava";
 
 function getStravaOAuthUrl() {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
@@ -42,12 +43,12 @@ function calculateStats(activities: Activity[]): ProfileStats {
 
   // Sort by date descending for streak calculation
   const sorted = [...activities].sort(
-    (a, b) => new Date(b.activity_date).getTime() - new Date(a.activity_date).getTime()
+    (a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
   );
 
   // Build a set of unique activity dates
   const dateDaySet = new Set(
-    sorted.map((a) => format(parseISO(a.activity_date), "yyyy-MM-dd"))
+    sorted.map((a) => format(parseISO(a.start_date), "yyyy-MM-dd"))
   );
   const uniqueDates = Array.from(dateDaySet).sort().reverse();
 
@@ -121,6 +122,7 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>("");
 
   useEffect(() => {
     async function fetchProfile() {
@@ -143,6 +145,8 @@ export default function ProfilePage() {
             .select("*")
             .eq("user_id", user.id),
         ]);
+
+        setDebugInfo(`user.id: ${user.id}\nprofile: ${profileRes.error ? JSON.stringify(profileRes.error) : "ok"}\nactivities: ${activitiesRes.error ? JSON.stringify(activitiesRes.error) : "ok"}, count: ${activitiesRes.data?.length ?? 0}\ndata: ${JSON.stringify(activitiesRes.data?.slice(0, 3))}`);
 
         if (profileRes.data) {
           setProfile(profileRes.data);
@@ -273,6 +277,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5">
+      {/* Debug info - temporary */}
+      {debugInfo && (
+        <pre className="whitespace-pre-wrap break-all rounded-lg border border-yellow-800 bg-yellow-950 p-3 text-xs text-yellow-300">
+          {debugInfo}
+        </pre>
+      )}
       {/* Profile card */}
       <Card className="border-neutral-800 bg-neutral-900">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
@@ -361,7 +371,10 @@ export default function ProfilePage() {
       <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
-            <span>Strava 連結</span>
+            <div className="flex items-center gap-2">
+              <span>Strava 連結</span>
+              <PoweredByStrava />
+            </div>
             {isStravaConnected ? (
               <Badge className="bg-green-900/50 text-green-400 border-green-700">已連結</Badge>
             ) : (
@@ -397,6 +410,12 @@ export default function ProfilePage() {
                   const data = await res.json();
                   if (res.ok) {
                     toast.success(data.synced > 0 ? `已同步 ${data.synced} 筆活動！` : "沒有新活動需要同步");
+                    if (data.debug) {
+                      console.log("[strava/sync] debug:", JSON.stringify(data.debug, null, 2));
+                      if (data.synced === 0) {
+                        toast.info(`Debug: Strava 回傳 ${data.debug.strava_total_returned} 筆活動, ${data.debug.runs_after_filter} 筆跑步, DB 已有 ${data.debug.existing_ids_in_db?.length ?? 0} 筆`, { duration: 10000 });
+                      }
+                    }
                     if (data.synced > 0) window.location.reload();
                   } else {
                     toast.error("同步失敗：" + (data.error || "未知錯誤"));
@@ -421,13 +440,10 @@ export default function ProfilePage() {
               <p className="text-xs text-neutral-400">
                 連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
-              <a
+              <ConnectWithStrava
                 href={`/api/strava/connect?user_id=${profile.id}`}
-                className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402] transition-colors"
-              >
-                <ExternalLink className="size-4" />
-                連結 Strava
-              </a>
+                className="w-full"
+              />
             </>
           )}
         </CardContent>

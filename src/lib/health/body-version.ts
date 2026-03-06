@@ -38,7 +38,7 @@ export function calculateBodyVersion(activities: Activity[]): BodyVersion {
   // Patch = activities in the most recent 7 days
   const now = new Date();
   const recentActivities = activities.filter((a) => {
-    const diff = differenceInDays(now, parseISO(a.activity_date));
+    const diff = differenceInDays(now, parseISO(a.start_date));
     return diff >= 0 && diff < 7;
   });
   const patch = recentActivities.length;
@@ -53,7 +53,7 @@ function countActiveWeeks(activities: Activity[]): number {
   // Group activities by ISO week (YYYY-ww)
   const weekSet = new Set<string>();
   for (const a of activities) {
-    const date = parseISO(a.activity_date);
+    const date = parseISO(a.start_date);
     const weekKey = format(date, "RRRR-II"); // ISO week year + week number
     weekSet.add(weekKey);
   }

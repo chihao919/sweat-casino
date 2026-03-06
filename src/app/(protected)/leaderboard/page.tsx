@@ -140,7 +140,7 @@ export default function LeaderboardPage() {
         // Fetch aggregated activity data for all users
         const { data: activityAggs } = await supabase
           .from("activities")
-          .select("user_id, distance_km, sc_earned, activity_date");
+          .select("user_id, distance_km, sc_earned, start_date");
 
         const now = new Date();
         const weekStart = new Date(now);
@@ -154,7 +154,7 @@ export default function LeaderboardPage() {
           const relevantActivities =
             timePeriod === "weekly"
               ? userActivities.filter(
-                  (a) => new Date(a.activity_date) >= weekStart
+                  (a) => new Date(a.start_date) >= weekStart
                 )
               : userActivities;
 

@@ -144,17 +144,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         user_id: body.userId,
         season_id: season.id,
         strava_activity_id: null,
+        name: "Mock Run",
         distance_km: distanceKm,
         duration_seconds: durationSeconds,
         pace_per_km: pacePerKm,
-        activity_date: now,
-        weather_code: weatherCode,
-        weather_description: weatherDescription,
-        temperature,
-        wind_speed: windSpeed,
+        start_date: now,
+        weather_record_id: weatherRecordId,
         weather_multiplier: weatherMultiplier,
         sc_earned: scEarned,
-        is_manual: true,
+        is_mock: true,
       })
       .select("*")
       .single();

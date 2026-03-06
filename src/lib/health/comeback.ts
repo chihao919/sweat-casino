@@ -31,9 +31,9 @@ export function checkComebackStatus(activities: Activity[]): ComebackStatus {
   }
 
   const sorted = [...activities].sort(
-    (a, b) => new Date(b.activity_date).getTime() - new Date(a.activity_date).getTime()
+    (a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
   );
-  const lastActivityDate = parseISO(sorted[0].activity_date);
+  const lastActivityDate = parseISO(sorted[0].start_date);
   const inactiveDays = differenceInDays(new Date(), lastActivityDate);
 
   if (inactiveDays < 3) {

@@ -236,18 +236,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .insert({
         user_id: profile.id,
         season_id: season.id,
-        strava_activity_id: String(body.object_id),
+        strava_activity_id: body.object_id,
+        name: stravaActivity.name || "Run",
         distance_km: distanceKm,
         duration_seconds: stravaActivity.moving_time,
         pace_per_km: pacePerKm,
-        activity_date: stravaActivity.start_date,
-        weather_code: weatherCode,
-        weather_description: weatherDescription,
-        temperature,
-        wind_speed: windSpeed,
+        start_date: stravaActivity.start_date,
+        start_latitude: startLat,
+        start_longitude: startLng,
+        weather_record_id: weatherRecordId,
         weather_multiplier: weatherMultiplier,
         sc_earned: scEarned,
-        is_manual: false,
+        is_mock: false,
       })
       .select("id")
       .single();

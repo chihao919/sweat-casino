@@ -78,7 +78,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         .select("distance_km")
         .eq("user_id", profile.id)
         .eq("season_id", season.id)
-        .gte("activity_date", weekStart);
+        .gte("start_date", weekStart);
 
       const weeklyKm = (weeklyActivities ?? []).reduce(
         (sum, a) => sum + (a.distance_km ?? 0),

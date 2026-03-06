@@ -66,9 +66,13 @@ export async function POST(): Promise<NextResponse> {
       ? Number(profile.strava_token_expires_at) * 1000
       : 0;
 
+    console.log("[strava/sync] Token expires at:", new Date(expiresAt).toISOString(), "now:", new Date().toISOString(), "expired:", Date.now() >= expiresAt);
+
     if (Date.now() >= expiresAt) {
+      console.log("[strava/sync] Refreshing expired token...");
       const freshTokens = await refreshStravaToken(profile.strava_refresh_token);
       accessToken = freshTokens.access_token;
+      console.log("[strava/sync] Token refreshed, new expires_at:", freshTokens.expires_at);
 
       await adminClient
         .from("profiles")
@@ -97,15 +101,27 @@ export async function POST(): Promise<NextResponse> {
 
     // Fetch activities from the last 7 days
     const sevenDaysAgo = Math.floor((Date.now() - 7 * 86400000) / 1000);
+    console.log("[strava/sync] Fetching activities after:", new Date(sevenDaysAgo * 1000).toISOString());
     const stravaActivities = await getStravaAthleteActivities(
       accessToken,
       sevenDaysAgo
     );
 
+    console.log("[strava/sync] Strava returned", stravaActivities.length, "activities:", stravaActivities.map((a) => ({
+      id: a.id,
+      type: a.type,
+      sport_type: a.sport_type,
+      name: a.name,
+      distance: a.distance,
+      date: a.start_date,
+    })));
+
     // Filter to runs only
     const runs = stravaActivities.filter(
       (a) => (a.type || a.sport_type) === "Run"
     );
+
+    console.log("[strava/sync] After filter:", runs.length, "runs");
 
     // Get existing strava_activity_ids to avoid duplicates
     const { data: existingActivities } = await adminClient
@@ -114,8 +130,12 @@ export async function POST(): Promise<NextResponse> {
       .eq("user_id", user.id);
 
     const existingIds = new Set(
-      (existingActivities || []).map((a) => a.strava_activity_id)
+      (existingActivities || []).map((a) => Number(a.strava_activity_id))
     );
+
+    console.log("[strava/sync] Existing activity IDs in DB:", Array.from(existingIds));
+    console.log("[strava/sync] Run IDs from Strava:", runs.map((r) => r.id));
+    console.log("[strava/sync] New runs to sync:", runs.filter((r) => !existingIds.has(r.id)).map((r) => r.id));
 
     let synced = 0;
     const config = season.config ?? {
@@ -126,7 +146,7 @@ export async function POST(): Promise<NextResponse> {
     };
 
     for (const run of runs) {
-      if (existingIds.has(String(run.id))) continue;
+      if (existingIds.has(run.id)) continue;
 
       const distanceKm = run.distance / 1000;
       const pacePerKm =
@@ -161,29 +181,33 @@ export async function POST(): Promise<NextResponse> {
 
       const scEarned = calculateSCEarned(distanceKm, weatherMultiplier, config);
 
-      // Insert activity
+      // Insert activity (columns must match DB schema in 002_profiles_activities.sql)
+      const [startLat2, startLng2] = run.start_latlng ?? [null, null];
       const { data: activity, error: activityError } = await adminClient
         .from("activities")
         .insert({
           user_id: user.id,
           season_id: season.id,
-          strava_activity_id: String(run.id),
+          strava_activity_id: run.id,
+          name: run.name || "Run",
           distance_km: distanceKm,
           duration_seconds: run.moving_time,
           pace_per_km: pacePerKm,
-          activity_date: run.start_date,
-          weather_code: weatherCode,
-          weather_description: weatherDescription,
-          temperature,
-          wind_speed: windSpeed,
+          start_date: run.start_date,
+          start_latitude: startLat2,
+          start_longitude: startLng2,
           weather_multiplier: weatherMultiplier,
           sc_earned: scEarned,
-          is_manual: false,
+          is_mock: false,
         })
         .select("id")
         .single();
 
-      if (activityError || !activity) continue;
+      if (activityError || !activity) {
+        console.error("[strava/sync] Failed to insert activity:", run.id, activityError?.message);
+        continue;
+      }
+      console.log("[strava/sync] Inserted activity:", run.id, "→", activity.id);
 
       // Record $SC transaction
       await adminClient.rpc("process_sc_transaction", {
@@ -225,6 +249,19 @@ export async function POST(): Promise<NextResponse> {
       message: synced > 0
         ? `Synced ${synced} new activities`
         : "No new activities to sync",
+      debug: {
+        strava_athlete_id: profile.strava_athlete_id,
+        token_expired: Date.now() >= expiresAt,
+        token_expires_at: new Date(expiresAt).toISOString(),
+        query_after: new Date(sevenDaysAgo * 1000).toISOString(),
+        strava_total_returned: stravaActivities.length,
+        strava_activities: stravaActivities.map((a) => ({
+          id: a.id, type: a.type, sport_type: a.sport_type, name: a.name,
+          distance: a.distance, date: a.start_date,
+        })),
+        runs_after_filter: runs.length,
+        existing_ids_in_db: Array.from(existingIds),
+      },
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

@@ -120,18 +120,18 @@ export interface Activity {
   id: string
   user_id: string
   season_id: string
-  strava_activity_id: string | null
+  strava_activity_id: number | null
+  name: string
   distance_km: number
   duration_seconds: number
   pace_per_km: number
-  activity_date: string
-  weather_code: number | null
-  weather_description: string | null
-  temperature: number | null
-  wind_speed: number | null
+  start_date: string
+  start_latitude: number | null
+  start_longitude: number | null
+  weather_record_id: string | null
   weather_multiplier: number
   sc_earned: number
-  is_manual: boolean
+  is_mock: boolean
   created_at: string
 }
 
