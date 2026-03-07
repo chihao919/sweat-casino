@@ -67,7 +67,7 @@ export function LootReveal({ drop, onClose }: LootRevealProps) {
           )}
           {drop.type === "skin" && skin && (
             <>
-              <PixelRunner skinColors={skin.colors} size={120} animate />
+              <PixelRunner skinSlug={skin.slug} size={120} animate />
               <p className="text-lg font-black text-neutral-100">{skin.nameCn}</p>
               <p className="text-xs text-neutral-400">{skin.name}</p>
               <p className="text-[11px] text-neutral-500 text-center max-w-[200px]">

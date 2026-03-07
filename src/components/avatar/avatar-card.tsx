@@ -11,12 +11,7 @@ interface AvatarCardProps {
   teamName?: string;
   teamEmoji?: string;
   title?: string;
-  skinColors?: {
-    primary: string;
-    accent?: string;
-    effect?: string;
-    aura?: string;
-  };
+  skinSlug?: string;
   size?: "sm" | "md" | "lg";
   showProgress?: boolean;
   className?: string;
@@ -28,7 +23,7 @@ export function AvatarCard({
   teamName,
   teamEmoji,
   title,
-  skinColors,
+  skinSlug,
   size = "md",
   showProgress = true,
   className,
@@ -48,7 +43,7 @@ export function AvatarCard({
       )}
     >
       {/* Avatar */}
-      <PixelRunner skinColors={skinColors} size={avatarSize} animate />
+      <PixelRunner skinSlug={skinSlug} size={avatarSize} animate />
 
       {/* Name + Title */}
       <div className="text-center">

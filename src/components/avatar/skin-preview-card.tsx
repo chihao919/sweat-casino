@@ -14,12 +14,7 @@ interface SkinPreviewCardProps {
   isPurchasable: boolean;
   isOwned: boolean;
   isEquipped: boolean;
-  colors: {
-    primary: string;
-    accent?: string;
-    effect?: string;
-    aura?: string;
-  };
+  slug: string;
   onBuy?: () => void;
   onEquip?: () => void;
   locked?: boolean;
@@ -35,7 +30,7 @@ export function SkinPreviewCard({
   isPurchasable,
   isOwned,
   isEquipped,
-  colors,
+  slug,
   onBuy,
   onEquip,
   locked,
@@ -60,7 +55,7 @@ export function SkinPreviewCard({
 
       {/* Character preview */}
       <div className="relative">
-        <PixelRunner skinColors={colors} size={80} animate={isEquipped} />
+        <PixelRunner skinSlug={slug} size={80} animate={isEquipped} />
         {locked && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded">
             <Lock className="size-5 text-neutral-400" />

@@ -165,7 +165,7 @@ export default function ShopPage() {
                 isPurchasable={skin.isPurchasable}
                 isOwned={ownedSkins.includes(skin.slug)}
                 isEquipped={false}
-                colors={skin.colors}
+                slug={skin.slug}
                 onBuy={() => handleBuySkin(skin.slug, skin.priceSc)}
                 onEquip={() => handleEquipSkin(skin.slug)}
               />
