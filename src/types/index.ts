@@ -112,6 +112,11 @@ export interface Profile {
   strava_token_expires_at: string | null
   created_at: string
   updated_at: string
+  // Gamification fields
+  active_skin_id: string | null
+  title: string | null
+  total_distance_km: number
+  rank: string
   // Joined relation (optional, present when team is fetched)
   team?: Team
 }

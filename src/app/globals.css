@@ -146,3 +146,17 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Slow bounce for pixel runner avatar */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
