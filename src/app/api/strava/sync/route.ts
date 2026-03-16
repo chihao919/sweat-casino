@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { refreshStravaToken } from "@/lib/strava/auth";
-import { getStravaAthleteActivities } from "@/lib/strava/client";
+import { getStravaAthleteActivities, StravaRateLimitError } from "@/lib/strava/client";
 import { fetchCurrentWeather } from "@/lib/weather/client";
 import { evaluateWeatherBonus } from "@/lib/weather/bonus";
 import { calculateSCEarned } from "@/lib/sc/engine";
@@ -264,6 +264,19 @@ export async function POST(): Promise<NextResponse> {
       },
     });
   } catch (err) {
+    // Return a user-friendly message when Strava rate limit is hit
+    if (err instanceof StravaRateLimitError) {
+      const minutes = Math.ceil(err.retryAfter / 60);
+      return NextResponse.json(
+        {
+          error: "rate_limit",
+          message: `目前太多人在使用，請等 ${minutes} 分鐘後再試！`,
+          retryAfter: err.retryAfter,
+        },
+        { status: 429 }
+      );
+    }
+
     const message = err instanceof Error ? err.message : String(err);
     console.error("[strava/sync] Error:", message);
     return NextResponse.json(

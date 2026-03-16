@@ -6,8 +6,23 @@ const STRAVA_API_BASE = "https://www.strava.com/api/v3";
 const DEFAULT_PAGE_SIZE = 30;
 
 /**
+ * Custom error for Strava API rate limit (HTTP 429).
+ * Contains retryAfter seconds parsed from the response header.
+ */
+export class StravaRateLimitError extends Error {
+  retryAfter: number;
+  constructor(retryAfter: number) {
+    const minutes = Math.ceil(retryAfter / 60);
+    super(`Strava API rate limit exceeded. Try again in ${minutes} minute(s).`);
+    this.name = "StravaRateLimitError";
+    this.retryAfter = retryAfter;
+  }
+}
+
+/**
  * Makes an authenticated GET request to the Strava API.
  * Throws a descriptive error on non-2xx responses.
+ * Throws StravaRateLimitError on 429 responses.
  */
 async function stravaGet<T>(
   accessToken: string,
@@ -28,6 +43,13 @@ async function stravaGet<T>(
       "Content-Type": "application/json",
     },
   });
+
+  if (response.status === 429) {
+    // Parse Retry-After header (seconds), default to 15 minutes
+    const retryAfter = parseInt(response.headers.get("Retry-After") || "900", 10);
+    console.warn(`[strava] Rate limited on ${path}, retry after ${retryAfter}s`);
+    throw new StravaRateLimitError(retryAfter);
+  }
 
   if (!response.ok) {
     throw new Error(

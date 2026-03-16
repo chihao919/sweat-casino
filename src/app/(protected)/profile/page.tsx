@@ -417,6 +417,8 @@ export default function ProfilePage() {
                       }
                     }
                     if (data.synced > 0) window.location.reload();
+                  } else if (res.status === 429) {
+                    toast.warning(data.message || "目前太多人在使用 Strava 同步，請稍等幾分鐘後再試！", { duration: 8000 });
                   } else {
                     toast.error("同步失敗：" + (data.error || "未知錯誤"));
                   }
