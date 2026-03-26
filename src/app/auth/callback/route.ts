@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Handles the OAuth/magic-link callback from Supabase.
@@ -52,6 +53,30 @@ export async function GET(request: NextRequest) {
       if (!error) {
         debugCtx.step = "exchange_success";
         console.log("[auth/callback] Success:", JSON.stringify(debugCtx));
+
+        // Process referral if a referrer cookie exists
+        const referrerId = request.cookies.get("referrer_id")?.value;
+        if (referrerId) {
+          try {
+            const admin = createAdminClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && user.id !== referrerId) {
+              await admin.rpc("process_referral_reward", {
+                p_new_user_id: user.id,
+                p_referrer_id: referrerId,
+              });
+              console.log(`[auth/callback] Referral processed: ${referrerId} -> ${user.id}`);
+            }
+          } catch (refErr) {
+            // Don't block login if referral processing fails
+            console.error("[auth/callback] Referral error:", refErr);
+          }
+          // Clear the referral cookie
+          const response = NextResponse.redirect(`${origin}${next}`);
+          response.cookies.set("referrer_id", "", { maxAge: 0, path: "/" });
+          return response;
+        }
+
         return NextResponse.redirect(`${origin}${next}`);
       }
 

@@ -15,7 +15,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
-import { Camera, ExternalLink, RefreshCw, Unlink, User } from "lucide-react";
+import { Camera, Copy, ExternalLink, RefreshCw, Share2, Unlink, User } from "lucide-react";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
 import { PoweredByStrava, ConnectWithStrava } from "@/components/strava/powered-by-strava";
@@ -447,6 +447,43 @@ export default function ProfilePage() {
                 className="w-full"
               />
             </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Referral link */}
+      <Card className="border-yellow-800/50 bg-gradient-to-br from-yellow-950/30 to-neutral-900">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-yellow-400">
+            <Share2 className="size-4" />
+            邀請朋友賺 $SC
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-xs text-neutral-400">
+            每成功邀請 1 位朋友加入，你可以獲得 <span className="font-bold text-yellow-400">50 $SC</span> 獎勵！
+          </p>
+          <div className="flex gap-2">
+            <Input
+              readOnly
+              value={typeof window !== "undefined" ? `${window.location.origin}/invite?ref=${profile.id}` : ""}
+              className="border-neutral-700 bg-neutral-800 text-neutral-300 text-xs"
+            />
+            <Button
+              variant="outline"
+              className="border-yellow-700 text-yellow-400 hover:bg-yellow-950 shrink-0"
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/invite?ref=${profile.id}`);
+                toast.success("邀請連結已複製！分享給朋友吧！");
+              }}
+            >
+              <Copy className="size-4" />
+            </Button>
+          </div>
+          {profile.referral_count > 0 && (
+            <p className="text-xs text-neutral-500">
+              已成功邀請 <span className="font-bold text-yellow-400">{profile.referral_count}</span> 位朋友
+            </p>
           )}
         </CardContent>
       </Card>

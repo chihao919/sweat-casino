@@ -82,6 +82,10 @@ const typeConfig: Record<
     label: "手動調整",
     className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
   },
+  [TransactionType.REFERRAL_REWARD]: {
+    label: "推薦獎勵",
+    className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  },
 };
 
 // Transaction types that represent money going out

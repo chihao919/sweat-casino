@@ -20,6 +20,7 @@ export enum TransactionType {
   POOL_REFUND = "pool_refund",
   SEASON_BONUS = "season_bonus",
   MANUAL_ADJUSTMENT = "manual_adjustment",
+  REFERRAL_REWARD = "referral_reward",
 }
 
 export enum BetType {
@@ -117,6 +118,9 @@ export interface Profile {
   title: string | null
   total_distance_km: number
   rank: string
+  // Referral fields
+  referred_by: string | null
+  referral_count: number
   // Joined relation (optional, present when team is fetched)
   team?: Team
 }
