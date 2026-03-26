@@ -13,7 +13,7 @@ export async function GET() {
   // Fetch all profiles with team info
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, display_name, avatar_url, team_id, sc_balance, created_at, teams(id, name, color, emoji)")
+    .select("id, display_name, avatar_url, team_id, sc_balance, total_distance_km, total_activities, current_streak, longest_streak, referral_count, created_at, teams(id, name, color, emoji)")
     .order("created_at", { ascending: true });
 
   if (error) {
@@ -29,18 +29,23 @@ export async function GET() {
     .select("id, name, color, emoji");
 
   const teamCounts: Record<string, number> = {};
+  const teamDistances: Record<string, number> = {};
   const unassigned = (profiles || []).filter((p) => !p.team_id).length;
 
   for (const team of teams || []) {
-    teamCounts[team.name] = (profiles || []).filter(
-      (p) => p.team_id === team.id
-    ).length;
+    const members = (profiles || []).filter((p) => p.team_id === team.id);
+    teamCounts[team.name] = members.length;
+    teamDistances[team.name] = members.reduce(
+      (sum, p) => sum + (Number(p.total_distance_km) || 0),
+      0
+    );
   }
 
   return NextResponse.json({
     total: profiles?.length ?? 0,
     unassigned,
     teamCounts,
+    teamDistances,
     teams: teams || [],
     players: (profiles || []).map((p) => ({
       id: p.id,
@@ -48,6 +53,12 @@ export async function GET() {
       avatarUrl: p.avatar_url,
       teamId: p.team_id,
       team: p.teams,
+      totalDistanceKm: p.total_distance_km ?? 0,
+      totalActivities: p.total_activities ?? 0,
+      currentStreak: p.current_streak ?? 0,
+      longestStreak: p.longest_streak ?? 0,
+      scBalance: p.sc_balance ?? 0,
+      referralCount: p.referral_count ?? 0,
       joinedAt: p.created_at,
     })),
   });
