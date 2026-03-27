@@ -13,7 +13,7 @@ export async function GET() {
   // Fetch all profiles with team info
   const { data: profiles, error } = await supabase
     .from("profiles")
-    .select("id, display_name, avatar_url, team_id, sc_balance, total_distance_km, total_activities, current_streak, longest_streak, referral_count, created_at, teams(id, name, color, emoji)")
+    .select("id, display_name, avatar_url, team_id, sc_balance, total_distance_km, total_activities, current_streak, longest_streak, is_strava_connected, referral_count, created_at, teams(id, name, color, emoji)")
     .order("created_at", { ascending: true });
 
   if (error) {
@@ -58,6 +58,7 @@ export async function GET() {
       currentStreak: p.current_streak ?? 0,
       longestStreak: p.longest_streak ?? 0,
       scBalance: p.sc_balance ?? 0,
+      isStravaConnected: p.is_strava_connected ?? false,
       referralCount: p.referral_count ?? 0,
       joinedAt: p.created_at,
     })),
