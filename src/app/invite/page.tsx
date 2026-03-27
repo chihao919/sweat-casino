@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -10,22 +10,37 @@ import {
 import { Button } from "@/components/ui/button";
 
 /**
- * /invite — Public landing page for recruiting new players.
- *
- * If the URL contains ?ref=USER_ID, store it in a cookie so we can
- * credit the referrer after the new user completes signup.
+ * Captures the ?ref= query param and stores it in a cookie.
+ * Must be inside a Suspense boundary because it uses useSearchParams().
  */
-export default function InvitePage() {
+function ReferralCapture() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const ref = searchParams.get("ref");
     if (ref) {
-      // Store referrer ID in a cookie (expires in 7 days)
       document.cookie = `referrer_id=${ref}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
     }
   }, [searchParams]);
 
+  if (!searchParams.get("ref")) return null;
+
+  return (
+    <Card className="mb-6 border-yellow-400/50 bg-gradient-to-r from-yellow-950/50 to-zinc-900">
+      <CardContent className="py-4 text-center">
+        <p className="text-lg font-bold text-yellow-400">🎁 你的朋友邀請你加入！</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          立即註冊即可獲得 100 $SC 註冊獎勵，邀請你的朋友也能獲得 50 $SC！
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+/**
+ * /invite — Public landing page for recruiting new players.
+ */
+export default function InvitePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Ambient glow */}
@@ -33,16 +48,9 @@ export default function InvitePage() {
 
       <div className="relative mx-auto max-w-lg px-5 py-10">
         {/* Referral banner */}
-        {searchParams.get("ref") && (
-          <Card className="mb-6 border-yellow-400/50 bg-gradient-to-r from-yellow-950/50 to-zinc-900">
-            <CardContent className="py-4 text-center">
-              <p className="text-lg font-bold text-yellow-400">🎁 你的朋友邀請你加入！</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                立即註冊即可獲得 100 $SC 註冊獎勵，邀請你的朋友也能獲得 50 $SC！
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <Suspense>
+          <ReferralCapture />
+        </Suspense>
 
         {/* Hero */}
         <div className="text-center">
