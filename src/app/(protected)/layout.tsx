@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { assignTeam } from "@/lib/teams/assignment";
 import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { HealthSyncProvider } from "@/components/health/health-sync-provider";
 import { Profile } from "@/types";
 
 /**
@@ -65,6 +66,7 @@ export default async function ProtectedLayout({
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header profile={profile} />
+      <HealthSyncProvider />
 
       {/* Main content — add bottom padding on mobile to avoid BottomNav overlap */}
       <main className="mx-auto w-full max-w-screen-lg flex-1 px-4 py-6 pb-24 md:pb-6">

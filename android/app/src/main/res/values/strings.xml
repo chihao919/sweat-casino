@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RunRun</string>
+    <string name="title_activity_main">RunRun</string>
+    <string name="package_name">com.runrun.app</string>
+    <string name="custom_url_scheme">com.runrun.app</string>
+</resources>
