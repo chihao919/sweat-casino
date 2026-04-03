@@ -27,6 +27,11 @@ import {
   Thermometer,
   Wind,
   ChevronDown,
+  Watch,
+  Smartphone,
+  Heart,
+  Download,
+  CheckCircle2,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -63,33 +68,63 @@ function FAQItem({
 }
 
 // -----------------------------------------------------------------------
-// Step Card (for onboarding)
+// Flow Step (horizontal flowchart node)
 // -----------------------------------------------------------------------
-function StepCard({
-  step,
+function FlowStep({
   icon,
+  label,
+  color,
+  isLast = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  color: string;
+  isLast?: boolean;
+}) {
+  return (
+    <div className="flex items-center">
+      <div
+        className={`flex flex-col items-center gap-2 rounded-xl border px-4 py-3 min-w-[90px] ${color}`}
+      >
+        {icon}
+        <span className="text-xs font-semibold text-center leading-tight">
+          {label}
+        </span>
+      </div>
+      {!isLast && (
+        <ArrowRight className="mx-2 h-5 w-5 shrink-0 text-zinc-600" />
+      )}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Vertical Step Card (for setup guides)
+// -----------------------------------------------------------------------
+function SetupStep({
+  step,
   title,
-  description,
+  children,
+  color = "bg-red-600",
 }: {
   step: number;
-  icon: React.ReactNode;
   title: string;
-  description: string;
+  children: React.ReactNode;
+  color?: string;
 }) {
   return (
     <div className="flex gap-4">
       <div className="flex shrink-0 flex-col items-center">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white">
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-full ${color} text-lg font-bold text-white`}
+        >
           {step}
         </div>
-        {step < 5 && <div className="mt-2 h-full w-px bg-zinc-700" />}
+        <div className="mt-2 h-full w-px bg-zinc-700" />
       </div>
       <div className="pb-8">
-        <div className="flex items-center gap-2 text-white">
-          {icon}
-          <h3 className="text-lg font-semibold">{title}</h3>
-        </div>
-        <p className="mt-1 text-zinc-400 leading-relaxed">{description}</p>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+        <div className="mt-2 text-zinc-400 leading-relaxed">{children}</div>
       </div>
     </div>
   );
@@ -108,15 +143,15 @@ export default function GuidePage() {
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-black tracking-tight">
-            🎰 汗水賭場
+            🎰 RunRun Guide
           </h1>
           <p className="mt-3 text-lg text-zinc-400">
-            用汗水下注，讓跑步變成一場賭局
+            Your sweat. Your stakes. Your game.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link href="/login">
               <Button className="bg-red-600 hover:bg-red-700 font-semibold">
-                立即加入
+                Join Now
               </Button>
             </Link>
             <Link href="/dashboard">
@@ -124,65 +159,67 @@ export default function GuidePage() {
                 variant="outline"
                 className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
               >
-                進入首頁
+                Dashboard
               </Button>
             </Link>
           </div>
         </div>
 
         {/* ============================================================= */}
-        {/* SECTION 1: Game Rules                                         */}
+        {/* HOW IT WORKS — Flow Diagram                                   */}
         {/* ============================================================= */}
         <section className="mb-16">
           <div className="mb-6 flex items-center gap-2">
             <Zap className="h-6 w-6 text-red-500" />
-            <h2 className="text-2xl font-bold">遊戲規則</h2>
+            <h2 className="text-2xl font-bold">How It Works</h2>
           </div>
 
-          {/* Strava Integration */}
-          <Card className="mb-4 border-orange-900/50 bg-gradient-to-r from-orange-950/30 to-zinc-900">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-lg text-white">
-                <svg className="h-5 w-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
-                </svg>
-                Strava 連結 — 自動追蹤你的跑步
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-zinc-400">
-              <p>
-                汗水賭場透過{" "}
-                <span className="font-semibold text-orange-400">Strava</span>{" "}
-                自動同步你的跑步數據。連結後每次跑完步，系統會自動：
+          {/* Horizontal flow */}
+          <Card className="border-zinc-800 bg-zinc-900 overflow-x-auto">
+            <CardContent className="py-6">
+              <div className="flex items-center justify-center min-w-[600px]">
+                <FlowStep
+                  icon={<Watch className="h-6 w-6 text-blue-400" />}
+                  label="Run with Watch"
+                  color="border-blue-800 bg-blue-950/50"
+                />
+                <FlowStep
+                  icon={<Heart className="h-6 w-6 text-pink-400" />}
+                  label="Auto Sync to Health"
+                  color="border-pink-800 bg-pink-950/50"
+                />
+                <FlowStep
+                  icon={<Smartphone className="h-6 w-6 text-green-400" />}
+                  label="Open RunRun App"
+                  color="border-green-800 bg-green-950/50"
+                />
+                <FlowStep
+                  icon={<Coins className="h-6 w-6 text-yellow-400" />}
+                  label="Earn $SC"
+                  color="border-yellow-800 bg-yellow-950/50"
+                />
+                <FlowStep
+                  icon={<Target className="h-6 w-6 text-purple-400" />}
+                  label="Bet & Win"
+                  color="border-purple-800 bg-purple-950/50"
+                  isLast
+                />
+              </div>
+              <p className="mt-4 text-center text-sm text-zinc-500">
+                No manual upload. No Strava needed. Just run.
               </p>
-              <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
-                  <Footprints className="mx-auto h-5 w-5 text-orange-400" />
-                  <p className="mt-1 text-sm font-medium text-white">記錄跑量</p>
-                  <p className="text-xs text-zinc-500">距離、時間、配速</p>
-                </div>
-                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
-                  <CloudRain className="mx-auto h-5 w-5 text-blue-400" />
-                  <p className="mt-1 text-sm font-medium text-white">查詢天氣</p>
-                  <p className="text-xs text-zinc-500">判定是否有天氣加成</p>
-                </div>
-                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 text-center">
-                  <Coins className="mx-auto h-5 w-5 text-yellow-400" />
-                  <p className="mt-1 text-sm font-medium text-white">發放 $SC</p>
-                  <p className="text-xs text-zinc-500">即時入帳到錢包</p>
-                </div>
-              </div>
-              <div className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950/50 p-3">
-                <p className="text-sm font-medium text-white">📱 如何連結？</p>
-                <ol className="mt-2 list-inside list-decimal space-y-1 text-sm">
-                  <li>下載 <span className="text-orange-400">Strava</span> App（免費）並註冊帳號</li>
-                  <li>登入汗水賭場後，到「<span className="text-white">個人資料</span>」頁面</li>
-                  <li>點擊「<span className="text-orange-400">連結 Strava</span>」按鈕，授權即完成</li>
-                  <li>之後用 Strava 記錄跑步，$SC 自動到帳！</li>
-                </ol>
-              </div>
             </CardContent>
           </Card>
+        </section>
+
+        {/* ============================================================= */}
+        {/* GAME MECHANICS                                                */}
+        {/* ============================================================= */}
+        <section className="mb-16">
+          <div className="mb-6 flex items-center gap-2">
+            <Coins className="h-6 w-6 text-yellow-500" />
+            <h2 className="text-2xl font-bold">Game Mechanics</h2>
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {/* SC Economy */}
@@ -190,22 +227,18 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Coins className="h-5 w-5 text-yellow-500" />
-                  $SC 汗水幣
+                  $SC Sweat Coins
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
                 <p>
-                  每跑 <Badge variant="secondary">1 公里</Badge> 賺取{" "}
-                  <Badge className="bg-yellow-600/20 text-yellow-400">
-                    10 $SC
-                  </Badge>
+                  Earn <Badge className="bg-yellow-600/20 text-yellow-400">10 $SC</Badge> per{" "}
+                  <Badge variant="secondary">1 km</Badge> run.
                 </p>
                 <p className="mt-2">
-                  註冊即贈{" "}
-                  <span className="font-semibold text-yellow-400">
-                    100 $SC
-                  </span>{" "}
-                  起始資金，用跑步累積更多籌碼！
+                  Sign up bonus:{" "}
+                  <span className="font-semibold text-yellow-400">100 $SC</span>{" "}
+                  to get started.
                 </p>
               </CardContent>
             </Card>
@@ -215,58 +248,28 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <CloudRain className="h-5 w-5 text-blue-400" />
-                  天氣加成 1.5x
+                  Weather Bonus 1.5x
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
-                <p className="mb-2">在惡劣天氣下跑步，獎勵翻 1.5 倍！</p>
+                <p className="mb-2">Run in bad weather, earn 1.5x rewards!</p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge
-                    variant="outline"
-                    className="border-blue-800 text-blue-400"
-                  >
-                    <CloudRain className="mr-1 h-3 w-3" />
-                    暴雨
+                  <Badge variant="outline" className="border-blue-800 text-blue-400">
+                    <CloudRain className="mr-1 h-3 w-3" /> Rain
                   </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-purple-800 text-purple-400"
-                  >
-                    <Zap className="mr-1 h-3 w-3" />
-                    雷暴
+                  <Badge variant="outline" className="border-purple-800 text-purple-400">
+                    <Zap className="mr-1 h-3 w-3" /> Thunder
                   </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-red-800 text-red-400"
-                  >
-                    <Thermometer className="mr-1 h-3 w-3" />
-                    極端高溫 &gt;35°C
+                  <Badge variant="outline" className="border-red-800 text-red-400">
+                    <Thermometer className="mr-1 h-3 w-3" /> &gt;35°C
                   </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-cyan-800 text-cyan-400"
-                  >
-                    <Snowflake className="mr-1 h-3 w-3" />
-                    極端低溫 &lt;0°C
+                  <Badge variant="outline" className="border-cyan-800 text-cyan-400">
+                    <Snowflake className="mr-1 h-3 w-3" /> &lt;0°C
                   </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-teal-800 text-teal-400"
-                  >
-                    <Wind className="mr-1 h-3 w-3" />
-                    強風 &gt;10 m/s
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-white/30 text-white"
-                  >
-                    <Snowflake className="mr-1 h-3 w-3" />
-                    下雪
+                  <Badge variant="outline" className="border-teal-800 text-teal-400">
+                    <Wind className="mr-1 h-3 w-3" /> &gt;10 m/s
                   </Badge>
                 </div>
-                <p className="mt-2 text-xs text-zinc-500">
-                  * 多重天氣不疊加，最高 1.5x
-                </p>
               </CardContent>
             </Card>
 
@@ -275,19 +278,15 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Skull className="h-5 w-5 text-red-500" />
-                  生存稅
+                  Survival Tax
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
                 <p>
-                  每週一結算，若上週跑量不足{" "}
-                  <Badge variant="secondary">5 公里</Badge>，將被扣除餘額的{" "}
-                  <span className="font-semibold text-red-400">5%</span>{" "}
-                  作為生存稅。
+                  Run less than <Badge variant="secondary">5 km</Badge> per week?
+                  Lose <span className="font-semibold text-red-400">5%</span> of your balance.
                 </p>
-                <p className="mt-2">
-                  不跑就淘汰！你的 $SC 會慢慢蒸發 💀
-                </p>
+                <p className="mt-2">Don&apos;t run = don&apos;t survive 💀</p>
               </CardContent>
             </Card>
 
@@ -296,25 +295,20 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Swords className="h-5 w-5 text-orange-500" />
-                  隊伍對決
+                  Team Battle
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
                 <p>
-                  註冊後自動分配到{" "}
-                  <span className="font-semibold text-red-400">🐂 紅牛隊</span>{" "}
-                  或{" "}
-                  <span className="font-semibold text-zinc-200">
-                    🐻‍❄️ 白熊隊
-                  </span>
-                  ，一旦分配不可更換。
+                  <span className="font-semibold text-red-400">🐂 Red Bulls</span>{" "}
+                  vs{" "}
+                  <span className="font-semibold text-zinc-200">🐻‍❄️ White Bears</span>
                 </p>
                 <p className="mt-2">
-                  <span className="font-medium text-white">調整分數</span> =
-                  總公里數 × 活躍率
+                  <span className="font-medium text-white">Score</span> = Total KM × Activity Rate
                 </p>
                 <p className="mt-1 text-xs text-zinc-500">
-                  光靠少數人衝距離沒用，團隊活躍率才是關鍵！
+                  Every teammate counts. It&apos;s not just about the top runners.
                 </p>
               </CardContent>
             </Card>
@@ -324,19 +318,15 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Target className="h-5 w-5 text-green-500" />
-                  跟自己對賭
+                  Personal Bets
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
-                <p>
-                  設定目標（例如：本週跑 20km），押上 $SC 作為賭注。
-                </p>
+                <p>Bet on yourself: &quot;I&apos;ll run 20km this week.&quot;</p>
                 <p className="mt-2">
-                  達標獲得{" "}
-                  <span className="font-semibold text-green-400">
-                    1.5x ~ 5.0x
-                  </span>{" "}
-                  賠率派彩，失敗則賭注歸零。目標越難，賠率越高！
+                  Win:{" "}
+                  <span className="font-semibold text-green-400">1.5x ~ 5.0x</span>{" "}
+                  payout. Fail: lose your stake.
                 </p>
               </CardContent>
             </Card>
@@ -346,20 +336,15 @@ export default function GuidePage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <TrendingUp className="h-5 w-5 text-purple-500" />
-                  公開賭池
+                  Betting Pools
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-zinc-400">
-                <p>
-                  預測市場：「紅牛隊本週能跑超過 500km 嗎？」
-                </p>
+                <p>Predict: &quot;Will Red Bulls run 500km this week?&quot;</p>
                 <p className="mt-2">
-                  選擇<span className="text-green-400">看多</span>或
-                  <span className="text-red-400">看空</span>
-                  ，投入 $SC。結算後贏家按比例分配整個賭池。
-                </p>
-                <p className="mt-1 text-xs text-zinc-500">
-                  * 零抽成！100% 由玩家分配（Pari-mutuel 模式）
+                  Pick <span className="text-green-400">Long</span> or{" "}
+                  <span className="text-red-400">Short</span>.
+                  Winners split the pool. Zero commission.
                 </p>
               </CardContent>
             </Card>
@@ -370,14 +355,13 @@ export default function GuidePage() {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Trophy className="h-5 w-5 text-yellow-500" />
-                賽季制度
+                Seasons
               </CardTitle>
             </CardHeader>
             <CardContent className="text-zinc-400">
               <p>
-                每個賽季為期 <span className="font-semibold text-white">3 個月</span>。
-                賽季結束時，勝利隊伍的成員將獲得額外 $SC 賽季獎勵。
-                新賽季開始時，所有人保留 $SC 餘額繼續戰鬥！
+                Each season lasts <span className="font-semibold text-white">3 months</span>.
+                The winning team earns bonus $SC. Your balance carries over.
               </p>
             </CardContent>
           </Card>
@@ -386,92 +370,259 @@ export default function GuidePage() {
         <Separator className="mb-16 bg-zinc-800" />
 
         {/* ============================================================= */}
-        {/* SECTION 2: Getting Started                                    */}
+        {/* SETUP GUIDE — Flow Diagrams                                   */}
+        {/* ============================================================= */}
+        <section className="mb-16">
+          <div className="mb-8 flex items-center gap-2">
+            <Watch className="h-6 w-6 text-red-500" />
+            <h2 className="text-2xl font-bold">Watch Setup</h2>
+          </div>
+
+          {/* Apple Watch Flow */}
+          <Card className="mb-6 border-zinc-800 bg-zinc-900">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                ⌚ Apple Watch
+              </CardTitle>
+              <p className="text-sm text-zinc-500">Zero setup needed</p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center overflow-x-auto py-4 min-w-[400px]">
+                <FlowStep
+                  icon={<Watch className="h-5 w-5 text-white" />}
+                  label="Run with Apple Watch"
+                  color="border-zinc-700 bg-zinc-800"
+                />
+                <FlowStep
+                  icon={<Heart className="h-5 w-5 text-pink-400" />}
+                  label="Auto saved to Apple Health"
+                  color="border-pink-800 bg-pink-950/50"
+                />
+                <FlowStep
+                  icon={<CheckCircle2 className="h-5 w-5 text-green-400" />}
+                  label="RunRun reads it"
+                  color="border-green-800 bg-green-950/50"
+                  isLast
+                />
+              </div>
+              <p className="text-center text-sm text-zinc-500">
+                Apple Watch automatically writes to Apple Health. Nothing to configure.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Garmin Flow */}
+          <Card className="mb-6 border-zinc-800 bg-zinc-900">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                🏃 Garmin
+              </CardTitle>
+              <p className="text-sm text-zinc-500">One-time setup required</p>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center overflow-x-auto py-4 min-w-[500px]">
+                <FlowStep
+                  icon={<Watch className="h-5 w-5 text-white" />}
+                  label="Run with Garmin"
+                  color="border-zinc-700 bg-zinc-800"
+                />
+                <FlowStep
+                  icon={<Download className="h-5 w-5 text-blue-400" />}
+                  label="Garmin Connect App"
+                  color="border-blue-800 bg-blue-950/50"
+                />
+                <FlowStep
+                  icon={<Heart className="h-5 w-5 text-pink-400" />}
+                  label="Sync to Apple Health"
+                  color="border-pink-800 bg-pink-950/50"
+                />
+                <FlowStep
+                  icon={<CheckCircle2 className="h-5 w-5 text-green-400" />}
+                  label="RunRun reads it"
+                  color="border-green-800 bg-green-950/50"
+                  isLast
+                />
+              </div>
+
+              <Separator className="my-4 bg-zinc-800" />
+
+              <div className="ml-1">
+                <SetupStep step={1} title="Install Garmin Connect" color="bg-blue-600">
+                  <p>
+                    Download <span className="text-blue-400 font-semibold">Garmin Connect</span> from
+                    App Store or Google Play. Pair your Garmin watch.
+                  </p>
+                </SetupStep>
+                <SetupStep step={2} title="Enable Apple Health Sync" color="bg-blue-600">
+                  <p>Open Garmin Connect:</p>
+                  <div className="mt-2 flex items-center gap-2 flex-wrap">
+                    <Badge variant="outline" className="border-zinc-600 text-zinc-300">More (⋯)</Badge>
+                    <ArrowRight className="h-3 w-3 text-zinc-600" />
+                    <Badge variant="outline" className="border-zinc-600 text-zinc-300">Settings</Badge>
+                    <ArrowRight className="h-3 w-3 text-zinc-600" />
+                    <Badge variant="outline" className="border-zinc-600 text-zinc-300">Health</Badge>
+                    <ArrowRight className="h-3 w-3 text-zinc-600" />
+                    <Badge variant="outline" className="border-green-700 text-green-400">Enable Apple Health</Badge>
+                  </div>
+                  <p className="mt-2">Allow all permissions when prompted.</p>
+                </SetupStep>
+                <SetupStep step={3} title="Verify" color="bg-blue-600">
+                  <p>
+                    Go for a run. After syncing to Garmin Connect, check iPhone{" "}
+                    <span className="text-pink-400 font-semibold">Health</span> app
+                    to confirm the workout appears. Done!
+                  </p>
+                </SetupStep>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* No Watch */}
+          <Card className="border-zinc-800 bg-zinc-900">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                📱 No Watch? No Problem.
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center overflow-x-auto py-4 min-w-[400px]">
+                <FlowStep
+                  icon={<Smartphone className="h-5 w-5 text-white" />}
+                  label="Run with any app"
+                  color="border-zinc-700 bg-zinc-800"
+                />
+                <FlowStep
+                  icon={<Heart className="h-5 w-5 text-pink-400" />}
+                  label="Writes to Health"
+                  color="border-pink-800 bg-pink-950/50"
+                />
+                <FlowStep
+                  icon={<CheckCircle2 className="h-5 w-5 text-green-400" />}
+                  label="RunRun reads it"
+                  color="border-green-800 bg-green-950/50"
+                  isLast
+                />
+              </div>
+              <p className="text-center text-sm text-zinc-500">
+                Use Nike Run Club, Adidas Running, or any app that writes to Apple Health / Health Connect.
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <Separator className="mb-16 bg-zinc-800" />
+
+        {/* ============================================================= */}
+        {/* GETTING STARTED                                               */}
         {/* ============================================================= */}
         <section className="mb-16">
           <div className="mb-8 flex items-center gap-2">
             <Footprints className="h-6 w-6 text-red-500" />
-            <h2 className="text-2xl font-bold">新手上路</h2>
+            <h2 className="text-2xl font-bold">Getting Started</h2>
           </div>
 
+          {/* Onboarding flow */}
+          <Card className="mb-6 border-zinc-800 bg-zinc-900 overflow-x-auto">
+            <CardContent className="py-6">
+              <div className="flex items-center justify-center min-w-[500px]">
+                <FlowStep
+                  icon={<Download className="h-5 w-5 text-blue-400" />}
+                  label="Download App"
+                  color="border-blue-800 bg-blue-950/50"
+                />
+                <FlowStep
+                  icon={<ArrowRight className="h-5 w-5 text-white" />}
+                  label="Google Login"
+                  color="border-zinc-700 bg-zinc-800"
+                />
+                <FlowStep
+                  icon={<Heart className="h-5 w-5 text-pink-400" />}
+                  label="Allow Health Access"
+                  color="border-pink-800 bg-pink-950/50"
+                />
+                <FlowStep
+                  icon={<Swords className="h-5 w-5 text-orange-400" />}
+                  label="Join Team"
+                  color="border-orange-800 bg-orange-950/50"
+                />
+                <FlowStep
+                  icon={<Footprints className="h-5 w-5 text-green-400" />}
+                  label="Run!"
+                  color="border-green-800 bg-green-950/50"
+                  isLast
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="ml-1">
-            <StepCard
-              step={1}
-              icon={<ArrowRight className="h-4 w-4 text-red-400" />}
-              title="Google 登入"
-              description="點擊「使用 Google 登入」，一鍵註冊。系統自動送你 100 $SC 起始資金。"
-            />
-            <StepCard
-              step={2}
-              icon={<Swords className="h-4 w-4 text-orange-400" />}
-              title="加入隊伍"
-              description="系統自動將你分配到紅牛隊 🐂 或白熊隊 🐻‍❄️，與隊友並肩作戰。分配後不可更換，這就是「共同命運」機制。"
-            />
-            <StepCard
-              step={3}
-              icon={<Footprints className="h-4 w-4 text-green-400" />}
-              title="連結 Strava"
-              description="到「個人資料」頁面連結你的 Strava 帳號。之後每次跑步完成，系統會自動同步你的跑步數據並發放 $SC。"
-            />
-            <StepCard
-              step={4}
-              icon={<Target className="h-4 w-4 text-blue-400" />}
-              title="開始下注"
-              description="到「下注」頁面跟自己對賭或加入公開賭池。押上你的 $SC，用行動證明自己！"
-            />
-            <StepCard
-              step={5}
-              icon={<Timer className="h-4 w-4 text-yellow-400" />}
-              title="保持活躍"
-              description="每週至少跑 5 公里避免生存稅。查看首頁的隊伍對決面板，和隊友一起衝排名！"
-            />
+            <SetupStep step={1} title="Download RunRun App">
+              <p>Get RunRun from the App Store (iOS) or Google Play (Android). It&apos;s free.</p>
+            </SetupStep>
+            <SetupStep step={2} title="Sign in with Google">
+              <p>One-tap Google login. You&apos;ll receive <span className="text-yellow-400 font-semibold">100 $SC</span> as a welcome bonus.</p>
+            </SetupStep>
+            <SetupStep step={3} title="Allow Health Data Access">
+              <p>The app will ask to read your running data from Apple Health or Health Connect. Tap &quot;Allow&quot; — this is how we track your runs automatically.</p>
+            </SetupStep>
+            <SetupStep step={4} title="Get Assigned to a Team">
+              <p>
+                You&apos;ll be auto-assigned to{" "}
+                <span className="text-red-400 font-semibold">🐂 Red Bulls</span> or{" "}
+                <span className="text-white font-semibold">🐻‍❄️ White Bears</span>.
+                No switching — your fate is sealed.
+              </p>
+            </SetupStep>
+            <SetupStep step={5} title="Run & Earn">
+              <p>Every kilometer earns $SC. Place bets, climb the leaderboard, and keep your team ahead. Don&apos;t forget — skip a week and the survival tax hits.</p>
+            </SetupStep>
           </div>
         </section>
 
         <Separator className="mb-16 bg-zinc-800" />
 
         {/* ============================================================= */}
-        {/* SECTION 3: FAQ                                                */}
+        {/* FAQ                                                           */}
         {/* ============================================================= */}
         <section className="mb-16">
           <div className="mb-6 flex items-center gap-2">
             <HelpCircle className="h-6 w-6 text-red-500" />
-            <h2 className="text-2xl font-bold">常見問題</h2>
+            <h2 className="text-2xl font-bold">FAQ</h2>
           </div>
 
           <Card className="border-zinc-800 bg-zinc-900">
             <CardContent className="px-6 py-2">
               <FAQItem
-                question="$SC 可以換成真錢嗎？"
-                answer="不行。$SC 是遊戲內虛擬貨幣，僅用於汗水賭場內的下注和競賽，沒有現實貨幣價值。"
+                question="Can I convert $SC to real money?"
+                answer="No. $SC is in-game virtual currency only. It has no real-world monetary value."
               />
               <FAQItem
-                question="我可以換隊伍嗎？"
-                answer="不行。隊伍在註冊時自動分配且不可更換，這是「共同命運」設計的核心——你必須和隊友一起努力。"
+                question="Can I switch teams?"
+                answer="No. Team assignment is permanent. This is the 'shared fate' design — you win or lose together."
               />
               <FAQItem
-                question="沒有 Strava 可以玩嗎？"
-                answer="目前需要 Strava 來自動記錄跑步數據。未來可能支援手動輸入或其他平台。建議先下載 Strava（免費），用手機 GPS 記錄跑步即可。"
+                question="Do I need Strava?"
+                answer="No! RunRun reads directly from Apple Health (iOS) or Health Connect (Android). Any watch or running app that writes to Health will work."
               />
               <FAQItem
-                question="天氣加成怎麼判定的？"
-                answer="系統在你跑步時自動查詢起點位置的即時天氣（OpenWeatherMap API）。符合暴雨、雷暴、極端溫度、強風或下雪任一條件，即可獲得 1.5x 加成。多重條件不疊加。"
+                question="How does weather bonus work?"
+                answer="The system checks real-time weather at your run location. Rain, thunderstorm, extreme heat (>35°C), extreme cold (<0°C), strong wind (>10 m/s), or snow triggers a 1.5x bonus. Multiple conditions don't stack."
               />
               <FAQItem
-                question="生存稅什麼時候扣？"
-                answer="每週一 00:00 自動結算。系統檢查你上週（週一至週日）的總跑量，不足 5 公里則扣除餘額的 5%。最低扣 1 $SC（如果餘額大於 0）。"
+                question="When is survival tax charged?"
+                answer="Every Monday at midnight. If you ran less than 5km the previous week, you lose 5% of your $SC balance."
               />
               <FAQItem
-                question="下注輸了怎麼辦？"
-                answer="個人賭注：未達標則賭金歸零。公開賭池：選錯邊則投入金額歸零，由贏家分配。但別擔心，繼續跑步就能賺回來！"
+                question="What if I lose a bet?"
+                answer="Personal bets: your stake is gone. Pool bets: your entry goes to the winners. But keep running — you'll earn it back!"
               />
               <FAQItem
-                question="賠率怎麼算的？"
-                answer="個人賭注：根據你的歷史平均表現計算，目標越有挑戰性賠率越高（1.5x~5.0x）。公開賭池：動態賠率 = 總賭池 ÷ 你選的那邊的總額，隨其他玩家加入而變動。"
+                question="How are odds calculated?"
+                answer="Personal bets: based on your history — harder goals = higher odds (1.5x–5.0x). Pool bets: dynamic odds based on total pool distribution (parimutuel)."
               />
               <FAQItem
-                question="賽季獎勵怎麼發？"
-                answer="每個賽季為期 3 個月。賽季結束時，調整分數（總公里 × 活躍率）較高的隊伍獲勝，該隊全體成員獲得額外 $SC 獎勵。"
+                question="What are season rewards?"
+                answer="Each season is 3 months. The team with the higher adjusted score (total KM × activity rate) wins. All members of the winning team earn bonus $SC."
               />
             </CardContent>
           </Card>
@@ -479,20 +630,20 @@ export default function GuidePage() {
 
         {/* CTA */}
         <div className="text-center">
-          <h3 className="mb-4 text-xl font-bold">準備好用汗水下注了嗎？</h3>
+          <h3 className="mb-4 text-xl font-bold">Ready to bet your sweat?</h3>
           <Link href="/login">
             <Button
               size="lg"
               className="bg-red-600 hover:bg-red-700 font-bold text-lg px-8"
             >
-              🎰 立即加入汗水賭場
+              🎰 Join RunRun Now
             </Button>
           </Link>
         </div>
 
         {/* Footer */}
         <div className="mt-16 text-center text-sm text-zinc-600">
-          <p>Sweat Casino © 2026 — 你的汗水，你的籌碼</p>
+          <p>RunRun © 2026 — Your Sweat, Your Stakes</p>
         </div>
       </div>
     </div>
