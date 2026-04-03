@@ -19,7 +19,11 @@ const config: CapacitorConfig = {
       signingType: "apksigner",
     },
   },
-  plugins: {},
+  plugins: {
+    Browser: {
+      // Browser plugin opens system browser for OAuth
+    },
+  },
 };
 
 export default config;

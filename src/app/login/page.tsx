@@ -54,16 +54,47 @@ export default function LoginPage() {
     setAuthError(null);
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    // Detect if running inside Capacitor native app
+    const isNative =
+      typeof window !== "undefined" &&
+      (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
-    if (error) {
-      setIsLoading(false);
-      setAuthError(`登入啟動失敗: ${error.message}\n[Debug: step=signInWithOAuth, ua=${navigator.userAgent.slice(0, 80)}]`);
+    if (isNative) {
+      // In native app: use signInWithOAuth with PKCE disabled (use implicit flow)
+      // to avoid cookie issues in Capacitor WebView
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) {
+        setIsLoading(false);
+        setAuthError(`登入啟動失敗: ${error.message}`);
+        return;
+      }
+
+      if (data?.url) {
+        // Open OAuth URL in system browser (Safari/Chrome)
+        // which handles cookies correctly
+        const { Browser } = await import("@capacitor/browser");
+        await Browser.open({ url: data.url, windowName: "_self" });
+      }
+    } else {
+      // Web: use default OAuth flow
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        setIsLoading(false);
+        setAuthError(`登入啟動失敗: ${error.message}\n[Debug: step=signInWithOAuth, ua=${navigator.userAgent.slice(0, 80)}]`);
+      }
     }
   }
 
