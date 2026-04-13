@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/lib/config";
 import {
   Card,
   CardContent,
@@ -40,7 +41,7 @@ export default function PlayersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/public/players")
+    fetch(`${API_BASE_URL}/api/public/players`)
       .then((res) => res.json())
       .then((d) => {
         setData(d);

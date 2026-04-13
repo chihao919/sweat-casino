@@ -5,8 +5,6 @@ const config: CapacitorConfig = {
   appName: "RunRun",
   webDir: "out",
   server: {
-    // Use the deployed URL during development for easy testing
-    // Remove this for production builds to use the local bundle
     url: "https://runrun-plum.vercel.app",
     cleartext: false,
   },
@@ -20,9 +18,7 @@ const config: CapacitorConfig = {
     },
   },
   plugins: {
-    Browser: {
-      // Browser plugin opens system browser for OAuth
-    },
+    Browser: {},
   },
 };
 

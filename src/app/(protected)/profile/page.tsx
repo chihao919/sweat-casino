@@ -16,6 +16,7 @@ import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
 import { Camera, Copy, ExternalLink, RefreshCw, Share2, Unlink, User } from "lucide-react";
+import { API_BASE_URL } from "@/lib/config";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
 import { PoweredByStrava, ConnectWithStrava } from "@/components/strava/powered-by-strava";
@@ -232,7 +233,7 @@ export default function ProfilePage() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch("/api/profile/avatar", {
+    const res = await fetch(`${API_BASE_URL}/api/profile/avatar`, {
       method: "POST",
       body: formData,
     });
@@ -406,7 +407,7 @@ export default function ProfilePage() {
                 disabled={isSyncing}
                 onClick={async () => {
                   setIsSyncing(true);
-                  const res = await fetch("/api/strava/sync", { method: "POST" });
+                  const res = await fetch(`${API_BASE_URL}/api/strava/sync`, { method: "POST" });
                   const data = await res.json();
                   if (res.ok) {
                     toast.success(data.synced > 0 ? `已同步 ${data.synced} 筆活動！` : "沒有新活動需要同步");

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Capacitor } from "@capacitor/core";
+import { API_BASE_URL } from "@/lib/config";
 
 /**
  * Hook that auto-syncs health data when the app is opened on a native device.
@@ -20,6 +21,8 @@ export function useHealthSync() {
 
     setSyncing(true);
     try {
+      console.log("[health-sync] Starting sync, platform:", Capacitor.getPlatform(), "isNative:", Capacitor.isNativePlatform());
+
       // Dynamically import to avoid loading on web
       const {
         isHealthAvailable,
@@ -28,12 +31,14 @@ export function useHealthSync() {
       } = await import("@/lib/health/client");
 
       const available = await isHealthAvailable();
+      console.log("[health-sync] Health available:", available);
       if (!available) {
         setLastSyncResult("Health data not available on this device");
         return;
       }
 
       const authorized = await requestHealthAuthorization();
+      console.log("[health-sync] Authorization:", authorized);
       if (!authorized) {
         setLastSyncResult("Health permission denied");
         return;
@@ -46,8 +51,8 @@ export function useHealthSync() {
         return;
       }
 
-      // Send to our API
-      const res = await fetch("/api/health/sync", {
+      // Send to our API — use absolute URL so native (local bundle) builds work
+      const res = await fetch(`${API_BASE_URL}/api/health/sync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ workouts }),

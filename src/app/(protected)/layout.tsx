@@ -1,67 +1,100 @@
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
-import { assignTeam } from "@/lib/teams/assignment";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Header } from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { HealthSyncProvider } from "@/components/health/health-sync-provider";
+import { API_BASE_URL } from "@/lib/config";
 import { Profile } from "@/types";
 
 /**
- * Server-side layout for all protected routes.
+ * Client-side layout for all protected routes.
  * Handles auth guard and automatic team assignment on first login.
+ *
+ * Converted from server component to support static export (Capacitor local
+ * bundle mode). Server redirects are not available in static export, so auth
+ * and profile checks run client-side here.
  */
-export default async function ProtectedLayout({
+export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
-  // Verify the user is authenticated
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    async function initLayout() {
+      const supabase = createClient();
 
-  if (!user) {
-    redirect("/login");
-  }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  // Fetch the user profile with team relation
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*, team:teams(*)")
-    .eq("id", user.id)
-    .single<Profile>();
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
 
-  if (!profile) {
-    // Profile should be created on signup; if missing something went wrong
-    redirect("/login");
-  }
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("*, team:teams(*)")
+        .eq("id", user.id)
+        .single<Profile>();
 
-  // Auto-assign team if the user does not have one yet
-  if (!profile.team_id) {
-    try {
-      await assignTeam(user.id);
-    } catch (err) {
-      // Log the error but do not block the user from accessing the app
-      console.error("ProtectedLayout: failed to assign team", err);
+      if (!profileData) {
+        // Profile should be created on signup; redirect if missing
+        router.replace("/login");
+        return;
+      }
+
+      // Auto-assign team if the user does not have one yet
+      if (!profileData.team_id) {
+        try {
+          await fetch(`${API_BASE_URL}/api/profile/assign-team`, {
+            method: "POST",
+          });
+          // Re-fetch profile so team info is available in the header
+          const { data: updatedProfile } = await supabase
+            .from("profiles")
+            .select("*, team:teams(*)")
+            .eq("id", user.id)
+            .single<Profile>();
+          setProfile(updatedProfile ?? profileData);
+        } catch (err) {
+          // Log but do not block the user from accessing the app
+          console.error("ProtectedLayout: failed to assign team", err);
+          setProfile(profileData);
+        }
+      } else {
+        setProfile(profileData);
+      }
+
+      // Redirect new users (no display name) to onboarding — skip if already on /setup
+      if (!profileData.display_name && !pathname.startsWith("/setup")) {
+        router.replace("/setup");
+        return;
+      }
+
+      setIsReady(true);
     }
-  }
 
-  // Redirect new users (no display name) to onboarding — skip if already on /setup
-  const headersList = await headers();
-  const currentPath = headersList.get("x-pathname") || "";
-  if (!profile.display_name && !currentPath.startsWith("/setup")) {
-    redirect("/setup");
-  }
+    initLayout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Determine team color for BottomNav active indicator
-  const teamColor: "red" | "white" | null = profile.team
+  const teamColor: "red" | "white" | null = profile?.team
     ? profile.team.name.toLowerCase().includes("red")
       ? "red"
       : "white"
     : null;
+
+  // Render nothing until auth check is complete to prevent flash of protected content
+  if (!isReady) return null;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
