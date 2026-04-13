@@ -60,12 +60,16 @@ export default function LoginPage() {
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
     if (isNative) {
-      // In native app: open OAuth in system browser, then redirect back via custom URL scheme
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      // In native app: use implicit flow to avoid PKCE cookie issues
+      // between WebView and system browser. The hash fragment with tokens
+      // is handled directly by Supabase client in the WebView.
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect_scheme=runrun`,
-          skipBrowserRedirect: true,
+          redirectTo: window.location.origin + "/dashboard",
+          queryParams: {
+            response_type: "token",
+          },
         },
       });
 
@@ -74,13 +78,7 @@ export default function LoginPage() {
         setAuthError(`登入啟動失敗: ${error.message}`);
         return;
       }
-
-      if (data?.url) {
-        // Open OAuth URL in system browser (Safari/Chrome)
-        // which handles cookies correctly
-        const { Browser } = await import("@capacitor/browser");
-        await Browser.open({ url: data.url, windowName: "_self" });
-      }
+      // OAuth redirect happens in the WebView itself — no system browser needed
     } else {
       // Web: use default OAuth flow
       const { error } = await supabase.auth.signInWithOAuth({
