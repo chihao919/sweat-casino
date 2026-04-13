@@ -410,12 +410,6 @@ export default function ProfilePage() {
                   const data = await res.json();
                   if (res.ok) {
                     toast.success(data.synced > 0 ? `已同步 ${data.synced} 筆活動！` : "沒有新活動需要同步");
-                    if (data.debug) {
-                      console.log("[strava/sync] debug:", JSON.stringify(data.debug, null, 2));
-                      if (data.synced === 0) {
-                        toast.info(`Debug: Strava 回傳 ${data.debug.strava_total_returned} 筆活動, ${data.debug.runs_after_filter} 筆跑步, DB 已有 ${data.debug.existing_ids_in_db?.length ?? 0} 筆`, { duration: 10000 });
-                      }
-                    }
                     if (data.synced > 0) window.location.reload();
                   } else if (res.status === 429) {
                     toast.warning(data.message || "目前太多人在使用 Strava 同步，請稍等幾分鐘後再試！", { duration: 8000 });

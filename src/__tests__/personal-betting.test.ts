@@ -85,6 +85,7 @@ describe("checkBetProgress", () => {
     period_start: "2026-01-01",
     period_end: "2026-01-07",
     created_at: "2026-01-01",
+    resolved_at: null,
   };
 
   it("adds activity value to current progress", () => {

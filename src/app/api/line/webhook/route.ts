@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       .digest("base64");
 
     if (hash !== signature) {
-      console.warn("LINE webhook signature mismatch — check LINE_CHANNEL_SECRET env var");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
   }
 

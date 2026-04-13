@@ -60,12 +60,11 @@ export default function LoginPage() {
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
     if (isNative) {
-      // In native app: use signInWithOAuth with PKCE disabled (use implicit flow)
-      // to avoid cookie issues in Capacitor WebView
+      // In native app: open OAuth in system browser, then redirect back via custom URL scheme
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?redirect_scheme=runrun`,
           skipBrowserRedirect: true,
         },
       });

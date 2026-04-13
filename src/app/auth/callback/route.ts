@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
   const errorParam = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
   const next = searchParams.get("next") ?? "/dashboard";
+  const redirectScheme = searchParams.get("redirect_scheme");
 
   // Build debug context for troubleshooting
   const debugCtx: Record<string, string> = {
@@ -52,7 +53,6 @@ export async function GET(request: NextRequest) {
 
       if (!error) {
         debugCtx.step = "exchange_success";
-        console.log("[auth/callback] Success:", JSON.stringify(debugCtx));
 
         // Process referral if a referrer cookie exists
         const referrerId = request.cookies.get("referrer_id")?.value;
@@ -71,7 +71,30 @@ export async function GET(request: NextRequest) {
             // Don't block login if referral processing fails
             console.error("[auth/callback] Referral error:", refErr);
           }
-          // Clear the referral cookie
+        }
+
+        // For native Capacitor app: redirect back via custom URL scheme with session tokens
+        // so the WebView can call setSession() (Safari and WebView have separate cookie jars)
+        if (redirectScheme) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            const params = new URLSearchParams({
+              access_token: session.access_token,
+              refresh_token: session.refresh_token,
+            });
+            // Return an HTML page that redirects to the custom scheme
+            // (NextResponse.redirect doesn't work reliably with custom schemes)
+            const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Redirecting...</title></head><body>
+              <p>登入成功，正在返回 App...</p>
+              <script>window.location.href="${redirectScheme}://auth/callback?${params.toString()}";</script>
+            </body></html>`;
+            return new NextResponse(html, {
+              headers: { "Content-Type": "text/html" },
+            });
+          }
+        }
+
+        if (referrerId) {
           const response = NextResponse.redirect(`${origin}${next}`);
           response.cookies.set("referrer_id", "", { maxAge: 0, path: "/" });
           return response;

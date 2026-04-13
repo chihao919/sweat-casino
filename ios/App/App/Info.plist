@@ -47,6 +47,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.runrun.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>runrun</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSHealthShareUsageDescription</key>
 	<string>RunRun needs to read your running data to track your distance and earn $SC rewards.</string>
 	<key>NSHealthUpdateUsageDescription</key>
