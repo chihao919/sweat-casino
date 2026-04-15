@@ -58,6 +58,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>RunRun needs to read your running data to track your distance and earn $SC rewards.</string>
 	<key>NSHealthUpdateUsageDescription</key>
