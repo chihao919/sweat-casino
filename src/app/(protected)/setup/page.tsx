@@ -252,21 +252,6 @@ export default function SetupPage() {
                 <ExternalLink className="size-5 text-zinc-500" />
               </a>
 
-              <a
-                href="https://play.google.com/store/apps/details?id=com.strava"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-4 transition hover:border-zinc-700"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 text-2xl">
-                  🤖
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-white">Google Play</p>
-                  <p className="text-xs text-zinc-500">Android</p>
-                </div>
-                <ExternalLink className="size-5 text-zinc-500" />
-              </a>
             </div>
 
             {/* Registration guide */}

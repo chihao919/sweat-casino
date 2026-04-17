@@ -450,7 +450,7 @@ export default function GuidePage() {
                 <SetupStep step={1} title="Install Garmin Connect" color="bg-blue-600">
                   <p>
                     Download <span className="text-blue-400 font-semibold">Garmin Connect</span> from
-                    App Store or Google Play. Pair your Garmin watch.
+                    App Store. Pair your Garmin watch.
                   </p>
                 </SetupStep>
                 <SetupStep step={2} title="Enable Apple Health Sync" color="bg-blue-600">
@@ -557,7 +557,7 @@ export default function GuidePage() {
 
           <div className="ml-1">
             <SetupStep step={1} title="Download RunRun App">
-              <p>Get RunRun from the App Store (iOS) or Google Play (Android). It&apos;s free.</p>
+              <p>Get RunRun from the App Store. It&apos;s free.</p>
             </SetupStep>
             <SetupStep step={2} title="Sign in with Google">
               <p>One-tap Google login. You&apos;ll receive <span className="text-yellow-400 font-semibold">100 $SC</span> as a welcome bonus.</p>
@@ -602,7 +602,7 @@ export default function GuidePage() {
               />
               <FAQItem
                 question="Do I need Strava?"
-                answer="No! RunRun reads directly from Apple Health (iOS) or Health Connect (Android). Any watch or running app that writes to Health will work."
+                answer="No! RunRun reads directly from Apple Health. Any watch or running app that writes to Health will work."
               />
               <FAQItem
                 question="How does weather bonus work?"

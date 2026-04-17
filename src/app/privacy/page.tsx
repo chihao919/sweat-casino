@@ -127,12 +127,6 @@ export default function PrivacyPage() {
         <UL>
           <li>Running workout distance (kilometers per activity)</li>
         </UL>
-        <P>
-          On Android, RunRun requests read-only access to Google Health Connect
-          for equivalent running distance data. We do not read any other health
-          or fitness categories (heart rate, sleep, nutrition, etc.).
-        </P>
-
         <SubHeading>1.3 Strava Activity Data (Optional)</SubHeading>
         <P>
           If you choose to connect your Strava account, we request access to:

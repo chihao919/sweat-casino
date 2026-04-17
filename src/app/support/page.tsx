@@ -79,8 +79,7 @@ const FAQ_ITEMS: FAQItemProps[] = [
         tap the &quot;Connect&quot; button. You&apos;ll be redirected to Strava to
         authorise the connection. Once approved, your runs will sync automatically
         within a few minutes of completing a workout. Note: RunRun can also read
-        directly from <strong className="text-white">Apple Health</strong> (iOS) or{" "}
-        <strong className="text-white">Health Connect</strong> (Android) — Strava is
+        directly from <strong className="text-white">Apple Health</strong> — Strava is
         optional.
       </p>
     ),
@@ -196,8 +195,7 @@ const FAQ_ITEMS: FAQItemProps[] = [
             Check that RunRun has permission to read health data:{" "}
             <strong className="text-white">
               iPhone Settings → Privacy → Health → RunRun
-            </strong>{" "}
-            (or Android <strong className="text-white">Health Connect → Permissions → RunRun</strong>).
+            </strong>.
           </li>
           <li>
             If you use Strava, make sure the run has finished syncing inside the
@@ -344,7 +342,7 @@ export default function SupportPage() {
                 </li>
                 <li>
                   <strong className="text-white">Device &amp; OS</strong> — e.g. iPhone 15 /
-                  iOS 17.4, or Samsung Galaxy S24 / Android 14.
+                  iOS 17.4.
                 </li>
                 <li>
                   <strong className="text-white">Screenshot or screen recording</strong>{" "}

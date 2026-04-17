@@ -182,7 +182,7 @@ export default function InvitePage() {
                 <div>
                   <p className="font-bold text-xl">下載 Strava（免費）</p>
                   <p className="mt-1 text-base text-muted-foreground">
-                    到 App Store 或 Google Play 搜尋「Strava」，下載並用 Google 帳號註冊。
+                    到 App Store 搜尋「Strava」，下載並用 Google 帳號註冊。
                     <span className="text-green-600 dark:text-green-400 font-semibold"> 選免費方案就好！</span>
                   </p>
                 </div>
