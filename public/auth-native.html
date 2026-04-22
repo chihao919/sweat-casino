@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting...</title>
+  <style>
+    body { background: #000; color: #999; font-family: system-ui; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+  </style>
+</head>
+<body>
+  <p>登入成功，正在返回 App...</p>
+  <script>
+    // Extract tokens from hash fragment (implicit flow)
+    // URL looks like: /auth-native.html#access_token=XXX&refresh_token=YYY&...
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    if (accessToken && refreshToken) {
+      // Redirect to app via custom URL scheme
+      window.location.href = 'runrun://auth/callback?access_token=' + encodeURIComponent(accessToken) + '&refresh_token=' + encodeURIComponent(refreshToken);
+    } else {
+      document.body.innerHTML = '<p style="color:red">登入失敗：未收到 token。請重試。</p><p style="color:#666;font-size:12px">' + window.location.href + '</p>';
+    }
+  </script>
+</body>
+</html>

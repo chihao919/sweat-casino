@@ -59,14 +59,15 @@ export default function LoginPage() {
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
     if (isNative) {
-      // Native app: open OAuth in SFSafariViewController (in-app browser overlay)
-      // After OAuth, Vercel callback redirects to runrun:// URL scheme
-      // which triggers appUrlOpen → CapacitorAuthHandler → setSession
+      // Native app: use implicit flow (response_type=token) in SFSafariViewController
+      // Tokens come back via hash fragment to auth-native.html on Vercel
+      // which redirects to runrun:// URL scheme → appUrlOpen → setSession
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: "https://runrun-plum.vercel.app/auth/callback?redirect_scheme=runrun",
+          redirectTo: "https://runrun-plum.vercel.app/auth-native.html",
           skipBrowserRedirect: true,
+          queryParams: { response_type: "token" },
         },
       });
 
@@ -78,7 +79,7 @@ export default function LoginPage() {
 
       if (data?.url) {
         const { Browser } = await import("@capacitor/browser");
-        await Browser.open({ url: data.url, presentationStyle: "popover" });
+        await Browser.open({ url: data.url });
       }
     } else {
       // Web: standard OAuth flow
