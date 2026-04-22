@@ -73,15 +73,19 @@ export async function GET(request: NextRequest) {
           }
         }
 
-        // For native Capacitor app: redirect back to local bundle with session tokens
-        // Tokens go in the hash fragment so Supabase client auto-detects them
+        // For native Capacitor app: redirect back via custom URL scheme
+        // SFSafariViewController handles this and triggers appUrlOpen in the app
         if (redirectScheme) {
           const { data: { session } } = await supabase.auth.getSession();
           if (session) {
-            const hash = `access_token=${session.access_token}&refresh_token=${session.refresh_token}&token_type=bearer&type=signup`;
+            const params = new URLSearchParams({
+              access_token: session.access_token,
+              refresh_token: session.refresh_token,
+            });
+            const redirectUrl = `${redirectScheme}://auth/callback?${params.toString()}`;
             const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Redirecting...</title></head><body>
-              <p>登入成功，正在返回 App...</p>
-              <script>window.location.href="capacitor://localhost/dashboard#${hash}";</script>
+              <p style="text-align:center;margin-top:40vh;font-family:system-ui;color:#666;">登入成功，正在返回 App...</p>
+              <script>window.location.href="${redirectUrl}";</script>
             </body></html>`;
             return new NextResponse(html, {
               headers: { "Content-Type": "text/html" },

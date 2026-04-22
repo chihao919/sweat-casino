@@ -49,51 +49,58 @@ export default function LoginPage() {
     }
   }, []);
 
-  function getRedirectUrl() {
+  async function handleOAuthLogin(provider: "apple" | "google") {
+    setIsLoading(true);
+    setAuthError(null);
+    const supabase = createClient();
+
     const isNative =
       typeof window !== "undefined" &&
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
     if (isNative) {
-      // Use Vercel callback with redirect_scheme so it sends tokens back to the app
-      return "https://runrun-plum.vercel.app/auth/callback?redirect_scheme=runrun";
+      // Native app: open OAuth in SFSafariViewController (in-app browser overlay)
+      // After OAuth, Vercel callback redirects to runrun:// URL scheme
+      // which triggers appUrlOpen → CapacitorAuthHandler → setSession
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: "https://runrun-plum.vercel.app/auth/callback?redirect_scheme=runrun",
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) {
+        setIsLoading(false);
+        setAuthError(`登入啟動失敗: ${error.message}`);
+        return;
+      }
+
+      if (data?.url) {
+        const { Browser } = await import("@capacitor/browser");
+        await Browser.open({ url: data.url, presentationStyle: "popover" });
+      }
+    } else {
+      // Web: standard OAuth flow
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        setIsLoading(false);
+        setAuthError(`登入啟動失敗: ${error.message}`);
+      }
     }
-    return `${window.location.origin}/auth/callback`;
   }
 
   async function handleAppleLogin() {
-    setIsLoading(true);
-    setAuthError(null);
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: {
-        redirectTo: getRedirectUrl(),
-      },
-    });
-    if (error) {
-      setIsLoading(false);
-      setAuthError(`登入啟動失敗: ${error.message}`);
-    }
+    await handleOAuthLogin("apple");
   }
 
   async function handleGoogleLogin() {
-    setIsLoading(true);
-    setAuthError(null);
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: getRedirectUrl(),
-      },
-    });
-
-    if (error) {
-      setIsLoading(false);
-      setAuthError(`登入啟動失敗: ${error.message}`);
-    }
+    await handleOAuthLogin("google");
   }
 
   function handleCopyUrl() {
