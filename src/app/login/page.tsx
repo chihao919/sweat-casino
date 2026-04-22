@@ -58,15 +58,41 @@ export default function LoginPage() {
       typeof window !== "undefined" &&
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
-    if (isNative) {
-      // Native app: use implicit flow (response_type=token) in SFSafariViewController
-      // Tokens come back via hash fragment to auth-native.html on Vercel
-      // which redirects to runrun:// URL scheme → appUrlOpen → setSession
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
+    if (isNative && provider === "apple") {
+      // Native Apple Sign-In — no WebView navigation needed
+      try {
+        const { AppleSignIn, SignInScope } = await import("@capawesome/capacitor-apple-sign-in");
+        const result = await AppleSignIn.signIn({
+          scopes: [SignInScope.Email, SignInScope.FullName],
+        });
+
+        // Exchange Apple's identity token with Supabase
+        const { error: sessionError } = await supabase.auth.signInWithIdToken({
+          provider: "apple",
+          token: result.idToken,
+        });
+
+        if (sessionError) {
+          setIsLoading(false);
+          setAuthError(`Apple 登入失敗: ${sessionError.message}`);
+          return;
+        }
+
+        window.location.href = "/dashboard";
+      } catch (err) {
+        setIsLoading(false);
+        const msg = err instanceof Error ? err.message : String(err);
+        if (!msg.includes("cancel")) {
+          setAuthError(`Apple 登入失敗: ${msg}`);
+        }
+      }
+      return;
+    } else if (isNative) {
+      // Native Google — use OAuth in WebView with capacitor://localhost redirect
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
         options: {
-          redirectTo: "https://runrun-plum.vercel.app/auth-native.html",
-          skipBrowserRedirect: true,
+          redirectTo: "capacitor://localhost/dashboard",
           queryParams: { response_type: "token" },
         },
       });
@@ -75,11 +101,6 @@ export default function LoginPage() {
         setIsLoading(false);
         setAuthError(`登入啟動失敗: ${error.message}`);
         return;
-      }
-
-      if (data?.url) {
-        const { Browser } = await import("@capacitor/browser");
-        await Browser.open({ url: data.url });
       }
     } else {
       // Web: standard OAuth flow
