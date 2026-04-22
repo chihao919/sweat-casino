@@ -8,21 +8,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Clear ALL cached data to ensure local bundle loads
-        // 1. Clear UserDefaults (Capacitor may cache server URL here)
-        if let bundleId = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: bundleId)
-            UserDefaults.standard.synchronize()
-            print("[RunRun] UserDefaults cleared")
-        }
-        // 2. Clear WebView data
-        let dataStore = WKWebsiteDataStore.default()
-        let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
-        dataStore.fetchDataRecords(ofTypes: dataTypes) { records in
-            dataStore.removeData(ofTypes: dataTypes, for: records) {
-                print("[RunRun] WebView data cleared (\(records.count) records)")
-            }
-        }
         return true
     }
 
