@@ -6,9 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 /**
  * Root landing page — acts as an authentication gate.
- * Uses client-side auth check because static export does not support
- * server components that redirect. Authenticated users go to the
- * dashboard; everyone else goes to login.
+ * Authenticated users go to the dashboard; everyone else goes to login.
  */
 export default function RootPage() {
   const router = useRouter();
@@ -30,6 +28,5 @@ export default function RootPage() {
     checkAuth();
   }, [router]);
 
-  // Render nothing while the auth check is in flight
   return null;
 }

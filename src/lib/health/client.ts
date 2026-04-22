@@ -43,7 +43,7 @@ export async function requestHealthAuthorization(): Promise<boolean> {
   if (!health) return false;
   try {
     await health.requestAuthorization({
-      read: ["distance", "exerciseTime"],
+      read: ["distance", "exerciseTime", "calories"],
       write: [],
     });
     return true;
@@ -59,7 +59,7 @@ export async function checkHealthAuthorization(): Promise<boolean> {
   if (!health) return false;
   try {
     const result = await health.checkAuthorization({
-      read: ["distance", "exerciseTime"],
+      read: ["distance", "exerciseTime", "calories"],
       write: [],
     });
     return result.readAuthorized.length > 0;

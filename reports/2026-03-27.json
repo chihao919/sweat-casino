@@ -1,0 +1,492 @@
+{
+  "date": "2026-03-27",
+  "generated_at": "2026-03-27T03:24:32.602Z",
+  "summary": {
+    "total_players": 23,
+    "active_players": 0,
+    "days_left": 2,
+    "danger_count": 23,
+    "behind_count": 0,
+    "crusher_count": 0,
+    "team_leader": "red"
+  },
+  "context": "今天：週五，本週還剩 2 天\n遊戲狀態：0/23 名玩家本週已出動\n隊伍戰況：\n🐂 紅牛隊：0.0km，0/11人出動（活躍率0%）\n🐻‍❄️ 白熊隊：0.0km，0/12人出動（活躍率0%）\n領先方：🐂 紅牛，差距 0.0 調整分（超接近，可以翻）\n本週尚未有人特別突出\n生存稅即將發動，這些人快被扣錢：\n  Betty Chen：只跑了0.0km，差5km，帳戶95$SC 將虧4\n  chenweifu：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  chihao：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  chihaohuang：只跑了0.0km，差5km，帳戶399.73$SC 將虧19\n  Chung-Hung Hsieh：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  ian09270927：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  info：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  jason chiu：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  jennifer CHOU：只跑了0.0km，差5km，帳戶90.25$SC 將虧4\n  kuei1204：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  Mimi Chien：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  nuluhappy0515：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  pei.lin694n81：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  seoginana：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  sgi.shaoyi：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  syliva0604：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  wuku691230：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  yi hung chen：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  丹Dan：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n  真真：只跑了0.0km，差5km，帳戶95$SC 將虧4\n  邱誠雄Sean：只跑了0.0km，差5km，帳戶90.25$SC 將虧4\n  陳卜鋒：只跑了0.0km，差5km，帳戶95$SC 將虧4\n  陳韋竹（Betty Chen）：只跑了0.0km，差5km，帳戶85.74$SC 將虧4\n本週跑最多：Betty Chen，0.0km\nFOMO素材：遊戲已開始第382天，23人搶籌碼，惡劣天氣跑步有1.5倍獎勵",
+  "raw": {
+    "players": [
+      {
+        "id": "f79001af-bb33-417e-9f96-5b88ce50fdae",
+        "name": "Betty Chen",
+        "team": "red",
+        "scBalance": 95,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "9f577eb0-e2af-4533-b543-1488067444a3",
+        "name": "chenweifu",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "57fe8acb-e816-4891-99e5-98beee3c1f27",
+        "name": "chihao",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "153e8283-1fe1-4787-af1c-df6872648bd9",
+        "name": "chihaohuang",
+        "team": "white",
+        "scBalance": 399.73,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "be78abbe-85c6-4232-abde-b2471ff7fd24",
+        "name": "Chung-Hung Hsieh",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "75d08c13-bba7-407d-84d6-21bb964e9422",
+        "name": "ian09270927",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "fe74cc32-16d7-44eb-9ef6-4dc9925f28d7",
+        "name": "info",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "1ad3fe5a-eeb0-42c1-b26c-c71ccc732856",
+        "name": "jason chiu",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "0be6f372-b906-44b5-b3c7-e95407d81117",
+        "name": "jennifer CHOU",
+        "team": "red",
+        "scBalance": 90.25,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "8618cb50-c0a0-4769-b751-08a5c630d735",
+        "name": "kuei1204",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "65ed117c-02c9-47d0-b406-7c50982afe90",
+        "name": "Mimi Chien",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "eda5e3db-4abb-4836-8fc8-4be4a55041ee",
+        "name": "nuluhappy0515",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "d6d8a1ff-3173-431d-acfc-38625523db26",
+        "name": "pei.lin694n81",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "6e555977-3bc1-4482-8481-22c423288d5e",
+        "name": "seoginana",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "7cdafabf-c1b5-4987-844c-74906c53528c",
+        "name": "sgi.shaoyi",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "56a77414-aa3b-4290-9c95-f05da9f5a58c",
+        "name": "syliva0604",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "f82a4ebe-376a-4194-829c-99690b9682aa",
+        "name": "wuku691230",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "d1b23899-e645-47a0-ba13-1e7f92517dfe",
+        "name": "yi hung chen",
+        "team": "white",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "ee217830-db66-4b67-bf1d-ec6bdaae1107",
+        "name": "丹Dan",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "485b1c3d-d824-4b97-8ed9-bac2ed1a6b3a",
+        "name": "真真",
+        "team": "white",
+        "scBalance": 95,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "8d5b5895-08cd-402b-af1b-7aa85cdb279b",
+        "name": "邱誠雄Sean",
+        "team": "white",
+        "scBalance": 90.25,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "c3108e63-dfaa-4a31-99a8-c581f206d423",
+        "name": "陳卜鋒",
+        "team": "white",
+        "scBalance": 95,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      },
+      {
+        "id": "6051e703-c28d-4420-9886-2eab53bca20f",
+        "name": "陳韋竹（Betty Chen）",
+        "team": "red",
+        "scBalance": 85.74,
+        "weekKm": 0,
+        "runCount": 0,
+        "weekScEarned": 0,
+        "hadWeatherBonus": false
+      }
+    ],
+    "teamStats": {
+      "red": {
+        "totalKm": 0,
+        "active": 0,
+        "players": [
+          {
+            "id": "f79001af-bb33-417e-9f96-5b88ce50fdae",
+            "name": "Betty Chen",
+            "team": "red",
+            "scBalance": 95,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "1ad3fe5a-eeb0-42c1-b26c-c71ccc732856",
+            "name": "jason chiu",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "0be6f372-b906-44b5-b3c7-e95407d81117",
+            "name": "jennifer CHOU",
+            "team": "red",
+            "scBalance": 90.25,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "65ed117c-02c9-47d0-b406-7c50982afe90",
+            "name": "Mimi Chien",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "eda5e3db-4abb-4836-8fc8-4be4a55041ee",
+            "name": "nuluhappy0515",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "d6d8a1ff-3173-431d-acfc-38625523db26",
+            "name": "pei.lin694n81",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "6e555977-3bc1-4482-8481-22c423288d5e",
+            "name": "seoginana",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "56a77414-aa3b-4290-9c95-f05da9f5a58c",
+            "name": "syliva0604",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "f82a4ebe-376a-4194-829c-99690b9682aa",
+            "name": "wuku691230",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "ee217830-db66-4b67-bf1d-ec6bdaae1107",
+            "name": "丹Dan",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "6051e703-c28d-4420-9886-2eab53bca20f",
+            "name": "陳韋竹（Betty Chen）",
+            "team": "red",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          }
+        ]
+      },
+      "white": {
+        "totalKm": 0,
+        "active": 0,
+        "players": [
+          {
+            "id": "9f577eb0-e2af-4533-b543-1488067444a3",
+            "name": "chenweifu",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "57fe8acb-e816-4891-99e5-98beee3c1f27",
+            "name": "chihao",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "153e8283-1fe1-4787-af1c-df6872648bd9",
+            "name": "chihaohuang",
+            "team": "white",
+            "scBalance": 399.73,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "be78abbe-85c6-4232-abde-b2471ff7fd24",
+            "name": "Chung-Hung Hsieh",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "75d08c13-bba7-407d-84d6-21bb964e9422",
+            "name": "ian09270927",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "fe74cc32-16d7-44eb-9ef6-4dc9925f28d7",
+            "name": "info",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "8618cb50-c0a0-4769-b751-08a5c630d735",
+            "name": "kuei1204",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "7cdafabf-c1b5-4987-844c-74906c53528c",
+            "name": "sgi.shaoyi",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "d1b23899-e645-47a0-ba13-1e7f92517dfe",
+            "name": "yi hung chen",
+            "team": "white",
+            "scBalance": 85.74,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "485b1c3d-d824-4b97-8ed9-bac2ed1a6b3a",
+            "name": "真真",
+            "team": "white",
+            "scBalance": 95,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "8d5b5895-08cd-402b-af1b-7aa85cdb279b",
+            "name": "邱誠雄Sean",
+            "team": "white",
+            "scBalance": 90.25,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          },
+          {
+            "id": "c3108e63-dfaa-4a31-99a8-c581f206d423",
+            "name": "陳卜鋒",
+            "team": "white",
+            "scBalance": 95,
+            "weekKm": 0,
+            "runCount": 0,
+            "weekScEarned": 0,
+            "hadWeatherBonus": false
+          }
+        ]
+      }
+    }
+  }
+}

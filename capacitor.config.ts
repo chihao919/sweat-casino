@@ -4,10 +4,7 @@ const config: CapacitorConfig = {
   appId: "com.runrun.app",
   appName: "RunRun",
   webDir: "out",
-  server: {
-    url: "https://runrun-plum.vercel.app",
-    cleartext: false,
-  },
+  // No server.url — use local bundle so Capacitor bridge + native plugins work
   ios: {
     contentInset: "automatic",
     scheme: "RunRun",

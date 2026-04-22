@@ -17,56 +17,52 @@ export function useHealthSync() {
 
   const sync = useCallback(async () => {
     if (syncing) return;
-
-    const isNative = Capacitor.isNativePlatform();
-    const platform = Capacitor.getPlatform();
-
-    if (!isNative) {
-      setLastSyncResult(`Not native (platform: ${platform}). Health sync skipped.`);
-      return;
-    }
+    if (!Capacitor.isNativePlatform()) return;
 
     setSyncing(true);
     try {
-      console.log("[health-sync] Starting sync, platform:", platform, "isNative:", isNative);
-
-      // Dynamically import to avoid loading on web
       const {
         isHealthAvailable,
         requestHealthAuthorization,
-        getRunningWorkouts,
+        getRunningDistance,
       } = await import("@/lib/health/client");
 
       const available = await isHealthAvailable();
-      console.log("[health-sync] Health available:", available);
       if (!available) {
         setLastSyncResult("Health data not available on this device");
         return;
       }
 
       const authorized = await requestHealthAuthorization();
-      console.log("[health-sync] Authorization:", authorized);
       if (!authorized) {
         setLastSyncResult("Health permission denied");
         return;
       }
 
-      // Get workouts from the last 7 days
-      const workouts = await getRunningWorkouts(7);
-      if (workouts.length === 0) {
-        setLastSyncResult("No recent running activities found");
+      // Get distance from the last 7 days using readSamples (works without workout auth)
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const distanceKm = await getRunningDistance(weekAgo);
+
+      if (distanceKm === 0) {
+        setLastSyncResult("No recent running distance found");
         return;
       }
 
-      // Send to our API — use absolute URL so native (local bundle) builds work
+      // Send distance data to our API
       const res = await fetch(`${API_BASE_URL}/api/health/sync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ workouts }),
+        body: JSON.stringify({
+          source: "healthkit",
+          distanceKm,
+          startDate: weekAgo.toISOString(),
+          endDate: new Date().toISOString(),
+        }),
       });
 
       const data = await res.json();
-      setLastSyncResult(data.message);
+      setLastSyncResult(`Synced ${distanceKm.toFixed(1)} km`);
     } catch (err) {
       console.error("[health-sync] Error:", err);
       setLastSyncResult("Sync failed");

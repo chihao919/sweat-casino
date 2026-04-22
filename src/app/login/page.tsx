@@ -49,38 +49,32 @@ export default function LoginPage() {
     }
   }, []);
 
-  async function handleAppleLogin() {
-    setIsLoading(true);
-    setAuthError(null);
-    const supabase = createClient();
-
+  function getRedirectUrl() {
     const isNative =
       typeof window !== "undefined" &&
       (window as unknown as Record<string, unknown>).Capacitor !== undefined;
 
     if (isNative) {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "apple",
-        options: {
-          redirectTo: window.location.origin + "/dashboard",
-          queryParams: { response_type: "token" },
-        },
-      });
-      if (error) {
-        setIsLoading(false);
-        setAuthError(`登入啟動失敗: ${error.message}`);
-      }
-    } else {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "apple",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) {
-        setIsLoading(false);
-        setAuthError(`登入啟動失敗: ${error.message}`);
-      }
+      // Use Vercel callback with redirect_scheme so it sends tokens back to the app
+      return "https://runrun-plum.vercel.app/auth/callback?redirect_scheme=runrun";
+    }
+    return `${window.location.origin}/auth/callback`;
+  }
+
+  async function handleAppleLogin() {
+    setIsLoading(true);
+    setAuthError(null);
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: {
+        redirectTo: getRedirectUrl(),
+      },
+    });
+    if (error) {
+      setIsLoading(false);
+      setAuthError(`登入啟動失敗: ${error.message}`);
     }
   }
 
@@ -89,44 +83,16 @@ export default function LoginPage() {
     setAuthError(null);
     const supabase = createClient();
 
-    // Detect if running inside Capacitor native app
-    const isNative =
-      typeof window !== "undefined" &&
-      (window as unknown as Record<string, unknown>).Capacitor !== undefined;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: getRedirectUrl(),
+      },
+    });
 
-    if (isNative) {
-      // In native app: use implicit flow to avoid PKCE cookie issues
-      // between WebView and system browser. The hash fragment with tokens
-      // is handled directly by Supabase client in the WebView.
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/dashboard",
-          queryParams: {
-            response_type: "token",
-          },
-        },
-      });
-
-      if (error) {
-        setIsLoading(false);
-        setAuthError(`登入啟動失敗: ${error.message}`);
-        return;
-      }
-      // OAuth redirect happens in the WebView itself — no system browser needed
-    } else {
-      // Web: use default OAuth flow
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) {
-        setIsLoading(false);
-        setAuthError(`登入啟動失敗: ${error.message}\n[Debug: step=signInWithOAuth, ua=${navigator.userAgent.slice(0, 80)}]`);
-      }
+    if (error) {
+      setIsLoading(false);
+      setAuthError(`登入啟動失敗: ${error.message}`);
     }
   }
 
