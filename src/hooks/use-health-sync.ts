@@ -16,12 +16,19 @@ export function useHealthSync() {
   const hasSynced = useRef(false);
 
   const sync = useCallback(async () => {
-    if (!Capacitor.isNativePlatform()) return;
     if (syncing) return;
+
+    const isNative = Capacitor.isNativePlatform();
+    const platform = Capacitor.getPlatform();
+
+    if (!isNative) {
+      setLastSyncResult(`Not native (platform: ${platform}). Health sync skipped.`);
+      return;
+    }
 
     setSyncing(true);
     try {
-      console.log("[health-sync] Starting sync, platform:", Capacitor.getPlatform(), "isNative:", Capacitor.isNativePlatform());
+      console.log("[health-sync] Starting sync, platform:", platform, "isNative:", isNative);
 
       // Dynamically import to avoid loading on web
       const {
