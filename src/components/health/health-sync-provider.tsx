@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 
 /**
- * Health sync component — directly calls Health plugin.
+ * Health sync component — reads daily distance from HealthKit
+ * using queryAggregated (auto de-duplicates sources) and writes to Supabase.
  */
 export function HealthSyncProvider() {
   const [status, setStatus] = useState("init");
@@ -12,81 +13,105 @@ export function HealthSyncProvider() {
     async function run() {
       try {
         const { Capacitor } = await import("@capacitor/core");
-        if (!Capacitor.isNativePlatform()) {
-          setStatus("not native");
-          return;
-        }
+        if (!Capacitor.isNativePlatform()) return;
 
-        setStatus("importing Health...");
         const { Health } = await import("@capgo/capacitor-health");
 
-        setStatus("checking...");
         const avail = await Health.isAvailable();
-        setStatus(`avail: ${JSON.stringify(avail)}`);
+        if (!avail.available) { setStatus("Health not available"); return; }
 
-        if (!avail.available) {
-          setStatus("Health not available");
-          return;
-        }
-
-        setStatus("auth...");
         await Health.requestAuthorization({
-          read: ["distance", "exerciseTime", "calories"],
+          read: ["distance", "exerciseTime", "calories", "workouts" as never],
           write: [],
         });
 
         setStatus("reading...");
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-        const samples = await Health.readSamples({
+        const monthAgo = new Date();
+        monthAgo.setDate(monthAgo.getDate() - 30);
+
+        // queryAggregated by day — auto de-duplicates sources (like Health app does)
+        const result = await Health.queryAggregated({
           dataType: "distance",
-          startDate: weekAgo.toISOString(),
+          startDate: monthAgo.toISOString(),
           endDate: new Date().toISOString(),
+          bucket: "day",
+          aggregation: "sum",
         });
-        const km = (samples.samples || []).reduce((s, d) => s + (d.value || 0), 0) / 1000;
-        setStatus(`${km.toFixed(1)} km, uploading...`);
 
-        if (km > 0) {
-          // Upload to Supabase
-          const { createClient } = await import("@/lib/supabase/client");
-          const { API_BASE_URL } = await import("@/lib/config");
-          const supabase = createClient();
-          const { data: { session } } = await supabase.auth.getSession();
+        const days = (result.samples || []).filter(s => s.value > 100); // >100m = actual activity
+        if (days.length === 0) { setStatus("No distance data"); return; }
 
-          if (session) {
-            const res = await fetch(`${API_BASE_URL}/api/health/sync`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${session.access_token}`,
-              },
-              body: JSON.stringify({
-                source: "healthkit",
-                distanceKm: km,
-                startDate: weekAgo.toISOString(),
-                endDate: new Date().toISOString(),
-              }),
+        setStatus(`${days.length} days, syncing...`);
+
+        // Write to Supabase
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) { setStatus("no user"); return; }
+
+        // Get existing activities to avoid duplicates
+        const { data: existing } = await supabase
+          .from("activities")
+          .select("start_date")
+          .eq("user_id", user.id)
+          .gte("start_date", monthAgo.toISOString());
+
+        const existingDates = new Set(
+          (existing || []).map(a => a.start_date?.slice(0, 10))
+        );
+
+        let synced = 0;
+        let totalKm = 0;
+
+        for (const day of days) {
+          const dateStr = day.startDate.slice(0, 10);
+          if (existingDates.has(dateStr)) continue;
+          const km = day.value / 1000;
+          if (km < 0.5) continue; // skip days with less than 0.5 km
+
+          const { error } = await supabase
+            .from("activities")
+            .insert({
+              user_id: user.id,
+              name: "Run (Health)",
+              distance_km: Math.round(km * 100) / 100,
+              duration_seconds: 0,
+              pace_per_km: 0,
+              start_date: `${dateStr}T00:00:00.000Z`,
+              sc_earned: Math.round(km * 5 * 100) / 100,
+              is_mock: false,
             });
-            const data = await res.json();
-            setStatus(data.error ? `err: ${data.error}` : `Synced ${km.toFixed(1)} km!`);
-          } else {
-            setStatus(`${km.toFixed(1)} km (no session)`);
-          }
-        } else {
-          setStatus("No distance");
+
+          if (!error) { synced++; totalKm += km; }
         }
+
+        // Update profile stats
+        if (synced > 0) {
+          const { data: allActs } = await supabase
+            .from("activities")
+            .select("distance_km")
+            .eq("user_id", user.id);
+
+          const total = (allActs || []).reduce((s, a) => s + a.distance_km, 0);
+          await supabase
+            .from("profiles")
+            .update({
+              total_distance_km: total,
+              total_activities: (allActs || []).length,
+              last_active_at: new Date().toISOString(),
+            })
+            .eq("id", user.id);
+        }
+
+        setStatus(synced > 0 ? `+${synced} days (${totalKm.toFixed(1)} km)` : "Up to date");
       } catch (e) {
-        setStatus(`err: ${e}`);
+        const msg = e instanceof Error ? e.message : String(e);
+        setStatus(`err: ${msg.slice(0, 100)}`);
       }
     }
 
-    // Delay to let everything initialize
     setTimeout(run, 3000);
   }, []);
 
-  return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-zinc-800/90 px-3 py-2 text-xs text-zinc-300 text-center">
-      Health: {status}
-    </div>
-  );
+  return null;
 }
