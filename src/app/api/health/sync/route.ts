@@ -14,6 +14,17 @@ import { TransactionType } from "@/types";
  * - distance is in meters
  * - duration is in seconds
  */
+// Handle CORS preflight for native app requests from capacitor://localhost
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
   // Support both cookie-based auth (web) and Bearer token auth (native app)
   const authHeader = request.headers.get("authorization");
@@ -24,7 +35,7 @@ export async function POST(request: NextRequest) {
     const authAdmin = createAdminClient();
     const { data, error } = await authAdmin.auth.getUser(token);
     if (error || !data.user) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+      return NextResponse.json({ error: "Invalid token" }, { status: 401, headers: { "Access-Control-Allow-Origin": "*" } });
     }
     user = data.user;
   } else {
@@ -34,7 +45,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: { "Access-Control-Allow-Origin": "*" } });
   }
 
   const body = await request.json();
@@ -165,11 +176,13 @@ export async function POST(request: NextRequest) {
       .eq("id", user.id);
   }
 
+  const corsHeaders = { "Access-Control-Allow-Origin": "*" };
+
   return NextResponse.json({
     synced,
     message:
       synced > 0
         ? `Synced ${synced} new activities from Health`
         : "No new activities to sync",
-  });
+  }, { headers: corsHeaders });
 }
