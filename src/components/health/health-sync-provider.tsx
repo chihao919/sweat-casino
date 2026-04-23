@@ -7,6 +7,11 @@ import { useHealthSync } from "@/hooks/use-health-sync";
  * Place this inside the protected layout so it runs after login.
  */
 export function HealthSyncProvider() {
-  useHealthSync();
-  return null;
+  const { syncing, lastSyncResult } = useHealthSync();
+  if (!lastSyncResult && !syncing) return null;
+  return (
+    <div className="fixed top-0 left-0 right-0 z-50 bg-zinc-800/90 px-3 py-2 text-xs text-zinc-300 text-center">
+      {lastSyncResult || (syncing ? "Starting..." : "")}
+    </div>
+  );
 }

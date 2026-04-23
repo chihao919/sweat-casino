@@ -21,45 +21,52 @@ export function useHealthSync() {
     if (!Capacitor.isNativePlatform()) return;
 
     setSyncing(true);
+    const log = (msg: string) => {
+      setLastSyncResult(msg);
+      // Send log to server so we can debug remotely
+      fetch(`${API_BASE_URL}/api/public/players?_healthlog=${encodeURIComponent(msg)}`).catch(() => {});
+    };
     try {
+      log("Loading health module...");
       const {
         isHealthAvailable,
         requestHealthAuthorization,
         getRunningDistance,
       } = await import("@/lib/health/client");
 
+      log("Checking availability...");
       const available = await isHealthAvailable();
       if (!available) {
-        setLastSyncResult("Health data not available on this device");
+        log("Health not available");
         return;
       }
 
+      log("Requesting auth...");
       const authorized = await requestHealthAuthorization();
       if (!authorized) {
-        setLastSyncResult("Health permission denied");
+        log("Health permission denied");
         return;
       }
 
-      // Get distance from the last 7 days using readSamples (works without workout auth)
+      log("Reading distance...");
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       const distanceKm = await getRunningDistance(weekAgo);
 
       if (distanceKm === 0) {
-        setLastSyncResult("No recent running distance found");
+        log("No distance in last 7 days");
         return;
       }
 
-      // Get the auth token to send with the API request
+      log(`Got ${distanceKm.toFixed(1)} km, uploading...`);
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
-        setLastSyncResult("No session — please login first");
+        log("No session");
         return;
       }
 
-      // Send distance data to our API with auth token
       const res = await fetch(`${API_BASE_URL}/api/health/sync`, {
         method: "POST",
         headers: {
@@ -75,10 +82,9 @@ export function useHealthSync() {
       });
 
       const data = await res.json();
-      setLastSyncResult(`Synced ${distanceKm.toFixed(1)} km`);
+      log(data.error ? `Error: ${data.error}` : `Synced ${distanceKm.toFixed(1)} km`);
     } catch (err) {
-      console.error("[health-sync] Error:", err);
-      setLastSyncResult("Sync failed");
+      log(`Sync error: ${err}`);
     } finally {
       setSyncing(false);
     }
