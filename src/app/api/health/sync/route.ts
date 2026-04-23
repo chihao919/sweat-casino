@@ -15,17 +15,45 @@ import { TransactionType } from "@/types";
  * - duration is in seconds
  */
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
+  // Support both cookie-based auth (web) and Bearer token auth (native app)
+  const authHeader = request.headers.get("authorization");
+  let user;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.slice(7);
+    const authAdmin = createAdminClient();
+    const { data, error } = await authAdmin.auth.getUser(token);
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+    user = data.user;
+  } else {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { workouts } = await request.json();
+  const body = await request.json();
+
+  // Support two formats:
+  // 1. { workouts: [...] } — individual workout records
+  // 2. { distanceKm, startDate, endDate } — aggregate distance from HealthKit readSamples
+  let workouts = body.workouts;
+
+  if (!workouts && body.distanceKm) {
+    // Convert aggregate distance to a single workout entry
+    workouts = [{
+      startDate: body.startDate,
+      endDate: body.endDate,
+      duration: 0,
+      distance: body.distanceKm * 1000, // convert km to meters
+      sourceName: body.source || "HealthKit",
+    }];
+  }
 
   if (!Array.isArray(workouts) || workouts.length === 0) {
     return NextResponse.json({ error: "No workouts provided" }, { status: 400 });

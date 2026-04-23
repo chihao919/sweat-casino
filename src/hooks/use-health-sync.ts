@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Capacitor } from "@capacitor/core";
+import { createClient } from "@/lib/supabase/client";
 import { API_BASE_URL } from "@/lib/config";
 
 /**
@@ -49,10 +50,22 @@ export function useHealthSync() {
         return;
       }
 
-      // Send distance data to our API
+      // Get the auth token to send with the API request
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        setLastSyncResult("No session — please login first");
+        return;
+      }
+
+      // Send distance data to our API with auth token
       const res = await fetch(`${API_BASE_URL}/api/health/sync`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           source: "healthkit",
           distanceKm,
