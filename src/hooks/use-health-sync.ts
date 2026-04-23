@@ -34,15 +34,24 @@ export function useHealthSync() {
         getRunningDistance,
       } = await import("@/lib/health/client");
 
+      // Wait for native plugins to be ready
+      await new Promise(r => setTimeout(r, 2000));
+
       log("Checking availability...");
-      const available = await isHealthAvailable();
+      const available = await Promise.race([
+        isHealthAvailable(),
+        new Promise<boolean>(r => setTimeout(() => r(false), 5000)),
+      ]);
       if (!available) {
         log("Health not available");
         return;
       }
 
       log("Requesting auth...");
-      const authorized = await requestHealthAuthorization();
+      const authorized = await Promise.race([
+        requestHealthAuthorization(),
+        new Promise<boolean>(r => setTimeout(() => r(false), 5000)),
+      ]);
       if (!authorized) {
         log("Health permission denied");
         return;
@@ -51,7 +60,10 @@ export function useHealthSync() {
       log("Reading distance...");
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      const distanceKm = await getRunningDistance(weekAgo);
+      const distanceKm = await Promise.race([
+        getRunningDistance(weekAgo),
+        new Promise<number>(r => setTimeout(() => r(0), 5000)),
+      ]);
 
       if (distanceKm === 0) {
         log("No distance in last 7 days");
