@@ -30,9 +30,14 @@ export default function LoginPage() {
   const [inAppBrowser, setInAppBrowser] = useState(false);
   const [copied, setCopied] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isNativeApp, setIsNativeApp] = useState(false);
 
   useEffect(() => {
     setInAppBrowser(isInAppBrowser());
+    setIsNativeApp(
+      typeof window !== "undefined" &&
+      (window as unknown as Record<string, unknown>).Capacitor !== undefined
+    );
 
     // Check if redirected back with an error
     const params = new URLSearchParams(window.location.search);
@@ -204,6 +209,8 @@ export default function LoginPage() {
               {isLoading ? "跳轉中..." : "使用 Apple 登入"}
             </Button>
 
+            {!isNativeApp && (
+            <>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-zinc-700" />
@@ -238,6 +245,8 @@ export default function LoginPage() {
               </svg>
               {isLoading ? "跳轉中..." : "使用 Google 登入"}
             </Button>
+            </>
+            )}
           </CardContent>
         </Card>
 
