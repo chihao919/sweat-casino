@@ -6,8 +6,9 @@ const config: CapacitorConfig = {
   webDir: "out",
   // No server.url — use local bundle so Capacitor bridge + native plugins work
   ios: {
-    contentInset: "automatic",
+    contentInset: "never",
     scheme: "RunRun",
+    backgroundColor: "#09090b",
   },
   android: {
     buildOptions: {

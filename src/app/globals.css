@@ -2,6 +2,21 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* iOS safe area — extend background behind status bar / Dynamic Island */
+html, body {
+  background-color: #09090b; /* bg-zinc-950 */
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

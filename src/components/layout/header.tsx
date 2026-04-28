@@ -75,7 +75,7 @@ export function Header({ profile }: HeaderProps) {
   const balanceDisplay = profile ? formatSC(profile.sc_balance) : "$0.00 SC";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-border bg-zinc-950 safe-top">
       <div className="mx-auto flex h-14 max-w-screen-lg items-center justify-between px-4">
         {/* Left: Logo */}
         <Link

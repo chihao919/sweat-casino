@@ -64,10 +64,13 @@ export function HealthSyncProvider() {
         let totalKm = 0;
 
         for (const day of days) {
-          const dateStr = day.startDate.slice(0, 10);
+          // Convert UTC date to local timezone date (e.g., UTC+8 for Taiwan)
+          const utcDate = new Date(day.startDate);
+          const localDate = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * -60000);
+          const dateStr = localDate.toISOString().slice(0, 10);
           if (existingDates.has(dateStr)) continue;
           const km = day.value / 1000;
-          if (km < 0.5) continue; // skip days with less than 0.5 km
+          if (km < 0.5 || km > 30) continue; // skip tiny or unrealistic distances (>30km in a day)
 
           const { error } = await supabase
             .from("activities")
@@ -77,7 +80,7 @@ export function HealthSyncProvider() {
               distance_km: Math.round(km * 100) / 100,
               duration_seconds: 0,
               pace_per_km: 0,
-              start_date: `${dateStr}T00:00:00.000Z`,
+              start_date: `${dateStr}T00:00:00+08:00`,
               sc_earned: Math.round(km * 5 * 100) / 100,
               is_mock: false,
             });
