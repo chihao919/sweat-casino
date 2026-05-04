@@ -15,11 +15,16 @@ import { createClient } from "@/lib/supabase/client";
 import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
-import { Camera, Copy, ExternalLink, RefreshCw, Share2, Unlink, User } from "lucide-react";
+import { Camera, Copy, RefreshCw, Share2, Trash2, Unlink, User } from "lucide-react";
 import { API_BASE_URL } from "@/lib/config";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
 import { PoweredByStrava, ConnectWithStrava } from "@/components/strava/powered-by-strava";
+
+/** Returns true when running inside a Capacitor native app (iOS/Android). */
+function isCapacitorNative(): boolean {
+  return typeof window !== "undefined" && !!(window as Window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
+}
 
 function getStravaOAuthUrl() {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
@@ -124,6 +129,9 @@ export default function ProfilePage() {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string>("");
+  const [isNative] = useState(() => isCapacitorNative());
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -249,6 +257,38 @@ export default function ProfilePage() {
     setIsUploadingAvatar(false);
   }
 
+  async function handleDeleteAccount() {
+    setIsDeleting(true);
+    try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
+      const res = await fetch(`${API_BASE_URL}/api/profile/delete-account`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast.error("刪除失敗：" + (body.error || "未知錯誤"));
+        setIsDeleting(false);
+        return;
+      }
+
+      toast.success("帳號已刪除，感謝您的使用。");
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("[delete-account] unexpected error", err);
+      toast.error("刪除帳號時發生錯誤，請稍後再試。");
+      setIsDeleting(false);
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -304,10 +344,13 @@ export default function ProfilePage() {
                 <Camera className="size-4" />
               )}
             </label>
+            {/* On native app, omit capture="camera" to avoid iPad crash.
+                The file picker will still allow choosing from the photo library. */}
             <input
               id="avatar-upload"
               type="file"
               accept="image/*"
+              {...(!isNative ? { capture: "environment" as const } : {})}
               className="hidden"
               onChange={handleAvatarUpload}
               disabled={isUploadingAvatar}
@@ -368,8 +411,8 @@ export default function ProfilePage() {
       {/* Health milestones */}
       <MilestoneTracker activities={activities} />
 
-      {/* Strava connection */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      {/* Strava connection — hidden in native app (OAuth redirect not supported) */}
+      {!isNative && <Card className="border-neutral-800 bg-neutral-900">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
             <div className="flex items-center gap-2">
@@ -437,14 +480,22 @@ export default function ProfilePage() {
               <p className="text-xs text-neutral-400">
                 連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
               </p>
-              <ConnectWithStrava
-                href={`/api/strava/connect?user_id=${profile.id}`}
-                className="w-full"
-              />
+              {isNative ? (
+                // Strava OAuth requires browser redirect; not supported inside the native WebView.
+                // Direct users to the web version to complete the connection.
+                <p className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-xs text-neutral-400">
+                  請至網頁版（app.runrun.tw）連結 Strava 帳號。
+                </p>
+              ) : (
+                <ConnectWithStrava
+                  href={`/api/strava/connect?user_id=${profile.id}`}
+                  className="w-full"
+                />
+              )}
             </>
           )}
         </CardContent>
-      </Card>
+      </Card>}
 
       {/* Referral link */}
       <Card className="border-yellow-800/50 bg-gradient-to-br from-yellow-950/30 to-neutral-900">
@@ -521,6 +572,57 @@ export default function ProfilePage() {
             <p className="text-sm text-neutral-300">{userEmail || "—"}</p>
             <p className="text-xs text-neutral-600">電子郵件無法在此變更。</p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Danger zone: account deletion */}
+      <Card className="border-red-900/50 bg-neutral-900">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-red-400">
+            <Trash2 className="size-4" />
+            危險區域
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {showDeleteConfirm ? (
+            <div className="space-y-3">
+              <p className="text-sm text-neutral-300">
+                確定要刪除帳號嗎？此操作<span className="font-bold text-red-400">無法復原</span>，
+                您的所有活動記錄、$SC 餘額及個人資料將被永久刪除。
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 border-neutral-700 text-neutral-300"
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                >
+                  取消
+                </Button>
+                <Button
+                  className="flex-1 bg-red-700 text-white hover:bg-red-600"
+                  onClick={handleDeleteAccount}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <RefreshCw className="mr-2 size-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-2 size-4" />
+                  )}
+                  {isDeleting ? "刪除中..." : "確認刪除"}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full border-red-900 text-red-400 hover:bg-red-950 hover:text-red-300"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              <Trash2 className="mr-2 size-4" />
+              刪除帳號
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>
