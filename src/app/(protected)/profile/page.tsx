@@ -334,27 +334,29 @@ export default function ProfilePage() {
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <label
-              htmlFor="avatar-upload"
-              className="absolute -bottom-1 -right-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white shadow-lg hover:bg-red-500 transition-colors"
-            >
-              {isUploadingAvatar ? (
-                <RefreshCw className="size-4 animate-spin" />
-              ) : (
-                <Camera className="size-4" />
-              )}
-            </label>
-            {/* On native app, omit capture="camera" to avoid iPad crash.
-                The file picker will still allow choosing from the photo library. */}
-            <input
-              id="avatar-upload"
-              type="file"
-              accept="image/*"
-              {...(!isNative ? { capture: "environment" as const } : {})}
-              className="hidden"
-              onChange={handleAvatarUpload}
-              disabled={isUploadingAvatar}
-            />
+            {!isNative && (
+              <>
+                <label
+                  htmlFor="avatar-upload"
+                  className="absolute -bottom-1 -right-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white shadow-lg hover:bg-red-500 transition-colors"
+                >
+                  {isUploadingAvatar ? (
+                    <RefreshCw className="size-4 animate-spin" />
+                  ) : (
+                    <Camera className="size-4" />
+                  )}
+                </label>
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={handleAvatarUpload}
+                  disabled={isUploadingAvatar}
+                />
+              </>
+            )}
           </div>
 
           <div className="text-center">
