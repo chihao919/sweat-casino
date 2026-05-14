@@ -206,7 +206,7 @@ export default function GuidePage() {
                 />
               </div>
               <p className="mt-4 text-center text-sm text-zinc-500">
-                No manual upload. No Strava needed. Just run.
+                No manual upload. Just run.
               </p>
             </CardContent>
           </Card>
@@ -601,8 +601,8 @@ export default function GuidePage() {
                 answer="No. Team assignment is permanent. This is the 'shared fate' design — you win or lose together."
               />
               <FAQItem
-                question="Do I need Strava?"
-                answer="No! RunRun reads directly from Apple Health. Any watch or running app that writes to Health will work."
+                question="Which running apps work?"
+                answer="RunRun reads directly from Apple Health. Any watch or running app that writes to Apple Health will work — Apple Watch, Garmin, Nike Run Club, etc."
               />
               <FAQItem
                 question="How does weather bonus work?"

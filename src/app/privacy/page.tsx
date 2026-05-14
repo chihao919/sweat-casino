@@ -127,20 +127,7 @@ export default function PrivacyPage() {
         <UL>
           <li>Running workout distance (kilometers per activity)</li>
         </UL>
-        <SubHeading>1.3 Strava Activity Data (Optional)</SubHeading>
-        <P>
-          If you choose to connect your Strava account, we request access to:
-        </P>
-        <UL>
-          <li>Your public Strava profile name</li>
-          <li>Activity list (run type, distance, date, elapsed time)</li>
-        </UL>
-        <P>
-          Strava connection is optional. You can use RunRun solely through Apple
-          Health or Health Connect without connecting Strava.
-        </P>
-
-        <SubHeading>1.4 App Usage Data</SubHeading>
+        <SubHeading>1.3 App Usage Data</SubHeading>
         <UL>
           <li>Sweat Currency ($SC) balance and transaction history</li>
           <li>Betting history (personal bets and pool bets)</li>
@@ -148,7 +135,7 @@ export default function PrivacyPage() {
           <li>In-app purchase or shop activity (if applicable)</li>
         </UL>
 
-        <SubHeading>1.5 Device & Technical Data</SubHeading>
+        <SubHeading>1.4 Device & Technical Data</SubHeading>
         <UL>
           <li>Device type and operating system version (for crash diagnostics)</li>
           <li>App version</li>
@@ -213,12 +200,6 @@ export default function PrivacyPage() {
             <strong className="text-zinc-200">Supabase</strong> — our backend database
             and authentication provider. Your profile and game data are stored on
             Supabase servers (hosted on AWS).
-          </li>
-          <li>
-            <strong className="text-zinc-200">Strava API</strong> — only if you
-            explicitly connect your Strava account. We exchange OAuth tokens with
-            Strava to fetch your running activities. We do not share your data back
-            to Strava beyond what is required for the OAuth flow.
           </li>
           <li>
             <strong className="text-zinc-200">LINE Messaging API</strong> — your LINE
@@ -328,11 +309,6 @@ export default function PrivacyPage() {
           <li>
             <strong className="text-zinc-200">Data portability</strong> — request an
             export of your running history and game data in JSON format
-          </li>
-          <li>
-            <strong className="text-zinc-200">Disconnect Strava</strong> — revoke
-            Strava access at any time from the Profile page or directly from your
-            Strava settings
           </li>
           <li>
             <strong className="text-zinc-200">Revoke Health access</strong> — remove

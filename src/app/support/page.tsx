@@ -14,7 +14,6 @@ import {
   Mail,
   Bug,
   ChevronDown,
-  Activity,
   Coins,
   Target,
   Users,
@@ -70,20 +69,6 @@ function FAQItem({ icon, question, answer }: FAQItemProps) {
 // ---------------------------------------------------------------------------
 
 const FAQ_ITEMS: FAQItemProps[] = [
-  {
-    icon: <Activity className="h-5 w-5" />,
-    question: "How do I connect Strava?",
-    answer: (
-      <p>
-        Go to <strong className="text-white">Profile → Settings → Connect Strava</strong> and
-        tap the &quot;Connect&quot; button. You&apos;ll be redirected to Strava to
-        authorise the connection. Once approved, your runs will sync automatically
-        within a few minutes of completing a workout. Note: RunRun can also read
-        directly from <strong className="text-white">Apple Health</strong> — Strava is
-        optional.
-      </p>
-    ),
-  },
   {
     icon: <Coins className="h-5 w-5" />,
     question: "How is SC (Sweat Currency) earned?",
@@ -198,8 +183,8 @@ const FAQ_ITEMS: FAQItemProps[] = [
             </strong>.
           </li>
           <li>
-            If you use Strava, make sure the run has finished syncing inside the
-            Strava app first, then open RunRun and refresh.
+            Make sure your run has finished syncing to Apple Health first,
+            then open RunRun and refresh.
           </li>
           <li>
             Ensure the run duration is at least{" "}

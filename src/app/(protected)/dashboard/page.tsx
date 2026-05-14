@@ -19,7 +19,7 @@ import { MilestoneTracker } from "@/components/health/milestone-tracker";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { ComebackBanner } from "@/components/health/comeback-banner";
 import { TodayCelebration } from "@/components/dashboard/today-celebration";
-import { PoweredByStrava } from "@/components/strava/powered-by-strava";
+
 
 // ── Placeholder data for team comparison (would come from API in production)
 const PLACEHOLDER_TEAM_STATS = {
@@ -265,7 +265,6 @@ export default function DashboardPage() {
         <CardHeader className="pb-1">
           <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
             <span>最近活動</span>
-            <PoweredByStrava />
           </CardTitle>
         </CardHeader>
         <CardContent className="divide-y divide-neutral-800">
@@ -274,7 +273,7 @@ export default function DashboardPage() {
               <span className="text-3xl">🏃</span>
               <p className="text-sm text-neutral-400">還沒有活動紀錄</p>
               <p className="text-xs text-neutral-600">
-                連結 Strava 或手動記錄跑步來開始吧！
+                開始跑步來記錄活動吧！
               </p>
             </div>
           ) : (

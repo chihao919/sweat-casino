@@ -15,23 +15,16 @@ import { createClient } from "@/lib/supabase/client";
 import { Profile, Activity } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { format, parseISO, differenceInDays } from "date-fns";
-import { Camera, Copy, RefreshCw, Share2, Trash2, Unlink, User } from "lucide-react";
+import { Camera, Copy, RefreshCw, Share2, Trash2, User } from "lucide-react";
 import { API_BASE_URL } from "@/lib/config";
 import { BodyVersionBadge } from "@/components/health/body-version-badge";
 import { MilestoneTracker } from "@/components/health/milestone-tracker";
-import { PoweredByStrava, ConnectWithStrava } from "@/components/strava/powered-by-strava";
 
 /** Returns true when running inside a Capacitor native app (iOS/Android). */
 function isCapacitorNative(): boolean {
   return typeof window !== "undefined" && !!(window as Window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
 }
 
-function getStravaOAuthUrl() {
-  const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
-  const redirectUri = process.env.NEXT_PUBLIC_STRAVA_REDIRECT_URI
-    || (typeof window !== "undefined" ? `${window.location.origin}/api/strava/callback` : "");
-  return `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=read,activity:read_all`;
-}
 
 interface ProfileStats {
   totalDistance: number;
@@ -127,7 +120,6 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string>("");
   const [isNative] = useState(() => isCapacitorNative());
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -189,38 +181,6 @@ export default function ProfilePage() {
       setProfile((prev) => (prev ? { ...prev, display_name: displayName } : prev));
     }
     setIsSaving(false);
-  }
-
-  async function handleDisconnectStrava() {
-    if (!profile) return;
-    const supabase = createClient();
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        strava_athlete_id: null,
-        strava_access_token: null,
-        strava_refresh_token: null,
-        strava_token_expires_at: null,
-      })
-      .eq("id", profile.id);
-
-    if (error) {
-      toast.error("Failed to disconnect Strava.");
-    } else {
-      toast.success("Strava disconnected.");
-      setProfile((prev) =>
-        prev
-          ? {
-              ...prev,
-              strava_athlete_id: null,
-              strava_access_token: null,
-              strava_refresh_token: null,
-              strava_token_expires_at: null,
-            }
-          : prev
-      );
-    }
   }
 
   async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -313,8 +273,6 @@ export default function ProfilePage() {
         emoji: profile.team.name.toLowerCase().includes("red") ? "🐂" : "🐻‍❄️",
       }
     : null;
-
-  const isStravaConnected = Boolean(profile.strava_athlete_id);
 
   return (
     <div className="space-y-5">
@@ -412,92 +370,6 @@ export default function ProfilePage() {
 
       {/* Health milestones */}
       <MilestoneTracker activities={activities} />
-
-      {/* Strava connection — hidden in native app (OAuth redirect not supported) */}
-      {!isNative && <Card className="border-neutral-800 bg-neutral-900">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
-            <div className="flex items-center gap-2">
-              <span>Strava 連結</span>
-              <PoweredByStrava />
-            </div>
-            {isStravaConnected ? (
-              <Badge className="bg-green-900/50 text-green-400 border-green-700">已連結</Badge>
-            ) : (
-              <Badge variant="outline" className="border-neutral-700 text-neutral-500">
-                未連結
-              </Badge>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {isStravaConnected ? (
-            <>
-              <div className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2">
-                <p className="text-xs text-neutral-500">Athlete ID</p>
-                <p className="font-mono text-sm text-neutral-300">
-                  {profile.strava_athlete_id}
-                </p>
-              </div>
-              {profile.strava_token_expires_at && (
-                <div className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2">
-                  <p className="text-xs text-neutral-500">Token expires</p>
-                  <p className="text-sm text-neutral-300">
-                    {format(new Date(Number(profile.strava_token_expires_at) * 1000), "MMM d, yyyy HH:mm")}
-                  </p>
-                </div>
-              )}
-              <Button
-                className="w-full bg-[#FC4C02] font-semibold text-white hover:bg-[#e04402]"
-                disabled={isSyncing}
-                onClick={async () => {
-                  setIsSyncing(true);
-                  const res = await fetch(`${API_BASE_URL}/api/strava/sync`, { method: "POST" });
-                  const data = await res.json();
-                  if (res.ok) {
-                    toast.success(data.synced > 0 ? `已同步 ${data.synced} 筆活動！` : "沒有新活動需要同步");
-                    if (data.synced > 0) window.location.reload();
-                  } else if (res.status === 429) {
-                    toast.warning(data.message || "目前太多人在使用 Strava 同步，請稍等幾分鐘後再試！", { duration: 8000 });
-                  } else {
-                    toast.error("同步失敗：" + (data.error || "未知錯誤"));
-                  }
-                  setIsSyncing(false);
-                }}
-              >
-                <RefreshCw className={`mr-2 size-4 ${isSyncing ? "animate-spin" : ""}`} />
-                {isSyncing ? "同步中..." : "同步 Strava 活動"}
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-red-900 text-red-400 hover:bg-red-950 hover:text-red-300"
-                onClick={handleDisconnectStrava}
-              >
-                <Unlink className="mr-2 size-4" />
-                解除連結 Strava
-              </Button>
-            </>
-          ) : (
-            <>
-              <p className="text-xs text-neutral-400">
-                連結您的 Strava 帳號，自動同步跑步活動並賺取 $SC。
-              </p>
-              {isNative ? (
-                // Strava OAuth requires browser redirect; not supported inside the native WebView.
-                // Direct users to the web version to complete the connection.
-                <p className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-xs text-neutral-400">
-                  請至網頁版（app.runrun.tw）連結 Strava 帳號。
-                </p>
-              ) : (
-                <ConnectWithStrava
-                  href={`/api/strava/connect?user_id=${profile.id}`}
-                  className="w-full"
-                />
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>}
 
       {/* Referral link */}
       <Card className="border-yellow-800/50 bg-gradient-to-br from-yellow-950/30 to-neutral-900">

@@ -8,7 +8,7 @@ import { TransactionType } from "@/types";
  * POST /api/health/sync
  *
  * Receives running workouts from the native app (HealthKit / Health Connect)
- * and syncs them into the database. This replaces the Strava sync flow.
+ * and syncs them into the database.
  *
  * Body: { workouts: Array<{ startDate, endDate, duration, distance, sourceName }> }
  * - distance is in meters

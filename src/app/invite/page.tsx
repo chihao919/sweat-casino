@@ -71,7 +71,7 @@ export default function InvitePage() {
           <CardContent className="py-5 text-center">
             <p className="text-4xl font-black text-green-600 dark:text-green-400">💰 完全免費</p>
             <p className="mt-2 text-lg text-muted-foreground">
-              不用花一毛錢！Strava、遊戲內貨幣，全部免費
+              不用花一毛錢！遊戲內貨幣，全部免費
             </p>
           </CardContent>
         </Card>
@@ -169,7 +169,7 @@ export default function InvitePage() {
             ⌚ 手錶設定超簡單
           </h2>
           <p className="mt-2 text-center text-lg text-muted-foreground">
-            只要 3 步驟，以後跑步自動同步
+            只要 2 步驟，以後跑步自動同步
           </p>
 
           <div className="mt-5 space-y-4">
@@ -180,11 +180,21 @@ export default function InvitePage() {
                   1
                 </div>
                 <div>
-                  <p className="font-bold text-xl">下載 Strava（免費）</p>
-                  <p className="mt-1 text-base text-muted-foreground">
-                    到 App Store 搜尋「Strava」，下載並用 Google 帳號註冊。
-                    <span className="text-green-600 dark:text-green-400 font-semibold"> 選免費方案就好！</span>
-                  </p>
+                  <p className="font-bold text-xl">用手錶或手機跑步</p>
+                  <div className="mt-2 space-y-2 text-base text-muted-foreground">
+                    <p>
+                      <span className="text-foreground font-semibold">⌚ Apple Watch：</span>
+                      直接用內建的「體能訓練」App 跑步，自動寫入 Apple Health。
+                    </p>
+                    <p>
+                      <span className="text-foreground font-semibold">🏃 Garmin：</span>
+                      用 Garmin Connect App 同步到 Apple Health 即可。
+                    </p>
+                    <p>
+                      <span className="text-foreground font-semibold">📱 沒手錶？</span>
+                      沒關係！用 Nike Run Club 等任何會寫入 Apple Health 的 App 都行！
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -196,42 +206,16 @@ export default function InvitePage() {
                   2
                 </div>
                 <div>
-                  <p className="font-bold text-xl">連結你的手錶</p>
-                  <div className="mt-2 space-y-2 text-base text-muted-foreground">
-                    <p>
-                      <span className="text-foreground font-semibold">⌚ Apple Watch：</span>
-                      Strava App → 設定 → 應用程式與裝置 → 開啟 Apple Health 同步。或直接在手錶安裝 Strava App。
-                    </p>
-                    <p>
-                      <span className="text-foreground font-semibold">🏃 Garmin：</span>
-                      Garmin Connect App → 設定 → 第三方應用 → 連結 Strava。
-                    </p>
-                    <p>
-                      <span className="text-foreground font-semibold">📱 沒手錶？</span>
-                      沒關係！直接用手機開 Strava 跑步一樣可以！
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 3 */}
-            <Card>
-              <CardContent className="flex items-start gap-4 py-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-lg font-black text-white">
-                  3
-                </div>
-                <div>
-                  <p className="font-bold text-xl">登入汗水賭場，串聯 Strava</p>
+                  <p className="font-bold text-xl">登入汗水賭場</p>
                   <p className="mt-1 text-base text-muted-foreground">
-                    用 Google 帳號登入網站，按「連結 Strava」授權。
+                    用 Apple 帳號登入，允許讀取 Apple Health 跑步資料。
                     <span className="text-green-600 dark:text-green-400 font-semibold"> 之後跑步完成就自動計分！</span>
                   </p>
                   <Link
                     href="/login"
                     className="mt-2 inline-block text-base font-semibold text-red-500 dark:text-red-400 underline"
                   >
-                    👉 點此登入並串聯 Strava
+                    👉 點此登入
                   </Link>
                 </div>
               </CardContent>

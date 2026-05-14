@@ -107,10 +107,6 @@ export interface Profile {
   avatar_url: string | null
   team_id: string | null
   sc_balance: number
-  strava_athlete_id: string | null
-  strava_access_token: string | null
-  strava_refresh_token: string | null
-  strava_token_expires_at: string | null
   created_at: string
   updated_at: string
   // Gamification fields
@@ -232,40 +228,3 @@ export interface WeatherRecord {
   created_at: string
 }
 
-// ---------------------------------------------------------------------------
-// Strava types
-// ---------------------------------------------------------------------------
-
-export interface StravaTokens {
-  access_token: string
-  refresh_token: string
-  expires_at: number
-  athlete_id?: number
-  profile_url?: string
-}
-
-export interface StravaActivity {
-  id: number
-  name: string
-  type: string
-  sport_type: string
-  distance: number        // meters
-  moving_time: number     // seconds
-  elapsed_time: number    // seconds
-  start_date: string
-  start_date_local: string
-  start_latlng: [number, number] | null
-  average_speed: number   // m/s
-  max_speed: number       // m/s
-  average_heartrate?: number
-  max_heartrate?: number
-  total_elevation_gain: number
-  map?: {
-    summary_polyline: string
-  }
-}
-
-export interface MockActivity extends StravaActivity {
-  _isMock: true
-  _userId: string
-}

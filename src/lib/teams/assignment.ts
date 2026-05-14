@@ -6,7 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * a deterministic bias toward one team over time.
  *
  * Uses the admin client so the operation bypasses Row Level Security and can
- * be executed safely from a server-side route (e.g. after Strava OAuth).
+ * be executed safely from a server-side route (e.g. after sign-up).
  *
  * @returns The team_id that was assigned to the user.
  */
