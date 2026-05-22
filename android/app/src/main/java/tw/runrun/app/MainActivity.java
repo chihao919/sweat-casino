@@ -1,4 +1,4 @@
-package com.runrun.app;
+package tw.runrun.app;
 
 import com.getcapacitor.BridgeActivity;
 

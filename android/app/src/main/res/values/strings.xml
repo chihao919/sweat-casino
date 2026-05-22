@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">RunRun</string>
     <string name="title_activity_main">RunRun</string>
-    <string name="package_name">com.runrun.app</string>
-    <string name="custom_url_scheme">com.runrun.app</string>
+    <string name="package_name">tw.runrun.app</string>
+    <string name="custom_url_scheme">tw.runrun.app</string>
 </resources>

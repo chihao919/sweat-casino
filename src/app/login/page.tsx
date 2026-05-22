@@ -31,13 +31,17 @@ export default function LoginPage() {
   const [copied, setCopied] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isNativeApp, setIsNativeApp] = useState(false);
+  const [nativePlatform, setNativePlatform] = useState<"ios" | "android" | null>(null);
 
   useEffect(() => {
     setInAppBrowser(isInAppBrowser());
-    setIsNativeApp(
-      typeof window !== "undefined" &&
-      (window as unknown as Record<string, unknown>).Capacitor !== undefined
-    );
+    const cap = (window as unknown as Record<string, unknown>).Capacitor as
+      | { isNativePlatform?: () => boolean; getPlatform?: () => string }
+      | undefined;
+    if (cap?.isNativePlatform?.()) {
+      setIsNativeApp(true);
+      setNativePlatform(cap.getPlatform?.() === "android" ? "android" : "ios");
+    }
 
     // Check if redirected back with an error
     const params = new URLSearchParams(window.location.search);
@@ -198,6 +202,8 @@ export default function LoginPage() {
           </CardHeader>
 
           <CardContent className="pb-8 space-y-3">
+            {/* Apple Sign-In — show on iOS native + web */}
+            {nativePlatform !== "android" && (
             <Button
               onClick={handleAppleLogin}
               disabled={isLoading || inAppBrowser}
@@ -208,9 +214,12 @@ export default function LoginPage() {
               </svg>
               {isLoading ? "跳轉中..." : "使用 Apple 登入"}
             </Button>
+            )}
 
-            {!isNativeApp && (
+            {/* Google Sign-In — show on Android native + web */}
+            {nativePlatform !== "ios" && (
             <>
+            {nativePlatform !== "android" && (
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-zinc-700" />
@@ -219,6 +228,7 @@ export default function LoginPage() {
                 <span className="bg-zinc-900 px-2 text-zinc-500">或</span>
               </div>
             </div>
+            )}
 
             <Button
               onClick={handleGoogleLogin}

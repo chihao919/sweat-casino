@@ -120,7 +120,6 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const [debugInfo, setDebugInfo] = useState<string>("");
   const [isNative] = useState(() => isCapacitorNative());
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -146,8 +145,6 @@ export default function ProfilePage() {
             .select("*")
             .eq("user_id", user.id),
         ]);
-
-        setDebugInfo(`user.id: ${user.id}\nprofile: ${profileRes.error ? JSON.stringify(profileRes.error) : "ok"}\nactivities: ${activitiesRes.error ? JSON.stringify(activitiesRes.error) : "ok"}, count: ${activitiesRes.data?.length ?? 0}\ndata: ${JSON.stringify(activitiesRes.data?.slice(0, 3))}`);
 
         if (profileRes.data) {
           setProfile(profileRes.data);
@@ -276,12 +273,6 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5">
-      {/* Debug info - temporary */}
-      {debugInfo && (
-        <pre className="whitespace-pre-wrap break-all rounded-lg border border-yellow-800 bg-yellow-950 p-3 text-xs text-yellow-300">
-          {debugInfo}
-        </pre>
-      )}
       {/* Profile card */}
       <Card className="border-neutral-800 bg-neutral-900">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
