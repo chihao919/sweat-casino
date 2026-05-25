@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="size-8 text-neutral-400">
+      <Button variant="ghost" size="icon" className="size-8 text-gray-500">
         <Sun className="size-4" />
       </Button>
     );
@@ -27,7 +27,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="size-8 text-neutral-400 hover:text-foreground"
+      className="size-8 text-gray-500 hover:text-gray-800"
       title={isDark ? "切換淺色模式" : "切換深色模式"}
     >
       {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}

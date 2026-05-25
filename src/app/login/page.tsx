@@ -141,32 +141,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-6">
-      {/* Subtle casino ambient glow */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.15)_0%,_transparent_60%)]" />
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      {/* Subtle red ambient glow */}
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.06)_0%,_transparent_60%)]" />
 
       <div className="relative w-full max-w-md">
         {/* App title */}
         <div className="mb-10 text-center">
-          <h1 className="text-5xl sm:text-6xl font-black tracking-tight text-white">
+          <h1 className="text-5xl sm:text-6xl font-black tracking-tight text-gray-900">
             汗水賭場 🎰
           </h1>
-          <p className="mt-4 text-lg sm:text-xl text-zinc-400">
+          <p className="mt-4 text-lg sm:text-xl text-gray-500">
             用汗水下注，讓跑步變成一場賭局
           </p>
         </div>
 
         {/* Auth error message */}
         {authError && (
-          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-950/40 p-5">
-            <p className="text-sm text-red-200 text-center whitespace-pre-line">{authError}</p>
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-5">
+            <p className="text-sm text-red-700 text-center whitespace-pre-line">{authError}</p>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(authError);
                 setCopied(true);
                 setTimeout(() => setCopied(false), 2000);
               }}
-              className="mt-3 w-full rounded-lg bg-red-900/50 py-2 text-xs text-red-300 hover:bg-red-900/70 transition-colors"
+              className="mt-3 w-full rounded-lg bg-red-100 py-2 text-xs text-red-600 hover:bg-red-200 transition-colors"
             >
               {copied ? "已複製錯誤訊息" : "複製錯誤訊息 (回報用)"}
             </button>
@@ -175,11 +175,11 @@ export default function LoginPage() {
 
         {/* Warning for in-app browsers */}
         {inAppBrowser && (
-          <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-950/40 p-5 text-center">
-            <p className="text-lg font-bold text-amber-400">
+          <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-5 text-center">
+            <p className="text-lg font-bold text-amber-700">
               ⚠️ 請使用外部瀏覽器開啟
             </p>
-            <p className="mt-2 text-sm text-amber-200/80">
+            <p className="mt-2 text-sm text-amber-600">
               Google 登入不支援 App 內建瀏覽器（LINE、Facebook 等）。
               <br />
               請複製連結，用 Safari 或 Chrome 開啟。
@@ -193,10 +193,10 @@ export default function LoginPage() {
           </div>
         )}
 
-        <Card className="border-zinc-800 bg-zinc-900 shadow-2xl shadow-red-950/20">
+        <Card className="border-gray-200 bg-white shadow-xl shadow-gray-200/80">
           <CardHeader className="pb-4 text-center">
-            <CardTitle className="text-2xl text-white">開始遊戲</CardTitle>
-            <CardDescription className="text-base text-zinc-400">
+            <CardTitle className="text-2xl text-gray-900">開始遊戲</CardTitle>
+            <CardDescription className="text-base text-gray-500">
               登入帳號，加入汗水賭局
             </CardDescription>
           </CardHeader>
@@ -207,7 +207,7 @@ export default function LoginPage() {
             <Button
               onClick={handleAppleLogin}
               disabled={isLoading || inAppBrowser}
-              className="w-full bg-white text-zinc-900 font-semibold hover:bg-zinc-100 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg"
+              className="w-full bg-gray-900 text-white font-semibold hover:bg-gray-800 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg"
             >
               <svg className="mr-3 h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -222,10 +222,10 @@ export default function LoginPage() {
             {nativePlatform !== "android" && (
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-zinc-700" />
+                <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-zinc-900 px-2 text-zinc-500">或</span>
+                <span className="bg-white px-2 text-gray-400">或</span>
               </div>
             </div>
             )}
@@ -233,7 +233,7 @@ export default function LoginPage() {
             <Button
               onClick={handleGoogleLogin}
               disabled={isLoading || inAppBrowser}
-              className="w-full bg-zinc-800 text-white font-semibold hover:bg-zinc-700 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg border border-zinc-700"
+              className="w-full bg-white text-gray-700 font-semibold hover:bg-gray-50 focus-visible:ring-red-600 disabled:opacity-50 h-14 text-lg border border-gray-200"
             >
               <svg className="mr-3 h-6 w-6" viewBox="0 0 24 24">
                 <path
@@ -263,11 +263,11 @@ export default function LoginPage() {
         <div className="mt-8 text-center space-y-3">
           <Link
             href="/guide"
-            className="block text-base font-medium text-red-400 hover:text-red-300 hover:underline"
+            className="block text-base font-medium text-red-500 hover:text-red-400 hover:underline"
           >
             📖 遊戲規則與新手指南
           </Link>
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-gray-400">
             登入即代表你同意用汗水下注 💦
           </p>
         </div>

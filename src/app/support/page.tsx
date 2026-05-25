@@ -40,23 +40,23 @@ function FAQItem({ icon, question, answer }: FAQItemProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-zinc-800 last:border-0">
+    <div className="border-b border-gray-200 last:border-0">
       <button
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between py-4 text-left hover:text-red-400 transition-colors"
       >
         <span className="flex items-center gap-3 font-medium text-white">
-          <span className="shrink-0 text-zinc-500">{icon}</span>
+          <span className="shrink-0 text-gray-400">{icon}</span>
           {question}
         </span>
         <ChevronDown
-          className={`ml-4 h-5 w-5 shrink-0 text-zinc-500 transition-transform ${
+          className={`ml-4 h-5 w-5 shrink-0 text-gray-400 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
       {open && (
-        <div className="pb-4 pl-9 text-zinc-400 leading-relaxed text-sm">
+        <div className="pb-4 pl-9 text-gray-500 leading-relaxed text-sm">
           {answer}
         </div>
       )}
@@ -207,7 +207,7 @@ const FAQ_ITEMS: FAQItemProps[] = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-slate-50 text-gray-900">
       {/* Ambient background glow */}
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.10)_0%,_transparent_60%)]" />
 
@@ -218,14 +218,14 @@ export default function SupportPage() {
         {/* ----------------------------------------------------------------- */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-black tracking-tight">Support</h1>
-          <p className="mt-3 text-lg text-zinc-400">
+          <p className="mt-3 text-lg text-gray-500">
             We&apos;re here to help you keep running.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link href="/guide">
               <Button
                 variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                className="border-zinc-700 text-gray-700 hover:bg-gray-100 hover:text-white"
               >
                 Read the Guide
               </Button>
@@ -233,7 +233,7 @@ export default function SupportPage() {
             <Link href="/dashboard">
               <Button
                 variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                className="border-zinc-700 text-gray-700 hover:bg-gray-100 hover:text-white"
               >
                 Dashboard
               </Button>
@@ -250,9 +250,9 @@ export default function SupportPage() {
             <h2 className="text-xl font-bold">Contact Us</h2>
           </div>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-gray-200 bg-white">
             <CardContent className="pt-6 pb-6">
-              <p className="text-zinc-400 leading-relaxed">
+              <p className="text-gray-500 leading-relaxed">
                 For account issues, data questions, or anything else, email us
                 directly. We typically reply within{" "}
                 <span className="text-white font-medium">1–2 business days</span>.
@@ -268,7 +268,7 @@ export default function SupportPage() {
           </Card>
         </section>
 
-        <Separator className="mb-12 bg-zinc-800" />
+        <Separator className="mb-12 bg-gray-100" />
 
         {/* ----------------------------------------------------------------- */}
         {/* FAQ                                                                */}
@@ -279,7 +279,7 @@ export default function SupportPage() {
             <h2 className="text-xl font-bold">Frequently Asked Questions</h2>
           </div>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-gray-200 bg-white">
             <CardContent className="px-6 py-2">
               {FAQ_ITEMS.map((item) => (
                 <FAQItem
@@ -293,7 +293,7 @@ export default function SupportPage() {
           </Card>
         </section>
 
-        <Separator className="mb-12 bg-zinc-800" />
+        <Separator className="mb-12 bg-gray-100" />
 
         {/* ----------------------------------------------------------------- */}
         {/* Bug Reporting                                                       */}
@@ -304,13 +304,13 @@ export default function SupportPage() {
             <h2 className="text-xl font-bold">Report a Bug</h2>
           </div>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-gray-200 bg-white">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-zinc-300">
+              <CardTitle className="text-base font-semibold text-gray-700">
                 Help us fix it fast — include these details in your email:
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-zinc-400 text-sm space-y-4">
+            <CardContent className="text-gray-500 text-sm space-y-4">
               <ol className="list-decimal pl-5 space-y-2 leading-relaxed">
                 <li>
                   <strong className="text-white">What happened</strong> — a short
@@ -335,16 +335,16 @@ export default function SupportPage() {
                 </li>
               </ol>
 
-              <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-4">
-                <p className="text-zinc-300 font-medium mb-1">Send your bug report to:</p>
+              <div className="rounded-lg border border-zinc-700 bg-gray-100/50 p-4">
+                <p className="text-gray-700 font-medium mb-1">Send your bug report to:</p>
                 <a
                   href="mailto:chihaohuang@gmail.com?subject=Bug%20Report%3A%20RunRun"
                   className="text-red-400 hover:underline font-mono text-sm"
                 >
                   chihaohuang@gmail.com
                 </a>
-                <p className="mt-1 text-zinc-500 text-xs">
-                  Subject: <span className="text-zinc-400">Bug Report: [short description]</span>
+                <p className="mt-1 text-gray-400 text-xs">
+                  Subject: <span className="text-gray-500">Bug Report: [short description]</span>
                 </p>
               </div>
             </CardContent>
@@ -352,7 +352,7 @@ export default function SupportPage() {
         </section>
 
         {/* Footer */}
-        <div className="text-center text-sm text-zinc-600">
+        <div className="text-center text-sm text-gray-400">
           <p>RunRun © 2026 — Your Sweat, Your Stakes</p>
         </div>
       </div>

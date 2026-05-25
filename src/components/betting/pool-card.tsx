@@ -60,14 +60,14 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
   const oddsB = calculateOdds(total, pool.side_b_total);
 
   return (
-    <Card className="border-neutral-800 bg-neutral-900">
+    <Card className="border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
                 variant="outline"
-                className="border-neutral-700 text-xs text-neutral-400"
+                className="border-gray-200 text-xs text-gray-500"
               >
                 {poolTypeLabel[pool.pool_type] || pool.pool_type}
               </Badge>
@@ -78,11 +78,11 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
                 {status.label}
               </Badge>
             </div>
-            <CardTitle className="text-sm font-semibold leading-snug text-neutral-100">
+            <CardTitle className="text-sm font-semibold leading-snug text-gray-800">
               {pool.title}
             </CardTitle>
             {pool.description && (
-              <p className="text-xs text-neutral-400">{pool.description}</p>
+              <p className="text-xs text-gray-500">{pool.description}</p>
             )}
           </div>
         </div>
@@ -109,31 +109,31 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
           {/* Side labels with odds */}
           <div className="flex items-center justify-between text-xs">
             <div className="space-y-0.5">
-              <p className="font-medium text-neutral-200">{pool.side_a_label}</p>
+              <p className="font-medium text-gray-700">{pool.side_a_label}</p>
               <div className="flex items-center gap-1.5">
                 <OddsDisplay odds={oddsA} size="sm" />
-                <span className="text-neutral-500">({formatSC(pool.side_a_total)})</span>
+                <span className="text-gray-400">({formatSC(pool.side_a_total)})</span>
               </div>
             </div>
             <div className="text-right space-y-0.5">
-              <p className="font-medium text-neutral-200">{pool.side_b_label}</p>
+              <p className="font-medium text-gray-700">{pool.side_b_label}</p>
               <div className="flex items-center justify-end gap-1.5">
                 <OddsDisplay odds={oddsB} size="sm" />
-                <span className="text-neutral-500">({formatSC(pool.side_b_total)})</span>
+                <span className="text-gray-400">({formatSC(pool.side_b_total)})</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Pool total and resolve time */}
-        <div className="flex items-center justify-between border-t border-neutral-800 pt-3">
+        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">總賭池</p>
-            <p className="text-sm font-bold text-white">{formatSC(pool.total_pool)}</p>
+            <p className="text-[11px] uppercase tracking-wide text-gray-500">總賭池</p>
+            <p className="text-sm font-bold text-gray-900">{formatSC(pool.total_pool)}</p>
           </div>
           <div className="text-right">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">結算</p>
-            <p className="text-xs text-neutral-300">{resolveTime}</p>
+            <p className="text-[11px] uppercase tracking-wide text-gray-500">結算</p>
+            <p className="text-xs text-gray-600">{resolveTime}</p>
           </div>
         </div>
 

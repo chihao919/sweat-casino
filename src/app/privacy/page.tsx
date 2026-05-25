@@ -30,7 +30,7 @@ function SubHeading({ children }: { children: React.ReactNode }) {
 // Prose paragraph
 // ---------------------------------------------------------------------------
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="mb-3 leading-relaxed text-zinc-400">{children}</p>;
+  return <p className="mb-3 leading-relaxed text-gray-500">{children}</p>;
 }
 
 // ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ function P({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 function UL({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="mb-4 list-disc list-inside space-y-1 text-zinc-400">
+    <ul className="mb-4 list-disc list-inside space-y-1 text-gray-500">
       {children}
     </ul>
   );
@@ -49,7 +49,7 @@ function UL({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 function Callout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="my-4 rounded-lg border border-pink-800/50 bg-pink-950/30 px-5 py-4 text-zinc-300 leading-relaxed">
+    <div className="my-4 rounded-lg border border-pink-800/50 bg-pink-950/30 px-5 py-4 text-gray-700 leading-relaxed">
       {children}
     </div>
   );
@@ -59,7 +59,7 @@ function Callout({ children }: { children: React.ReactNode }) {
 // Divider
 // ---------------------------------------------------------------------------
 function Divider() {
-  return <hr className="my-8 border-zinc-800" />;
+  return <hr className="my-8 border-gray-200" />;
 }
 
 // ---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ function Divider() {
 // ---------------------------------------------------------------------------
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-slate-50 text-gray-900">
       {/* Ambient glow — matches the rest of the app */}
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.08)_0%,_transparent_60%)]" />
 
@@ -78,12 +78,12 @@ export default function PrivacyPage() {
         <div className="mb-10">
           <Link
             href="/"
-            className="mb-6 inline-block text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="mb-6 inline-block text-sm text-gray-400 hover:text-gray-700 transition-colors"
           >
             &larr; Back to RunRun
           </Link>
           <h1 className="text-4xl font-black tracking-tight">Privacy Policy</h1>
-          <p className="mt-2 text-zinc-500">
+          <p className="mt-2 text-gray-400">
             Effective date: April 8, 2026 &nbsp;&middot;&nbsp; Last updated: April 8, 2026
           </p>
         </div>
@@ -377,7 +377,7 @@ export default function PrivacyPage() {
           Policy or your personal data, please contact:
         </P>
 
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-5 py-4 text-zinc-300">
+        <div className="rounded-lg border border-gray-200 bg-white px-5 py-4 text-gray-700">
           <p className="font-semibold text-white">chihaohuang</p>
           <p className="mt-1">
             Email:{" "}
@@ -388,19 +388,19 @@ export default function PrivacyPage() {
               chihaohuang@gmail.com
             </a>
           </p>
-          <p className="mt-1 text-zinc-500">Taipei, Taiwan</p>
+          <p className="mt-1 text-gray-400">Taipei, Taiwan</p>
         </div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Footer                                                           */}
         {/* ---------------------------------------------------------------- */}
-        <div className="mt-14 text-center text-sm text-zinc-600">
+        <div className="mt-14 text-center text-sm text-gray-400">
           <p>RunRun &copy; 2026 &mdash; Your Sweat, Your Stakes</p>
           <div className="mt-2 flex justify-center gap-4">
-            <Link href="/guide" className="hover:text-zinc-400 transition-colors">
+            <Link href="/guide" className="hover:text-gray-500 transition-colors">
               Guide
             </Link>
-            <Link href="/login" className="hover:text-zinc-400 transition-colors">
+            <Link href="/login" className="hover:text-gray-500 transition-colors">
               Sign In
             </Link>
           </div>

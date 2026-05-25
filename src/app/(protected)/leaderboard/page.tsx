@@ -13,6 +13,7 @@ import { Profile, Team } from "@/types";
 import { formatSC } from "@/lib/sc/engine";
 import { cn } from "@/lib/utils";
 import { Trophy } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 // ── Extended profile for leaderboard display
 interface LeaderboardEntry {
@@ -28,9 +29,9 @@ type TimePeriod = "weekly" | "all-time";
 
 // Medal emoji/styling for top 3
 const RANK_CONFIG: Record<number, { medal: string; rowClass: string }> = {
-  1: { medal: "🥇", rowClass: "border-yellow-600/30 bg-yellow-950/20" },
-  2: { medal: "🥈", rowClass: "border-neutral-500/30 bg-neutral-800/40" },
-  3: { medal: "🥉", rowClass: "border-orange-800/30 bg-orange-950/20" },
+  1: { medal: "🥇", rowClass: "border-yellow-300 bg-yellow-50" },
+  2: { medal: "🥈", rowClass: "border-gray-300 bg-gray-50" },
+  3: { medal: "🥉", rowClass: "border-orange-200 bg-orange-50" },
 };
 
 function getInitials(profile: Profile): string {
@@ -68,8 +69,8 @@ function LeaderboardRow({
         "flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors",
         rankConf
           ? rankConf.rowClass
-          : "border-neutral-800 bg-neutral-900 hover:bg-neutral-800/50",
-        isCurrentUser && !rankConf && "border-red-800/40 bg-red-950/20"
+          : "border-gray-200 bg-white hover:bg-gray-50 shadow-sm",
+        isCurrentUser && !rankConf && "border-red-200 bg-red-50"
       )}
     >
       {/* Rank */}
@@ -77,24 +78,24 @@ function LeaderboardRow({
         {rankConf ? (
           <span className="text-xl">{rankConf.medal}</span>
         ) : (
-          <span className="text-sm font-bold text-neutral-500">#{rank}</span>
+          <span className="text-base font-black text-gray-400">#{rank}</span>
         )}
       </div>
 
       {/* Avatar */}
-      <Avatar className="size-9 ring-1 ring-neutral-700">
+      <Avatar className="size-9 ring-1 ring-gray-200">
         <AvatarImage src={entry.profile.avatar_url ?? undefined} />
-        <AvatarFallback className="bg-neutral-800 text-xs font-bold text-white">
+        <AvatarFallback className="bg-gray-100 text-xs font-bold text-gray-600">
           {getInitials(entry.profile)}
         </AvatarFallback>
       </Avatar>
 
       {/* Name + team */}
       <div className="min-w-0 flex-1">
-        <p className={cn("truncate text-sm font-semibold", isCurrentUser ? "text-red-300" : "text-white")}>
+        <p className={cn("truncate text-sm font-semibold", isCurrentUser ? "text-red-600" : "text-gray-800")}>
           {entry.profile.display_name ?? entry.profile.username ?? "選手"}
           {isCurrentUser && (
-            <span className="ml-1.5 text-[10px] font-normal text-neutral-500">（我）</span>
+            <span className="ml-1.5 text-[10px] font-normal text-gray-400">（我）</span>
           )}
         </p>
         {teamInfo && (
@@ -106,8 +107,8 @@ function LeaderboardRow({
 
       {/* Value */}
       <div className="text-right">
-        <p className="text-sm font-black tabular-nums text-white">{value}</p>
-        <p className="text-[10px] text-neutral-500">{unit}</p>
+        <p className="text-lg font-black tabular-nums text-gray-900">{value}</p>
+        <p className="text-[10px] text-gray-500">{unit}</p>
       </div>
     </div>
   );
@@ -167,11 +168,33 @@ export default function LeaderboardPage() {
             0
           );
 
+          // Calculate current streak from activity dates
+          const dateDaySet = new Set(
+            userActivities.map((a) => format(parseISO(a.start_date), "yyyy-MM-dd"))
+          );
+          let currentStreak = 0;
+          const todayStr = format(new Date(), "yyyy-MM-dd");
+          const hasToday = dateDaySet.has(todayStr);
+          const startCheck = hasToday ? new Date() : new Date(Date.now() - 86400000);
+          const startCheckStr = format(startCheck, "yyyy-MM-dd");
+          if (dateDaySet.has(startCheckStr)) {
+            currentStreak = 1;
+            let checkDate = new Date(startCheck);
+            for (let i = 1; i <= 365; i++) {
+              checkDate = new Date(checkDate.getTime() - 86400000);
+              if (dateDaySet.has(format(checkDate, "yyyy-MM-dd"))) {
+                currentStreak++;
+              } else {
+                break;
+              }
+            }
+          }
+
           return {
             profile,
             totalKm,
             totalSCEarned,
-            currentStreak: 0, // Streak calculation would be more complex; placeholder
+            currentStreak,
           };
         });
 
@@ -212,9 +235,9 @@ export default function LeaderboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-10 w-full rounded-lg bg-neutral-800" />
+        <Skeleton className="h-10 w-full rounded-lg bg-gray-200" />
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-lg bg-neutral-800" />
+          <Skeleton key={i} className="h-16 w-full rounded-lg bg-gray-200" />
         ))}
       </div>
     );
@@ -226,11 +249,11 @@ export default function LeaderboardPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="size-5 text-yellow-500" />
-          <h1 className="text-lg font-black text-white">排行榜</h1>
+          <h1 className="text-lg font-black text-gray-900">排行榜</h1>
         </div>
 
         {/* Weekly / All-time toggle */}
-        <div className="flex rounded-lg border border-neutral-800 bg-neutral-900 p-1 gap-1">
+        <div className="flex rounded-lg border border-gray-200 bg-white p-1 gap-1 shadow-sm">
           {(["weekly", "all-time"] as TimePeriod[]).map((period) => (
             <button
               key={period}
@@ -239,7 +262,7 @@ export default function LeaderboardPage() {
                 "rounded-md px-3 py-1 text-xs font-semibold capitalize transition-colors",
                 timePeriod === period
                   ? "bg-red-600 text-white"
-                  : "text-neutral-400 hover:text-white"
+                  : "text-gray-500 hover:text-gray-800"
               )}
             >
               {period === "weekly" ? "本週" : "總累計"}
@@ -257,14 +280,14 @@ export default function LeaderboardPage() {
             variant="outline"
             onClick={() => setTeamFilter(f)}
             className={cn(
-              "border-neutral-700 text-sm font-medium capitalize",
+              "border-gray-200 text-sm font-medium capitalize",
               teamFilter === f
                 ? f === "red"
-                  ? "border-red-600 bg-red-600/20 text-red-300"
+                  ? "border-red-400 bg-red-50 text-red-600"
                   : f === "white"
-                  ? "border-neutral-400 bg-neutral-400/10 text-neutral-300"
-                  : "border-neutral-500 bg-neutral-800 text-white"
-                : "bg-neutral-900 text-neutral-400 hover:text-white"
+                  ? "border-gray-400 bg-gray-50 text-gray-700"
+                  : "border-gray-400 bg-gray-100 text-gray-800"
+                : "bg-white text-gray-500 hover:text-gray-800"
             )}
           >
             {f === "all" ? "全部" : f === "red" ? "🐂 紅牛隊" : "🐻‍❄️ 白熊隊"}
@@ -274,7 +297,7 @@ export default function LeaderboardPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="distance">
-        <TabsList className="w-full border border-neutral-800 bg-neutral-900">
+        <TabsList className="w-full border border-gray-200 bg-white shadow-sm">
           <TabsTrigger
             value="distance"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
@@ -297,8 +320,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="distance" className="mt-4">
           {sortedByDistance.length === 0 ? (
-            <Card className="border-neutral-800 bg-neutral-900">
-              <CardContent className="py-10 text-center text-sm text-neutral-500">
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="py-10 text-center text-sm text-gray-500">
                 暫無資料
               </CardContent>
             </Card>
@@ -320,8 +343,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="sc-earned" className="mt-4">
           {sortedBySC.length === 0 ? (
-            <Card className="border-neutral-800 bg-neutral-900">
-              <CardContent className="py-10 text-center text-sm text-neutral-500">
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="py-10 text-center text-sm text-gray-500">
                 暫無資料
               </CardContent>
             </Card>
@@ -343,8 +366,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="streak" className="mt-4">
           {sortedByStreak.length === 0 ? (
-            <Card className="border-neutral-800 bg-neutral-900">
-              <CardContent className="py-10 text-center text-sm text-neutral-500">
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="py-10 text-center text-sm text-gray-500">
                 暫無資料
               </CardContent>
             </Card>

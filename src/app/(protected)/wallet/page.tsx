@@ -80,7 +80,7 @@ const typeConfig: Record<
   },
   [TransactionType.MANUAL_ADJUSTMENT]: {
     label: "手動調整",
-    className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
+    className: "bg-gray-100 text-gray-500 border-gray-300",
   },
   [TransactionType.REFERRAL_REWARD]: {
     label: "推薦獎勵",
@@ -181,29 +181,29 @@ export default function WalletPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-36 w-full rounded-xl bg-neutral-800" />
-        <Skeleton className="h-96 w-full rounded-xl bg-neutral-800" />
+        <Skeleton className="h-36 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-96 w-full rounded-xl bg-gray-200" />
       </div>
     );
   }
 
   const teamColor = profile?.team_id ? "red" : "neutral";
   const borderColorClass =
-    teamColor === "red" ? "border-red-600/50" : "border-neutral-600/50";
+    teamColor === "red" ? "border-red-300" : "border-gray-200";
 
   return (
     <div className="space-y-5">
       {/* Balance hero */}
-      <Card className={cn("border-2 bg-neutral-900", borderColorClass)}>
+      <Card className={cn("border-2 bg-white shadow-md", borderColorClass)}>
         <CardContent className="flex flex-col items-center gap-3 py-8">
-          <div className="flex size-14 items-center justify-center rounded-full bg-yellow-950/50 ring-2 ring-yellow-600/30">
+          <div className="flex size-14 items-center justify-center rounded-full bg-yellow-50 ring-2 ring-yellow-300">
             <Coins className="size-7 text-yellow-500" />
           </div>
           <div className="text-center">
-            <p className="text-xs uppercase tracking-widest text-neutral-500">
+            <p className="text-xs uppercase tracking-widest text-gray-500">
               目前餘額
             </p>
-            <p className="mt-1 text-5xl font-black tabular-nums text-white">
+            <p className="mt-1 text-5xl font-black tabular-nums text-gray-900">
               {profile ? formatSC(profile.sc_balance) : "$0.00 SC"}
             </p>
           </div>
@@ -211,16 +211,16 @@ export default function WalletPage() {
       </Card>
 
       {/* Transaction history */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      <Card className="border-gray-200 bg-white shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
-          <CardTitle className="text-sm font-semibold text-neutral-300">
+          <CardTitle className="text-sm font-semibold text-gray-700">
             交易紀錄
           </CardTitle>
           <Select value={filter} onValueChange={handleFilterChange}>
-            <SelectTrigger className="h-8 w-32 border-neutral-700 bg-neutral-800 text-xs text-white">
+            <SelectTrigger className="h-8 w-32 border-gray-200 bg-white text-xs text-gray-700">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="border-neutral-800 bg-neutral-900 text-neutral-200">
+            <SelectContent className="border-gray-200 bg-white text-gray-700">
               <SelectItem value="all">全部</SelectItem>
               <SelectItem value="rewards">獎勵</SelectItem>
               <SelectItem value="bets">下注</SelectItem>
@@ -232,23 +232,23 @@ export default function WalletPage() {
         <CardContent className="p-0">
           {paginatedTransactions.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-10">
-              <Coins className="size-8 text-neutral-700" />
-              <p className="text-sm text-neutral-500">暫無交易紀錄。</p>
+              <Coins className="size-8 text-gray-300" />
+              <p className="text-sm text-gray-500">暫無交易紀錄。</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-neutral-800 hover:bg-transparent">
-                    <TableHead className="text-xs text-neutral-500">日期</TableHead>
-                    <TableHead className="text-xs text-neutral-500">類型</TableHead>
-                    <TableHead className="hidden text-xs text-neutral-500 sm:table-cell">
+                  <TableRow className="border-gray-100 hover:bg-transparent">
+                    <TableHead className="text-xs text-gray-500">日期</TableHead>
+                    <TableHead className="text-xs text-gray-500">類型</TableHead>
+                    <TableHead className="hidden text-xs text-gray-500 sm:table-cell">
                       說明
                     </TableHead>
-                    <TableHead className="text-right text-xs text-neutral-500">
+                    <TableHead className="text-right text-xs text-gray-500">
                       金額
                     </TableHead>
-                    <TableHead className="hidden text-right text-xs text-neutral-500 sm:table-cell">
+                    <TableHead className="hidden text-right text-xs text-gray-500 sm:table-cell">
                       餘額
                     </TableHead>
                   </TableRow>
@@ -260,9 +260,9 @@ export default function WalletPage() {
                     return (
                       <TableRow
                         key={tx.id}
-                        className="border-neutral-800 hover:bg-neutral-800/50"
+                        className="border-gray-100 hover:bg-gray-50"
                       >
-                        <TableCell className="text-xs text-neutral-400">
+                        <TableCell className="text-xs text-gray-500">
                           {format(parseISO(tx.created_at), "MMM d")}
                         </TableCell>
                         <TableCell>
@@ -273,7 +273,7 @@ export default function WalletPage() {
                             {config.label}
                           </Badge>
                         </TableCell>
-                        <TableCell className="hidden text-xs text-neutral-400 sm:table-cell">
+                        <TableCell className="hidden text-xs text-gray-500 sm:table-cell">
                           {tx.description ?? "—"}
                         </TableCell>
                         <TableCell
@@ -285,7 +285,7 @@ export default function WalletPage() {
                           {isNegative ? "-" : "+"}
                           {Math.abs(tx.amount).toFixed(2)} SC
                         </TableCell>
-                        <TableCell className="hidden text-right text-xs tabular-nums text-neutral-400 sm:table-cell">
+                        <TableCell className="hidden text-right text-xs tabular-nums text-gray-500 sm:table-cell">
                           {tx.balance_after.toFixed(2)} SC
                         </TableCell>
                       </TableRow>
@@ -298,15 +298,15 @@ export default function WalletPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-neutral-800 px-4 py-3">
-              <p className="text-xs text-neutral-500">
+            <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3">
+              <p className="text-xs text-gray-500">
                 Page {page + 1} of {totalPages}
               </p>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="size-7 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 disabled:opacity-30"
+                  className="size-7 border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-30"
                   disabled={page === 0}
                   onClick={() => setPage((p) => p - 1)}
                 >
@@ -315,7 +315,7 @@ export default function WalletPage() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="size-7 border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 disabled:opacity-30"
+                  className="size-7 border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-30"
                   disabled={page >= totalPages - 1}
                   onClick={() => setPage((p) => p + 1)}
                 >

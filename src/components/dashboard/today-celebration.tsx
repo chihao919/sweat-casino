@@ -35,17 +35,17 @@ export function TodayCelebration({ activities }: TodayCelebrationProps) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-yellow-600/30 bg-gradient-to-br from-yellow-950/80 via-amber-950/60 to-orange-950/40">
+    <div className="relative overflow-hidden rounded-2xl border border-yellow-300 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 shadow-md">
       {/* Animated glow effects */}
-      <div className="absolute -left-8 -top-8 size-32 animate-pulse rounded-full bg-yellow-500/10 blur-3xl" />
-      <div className="absolute -bottom-6 -right-6 size-28 animate-pulse rounded-full bg-orange-500/10 blur-3xl" style={{ animationDelay: "1s" }} />
-      <div className="absolute left-1/2 top-0 size-20 animate-pulse rounded-full bg-amber-400/8 blur-2xl" style={{ animationDelay: "0.5s" }} />
+      <div className="absolute -left-8 -top-8 size-32 animate-pulse rounded-full bg-yellow-300/30 blur-3xl" />
+      <div className="absolute -bottom-6 -right-6 size-28 animate-pulse rounded-full bg-orange-300/30 blur-3xl" style={{ animationDelay: "1s" }} />
+      <div className="absolute left-1/2 top-0 size-20 animate-pulse rounded-full bg-amber-300/20 blur-2xl" style={{ animationDelay: "0.5s" }} />
 
       <div className="relative z-10 px-5 py-5">
         {/* Trophy header */}
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="text-3xl animate-bounce" style={{ animationDuration: "2s" }}>🏆</span>
-          <h3 className="text-lg font-black text-yellow-300 tracking-wide">
+          <h3 className="text-lg font-black text-amber-700 tracking-wide">
             今日戰績
           </h3>
           <span className="text-3xl animate-bounce" style={{ animationDuration: "2s", animationDelay: "0.3s" }}>🔥</span>
@@ -53,38 +53,38 @@ export function TodayCelebration({ activities }: TodayCelebrationProps) {
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="rounded-xl bg-black/30 px-3 py-3 text-center backdrop-blur-sm">
-            <p className="text-2xl font-black tabular-nums text-white">
+          <div className="rounded-xl bg-white/70 px-3 py-3 text-center shadow-sm backdrop-blur-sm">
+            <p className="text-2xl font-black tabular-nums text-gray-900">
               {totalKm.toFixed(1)}
             </p>
-            <p className="text-[10px] font-medium uppercase tracking-widest text-yellow-400/80">
+            <p className="text-[10px] font-medium uppercase tracking-widest text-amber-600">
               公里
             </p>
           </div>
-          <div className="rounded-xl bg-black/30 px-3 py-3 text-center backdrop-blur-sm">
-            <p className="text-2xl font-black tabular-nums text-green-400">
+          <div className="rounded-xl bg-white/70 px-3 py-3 text-center shadow-sm backdrop-blur-sm">
+            <p className="text-2xl font-black tabular-nums text-green-600">
               +{formatSC(totalSC)}
             </p>
-            <p className="text-[10px] font-medium uppercase tracking-widest text-green-400/80">
+            <p className="text-[10px] font-medium uppercase tracking-widest text-green-600">
               $SC 入帳
             </p>
           </div>
-          <div className="rounded-xl bg-black/30 px-3 py-3 text-center backdrop-blur-sm">
-            <p className="text-2xl font-black tabular-nums text-white">
+          <div className="rounded-xl bg-white/70 px-3 py-3 text-center shadow-sm backdrop-blur-sm">
+            <p className="text-2xl font-black tabular-nums text-gray-900">
               {runCount}
             </p>
-            <p className="text-[10px] font-medium uppercase tracking-widest text-yellow-400/80">
+            <p className="text-[10px] font-medium uppercase tracking-widest text-amber-600">
               {runCount > 1 ? "次跑步" : "次跑步"}
             </p>
           </div>
         </div>
 
         {/* Encouraging message */}
-        <div className="rounded-xl bg-gradient-to-r from-yellow-900/40 to-orange-900/30 px-4 py-3 text-center">
-          <p className="text-sm font-bold leading-relaxed text-yellow-100">
+        <div className="rounded-xl bg-white/60 px-4 py-3 text-center shadow-sm">
+          <p className="text-sm font-bold leading-relaxed text-amber-800">
             {getMessage()}
           </p>
-          <p className="mt-1 text-xs text-yellow-400/60">
+          <p className="mt-1 text-xs text-amber-600">
             你的汗水已轉化為 {formatSC(totalSC)} $SC，持續累積財富！💰
           </p>
         </div>

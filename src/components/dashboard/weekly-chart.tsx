@@ -51,7 +51,7 @@ function buildLast7DaysData(activities: Activity[]): ChartDataPoint[] {
   });
 }
 
-// Custom tooltip to match dark theme
+// Custom tooltip to match light theme
 function CustomTooltip({
   active,
   payload,
@@ -63,9 +63,9 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 shadow-xl">
-      <p className="text-xs text-neutral-400">{label}</p>
-      <p className="text-sm font-bold text-white">{payload[0].value.toFixed(2)} km</p>
+    <div className="rounded-md border border-gray-200 bg-white px-3 py-2 shadow-lg">
+      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-sm font-bold text-gray-900">{payload[0].value.toFixed(2)} km</p>
     </div>
   );
 }
@@ -81,8 +81,8 @@ export function WeeklyChart({ activities, teamColor = "red" }: WeeklyChartProps)
     return (
       <div className="flex h-40 flex-col items-center justify-center gap-2">
         <p className="text-2xl">🏃</p>
-        <p className="text-sm text-neutral-400">本週還沒有跑步紀錄</p>
-        <p className="text-xs text-neutral-600">出去跑步並記錄你的第一公里吧！</p>
+        <p className="text-sm text-gray-500">本週還沒有跑步紀錄</p>
+        <p className="text-xs text-gray-400">出去跑步並記錄你的第一公里吧！</p>
       </div>
     );
   }
@@ -90,22 +90,22 @@ export function WeeklyChart({ activities, teamColor = "red" }: WeeklyChartProps)
   return (
     <ResponsiveContainer width="100%" height={160}>
       <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-        <CartesianGrid vertical={false} stroke="#262626" strokeDasharray="3 3" />
+        <CartesianGrid vertical={false} stroke="#e5e7eb" strokeDasharray="3 3" />
         <XAxis
           dataKey="day"
-          tick={{ fill: "#737373", fontSize: 11 }}
+          tick={{ fill: "#9ca3af", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#737373", fontSize: 11 }}
+          tick={{ fill: "#9ca3af", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           tickFormatter={(v: number) => `${v}`}
         />
         <Tooltip
           content={<CustomTooltip />}
-          cursor={{ fill: "rgba(255,255,255,0.04)" }}
+          cursor={{ fill: "rgba(0,0,0,0.04)" }}
         />
         <Bar
           dataKey="km"

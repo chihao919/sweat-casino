@@ -29,11 +29,11 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
   const redIsLeading = redTeam.weeklyKm >= whiteTeam.weeklyKm;
 
   return (
-    <Card className={cn("border-neutral-800 bg-neutral-900 overflow-hidden", className)}>
+    <Card className={cn("border-gray-200 bg-white shadow-sm overflow-hidden", className)}>
       <CardContent className="p-0">
         {/* Header */}
-        <div className="border-b border-neutral-800 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-widest text-neutral-500 font-semibold">
+        <div className="border-b border-gray-100 px-4 py-3">
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold">
             本週 — 隊伍對決
           </p>
         </div>
@@ -42,28 +42,28 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0">
           {/* Red Bulls side */}
           <div className="relative flex flex-col items-center gap-2 p-5">
-            {/* Ambient glow effect */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(239,68,68,0.12)_0%,_transparent_60%)]" />
+            {/* Ambient glow effect — keep red glow for red team */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(239,68,68,0.08)_0%,_transparent_60%)]" />
 
             <span className="text-4xl drop-shadow-[0_0_12px_rgba(239,68,68,0.6)]">
               {redTeam.emoji}
             </span>
-            <span className="text-xs font-semibold text-neutral-300">{redTeam.name}</span>
+            <span className="text-xs font-semibold text-gray-700">{redTeam.name}</span>
 
             <div className="mt-1 text-center">
-              <p className="text-3xl font-black tabular-nums text-white leading-none">
+              <p className="text-4xl font-black tabular-nums text-gray-900 leading-none">
                 {formatKm(redTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-neutral-500">本週公里數</p>
+              <p className="text-xs text-gray-500">本週公里數</p>
             </div>
 
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-gray-500">
               {redTeam.activityCount} 次活動
             </p>
 
             {/* Leading indicator */}
             {redIsLeading && totalKm > 0 && (
-              <span className="animate-pulse rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-400">
+              <span className="animate-pulse rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-500">
                 領先中
               </span>
             )}
@@ -71,33 +71,34 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
 
           {/* VS divider */}
           <div className="flex flex-col items-center gap-1 px-2">
-            <div className="h-16 w-px bg-gradient-to-b from-transparent via-neutral-700 to-transparent" />
-            <span className="text-xs font-black text-neutral-600 tracking-widest">VS</span>
-            <div className="h-16 w-px bg-gradient-to-b from-neutral-700 via-neutral-700 to-transparent" />
+            <div className="h-16 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
+            <span className="text-xs font-black text-gray-400 tracking-widest">VS</span>
+            <div className="h-16 w-px bg-gradient-to-b from-gray-300 via-gray-300 to-transparent" />
           </div>
 
           {/* White Bears side */}
           <div className="relative flex flex-col items-center gap-2 p-5">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_right,_rgba(229,229,229,0.06)_0%,_transparent_60%)]" />
+            {/* Subtle blue/gray glow for white team */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_right,_rgba(148,163,184,0.10)_0%,_transparent_60%)]" />
 
-            <span className="text-4xl drop-shadow-[0_0_12px_rgba(229,229,229,0.4)]">
+            <span className="text-4xl drop-shadow-[0_0_12px_rgba(148,163,184,0.5)]">
               {whiteTeam.emoji}
             </span>
-            <span className="text-xs font-semibold text-neutral-300">{whiteTeam.name}</span>
+            <span className="text-xs font-semibold text-gray-700">{whiteTeam.name}</span>
 
             <div className="mt-1 text-center">
-              <p className="text-3xl font-black tabular-nums text-white leading-none">
+              <p className="text-4xl font-black tabular-nums text-gray-900 leading-none">
                 {formatKm(whiteTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-neutral-500">本週公里數</p>
+              <p className="text-xs text-gray-500">本週公里數</p>
             </div>
 
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-gray-500">
               {whiteTeam.activityCount} 次活動
             </p>
 
             {!redIsLeading && totalKm > 0 && (
-              <span className="animate-pulse rounded-full bg-neutral-400/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-neutral-300">
+              <span className="animate-pulse rounded-full bg-slate-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">
                 領先中
               </span>
             )}
@@ -108,15 +109,15 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
         <div className="px-4 pb-4">
           <div className="flex overflow-hidden rounded-full h-3">
             <div
-              className="h-full bg-red-600 transition-all duration-700 ease-out"
+              className="h-full bg-red-500 transition-all duration-700 ease-out"
               style={{ width: `${redPercent}%` }}
             />
             <div
-              className="h-full bg-neutral-300 transition-all duration-700 ease-out"
+              className="h-full bg-slate-300 transition-all duration-700 ease-out"
               style={{ width: `${whitePercent}%` }}
             />
           </div>
-          <div className="mt-1.5 flex justify-between text-[10px] text-neutral-600">
+          <div className="mt-1.5 flex justify-between text-[10px] text-gray-500">
             <span>{redPercent}%</span>
             <span>{whitePercent}%</span>
           </div>

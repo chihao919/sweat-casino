@@ -75,12 +75,12 @@ export function Header({ profile }: HeaderProps) {
   const balanceDisplay = profile ? formatSC(profile.sc_balance) : "$0.00 SC";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-zinc-950 safe-top">
+    <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm safe-top shadow-sm">
       <div className="mx-auto flex h-14 max-w-screen-lg items-center justify-between px-4">
         {/* Left: Logo */}
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 text-lg font-black tracking-tight text-white hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 text-lg font-black tracking-tight text-gray-900 hover:opacity-80 transition-opacity"
         >
           <span>🎰</span>
           <span>汗水賭場</span>
@@ -99,9 +99,9 @@ export function Header({ profile }: HeaderProps) {
           {profile && (
             <>
               {/* SC Balance chip */}
-              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-yellow-600/40 bg-yellow-950/40 px-3 py-1">
+              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-yellow-400/40 bg-yellow-50 px-3 py-1">
                 <Coins className="size-3.5 text-yellow-500" />
-                <span className="text-sm font-bold tabular-nums text-yellow-300">
+                <span className="text-sm font-bold tabular-nums text-yellow-700">
                   {balanceDisplay}
                 </span>
               </div>
@@ -109,10 +109,10 @@ export function Header({ profile }: HeaderProps) {
               {/* Avatar dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="rounded-full ring-2 ring-neutral-700 hover:ring-red-600 transition-all focus:outline-none">
+                  <button className="rounded-full ring-2 ring-gray-200 hover:ring-red-500 transition-all focus:outline-none">
                     <Avatar className="size-8">
                       <AvatarImage src={profile.avatar_url ?? undefined} />
-                      <AvatarFallback className="bg-neutral-800 text-xs font-bold text-white">
+                      <AvatarFallback className="bg-gray-100 text-xs font-bold text-gray-700">
                         {getInitials(profile)}
                       </AvatarFallback>
                     </Avatar>
@@ -121,21 +121,21 @@ export function Header({ profile }: HeaderProps) {
 
                 <DropdownMenuContent
                   align="end"
-                  className="w-48 border-neutral-800 bg-neutral-900 text-neutral-200"
+                  className="w-48 border-gray-200 bg-white text-gray-700 shadow-lg"
                 >
-                  <DropdownMenuLabel className="text-xs text-neutral-400">
+                  <DropdownMenuLabel className="text-xs text-gray-500">
                     {profile.display_name ?? profile.username ?? "Athlete"}
                   </DropdownMenuLabel>
 
                   {/* Mobile: show balance inside dropdown */}
                   <div className="sm:hidden flex items-center gap-1.5 px-2 py-1.5">
                     <Coins className="size-3.5 text-yellow-500" />
-                    <span className="text-sm font-bold tabular-nums text-yellow-300">
+                    <span className="text-sm font-bold tabular-nums text-yellow-700">
                       {balanceDisplay}
                     </span>
                   </div>
 
-                  <DropdownMenuSeparator className="bg-neutral-800" />
+                  <DropdownMenuSeparator className="bg-gray-100" />
 
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="flex cursor-pointer items-center gap-2">
@@ -151,11 +151,11 @@ export function Header({ profile }: HeaderProps) {
                     </Link>
                   </DropdownMenuItem>
 
-                  <DropdownMenuSeparator className="bg-neutral-800" />
+                  <DropdownMenuSeparator className="bg-gray-100" />
 
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="flex cursor-pointer items-center gap-2 text-red-400 focus:text-red-400"
+                    className="flex cursor-pointer items-center gap-2 text-red-500 focus:text-red-500"
                   >
                     <LogOut className="size-4" />
                     登出
@@ -171,16 +171,16 @@ export function Header({ profile }: HeaderProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden text-neutral-400 hover:text-white"
+                className="md:hidden text-gray-500 hover:text-gray-800"
               >
                 <Menu className="size-5" />
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
 
-            <SheetContent side="left" className="w-64 border-neutral-800 bg-neutral-950 p-0">
-              <SheetHeader className="border-b border-neutral-800 px-5 py-4">
-                <SheetTitle className="text-left text-lg font-black text-white">
+            <SheetContent side="left" className="w-64 border-gray-200 bg-white p-0">
+              <SheetHeader className="border-b border-gray-100 px-5 py-4">
+                <SheetTitle className="text-left text-lg font-black text-gray-900">
                   🎰 汗水賭場
                 </SheetTitle>
                 {teamInfo && (
@@ -196,7 +196,7 @@ export function Header({ profile }: HeaderProps) {
                     key={href}
                     href={href}
                     onClick={() => setSheetOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
                   >
                     <Icon className="size-5" />
                     {label}

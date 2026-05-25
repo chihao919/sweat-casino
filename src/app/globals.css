@@ -4,7 +4,7 @@
 
 /* iOS safe area — extend background behind status bar / Dynamic Island */
 html, body {
-  background-color: #09090b; /* bg-zinc-950 */
+  background-color: #f8fafc; /* slate-50 light background */
 }
 
 body {

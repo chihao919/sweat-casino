@@ -102,11 +102,11 @@ function calculateStats(activities: Activity[]): ProfileStats {
 
 function StatCard({ label, value, unit }: { label: string; value: string | number; unit?: string }) {
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 text-center">
-      <p className="text-[11px] uppercase tracking-wide text-neutral-500">{label}</p>
-      <p className="mt-1 text-2xl font-black tabular-nums text-white">
+    <div className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+      <p className="text-[11px] uppercase tracking-wide text-gray-500">{label}</p>
+      <p className="mt-1 text-2xl font-black tabular-nums text-gray-900">
         {value}
-        {unit && <span className="ml-1 text-sm font-normal text-neutral-400">{unit}</span>}
+        {unit && <span className="ml-1 text-sm font-normal text-gray-400">{unit}</span>}
       </p>
     </div>
   );
@@ -249,10 +249,10 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-32 w-full rounded-xl bg-neutral-800" />
+        <Skeleton className="h-32 w-full rounded-xl bg-gray-200" />
         <div className="grid grid-cols-2 gap-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 rounded-xl bg-neutral-800" />
+            <Skeleton key={i} className="h-20 rounded-xl bg-gray-200" />
           ))}
         </div>
       </div>
@@ -274,12 +274,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-5">
       {/* Profile card */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      <Card className="border-gray-200 bg-white shadow-sm">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
           <div className="relative">
-            <Avatar className="size-20 ring-2 ring-red-600 ring-offset-2 ring-offset-neutral-900">
+            <Avatar className="size-20 ring-2 ring-red-500 ring-offset-2 ring-offset-white">
               <AvatarImage src={profile.avatar_url ?? undefined} />
-              <AvatarFallback className="bg-neutral-800 text-2xl font-black text-white">
+              <AvatarFallback className="bg-gray-100 text-2xl font-black text-gray-700">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -309,18 +309,18 @@ export default function ProfilePage() {
           </div>
 
           <div className="text-center">
-            <h2 className="text-xl font-black text-white">
+            <h2 className="text-xl font-black text-gray-900">
               {profile.display_name ?? profile.username ?? "Anonymous Athlete"}
             </h2>
             {profile.username && profile.display_name && (
-              <p className="text-sm text-neutral-500">@{profile.username}</p>
+              <p className="text-sm text-gray-500">@{profile.username}</p>
             )}
           </div>
 
           {teamInfo ? (
             <TeamBadge team={teamInfo} size="lg" />
           ) : (
-            <Badge variant="outline" className="border-neutral-700 text-neutral-400">
+            <Badge variant="outline" className="border-gray-300 text-gray-500">
               未分配隊伍
             </Badge>
           )}
@@ -332,7 +332,7 @@ export default function ProfilePage() {
 
       {/* Stats grid */}
       <div>
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           統計數據
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -363,26 +363,26 @@ export default function ProfilePage() {
       <MilestoneTracker activities={activities} />
 
       {/* Referral link */}
-      <Card className="border-yellow-800/50 bg-gradient-to-br from-yellow-950/30 to-neutral-900">
+      <Card className="border-yellow-200 bg-gradient-to-br from-yellow-50 to-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-yellow-400">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-yellow-600">
             <Share2 className="size-4" />
             邀請朋友賺 $SC
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-xs text-neutral-400">
-            每成功邀請 1 位朋友加入，你可以獲得 <span className="font-bold text-yellow-400">50 $SC</span> 獎勵！
+          <p className="text-xs text-gray-600">
+            每成功邀請 1 位朋友加入，你可以獲得 <span className="font-bold text-yellow-600">50 $SC</span> 獎勵！
           </p>
           <div className="flex gap-2">
             <Input
               readOnly
               value={typeof window !== "undefined" ? `${window.location.origin}/invite?ref=${profile.id}` : ""}
-              className="border-neutral-700 bg-neutral-800 text-neutral-300 text-xs"
+              className="border-gray-200 bg-gray-50 text-gray-600 text-xs"
             />
             <Button
               variant="outline"
-              className="border-yellow-700 text-yellow-400 hover:bg-yellow-950 shrink-0"
+              className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 shrink-0"
               onClick={() => {
                 navigator.clipboard.writeText(`${window.location.origin}/invite?ref=${profile.id}`);
                 toast.success("邀請連結已複製！分享給朋友吧！");
@@ -392,24 +392,24 @@ export default function ProfilePage() {
             </Button>
           </div>
           {profile.referral_count > 0 && (
-            <p className="text-xs text-neutral-500">
-              已成功邀請 <span className="font-bold text-yellow-400">{profile.referral_count}</span> 位朋友
+            <p className="text-xs text-gray-500">
+              已成功邀請 <span className="font-bold text-yellow-600">{profile.referral_count}</span> 位朋友
             </p>
           )}
         </CardContent>
       </Card>
 
       {/* Edit profile */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      <Card className="border-gray-200 bg-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
             <User className="size-4" />
             編輯個人資料
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="display-name" className="text-xs text-neutral-400">
+            <Label htmlFor="display-name" className="text-xs text-gray-500">
               顯示名稱（建議跟 LINE 名稱一致，方便辨識）
             </Label>
             <div className="flex gap-2">
@@ -418,7 +418,7 @@ export default function ProfilePage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="您的公開名稱"
-                className="border-neutral-700 bg-neutral-800 text-white placeholder:text-neutral-500 focus-visible:ring-red-600"
+                className="border-gray-200 bg-white text-gray-800 placeholder:text-gray-400 focus-visible:ring-red-500"
               />
               <Button
                 onClick={handleSaveDisplayName}
@@ -430,18 +430,18 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <Separator className="bg-neutral-800" />
+          <Separator className="bg-gray-100" />
 
           <div className="space-y-1">
-            <Label className="text-xs text-neutral-400">電子郵件</Label>
-            <p className="text-sm text-neutral-300">{userEmail || "—"}</p>
-            <p className="text-xs text-neutral-600">電子郵件無法在此變更。</p>
+            <Label className="text-xs text-gray-500">電子郵件</Label>
+            <p className="text-sm text-gray-700">{userEmail || "—"}</p>
+            <p className="text-xs text-gray-400">電子郵件無法在此變更。</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Danger zone: account deletion */}
-      <Card className="border-red-900/50 bg-neutral-900">
+      <Card className="border-red-200 bg-white shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm font-semibold text-red-400">
             <Trash2 className="size-4" />
@@ -451,14 +451,14 @@ export default function ProfilePage() {
         <CardContent>
           {showDeleteConfirm ? (
             <div className="space-y-3">
-              <p className="text-sm text-neutral-300">
-                確定要刪除帳號嗎？此操作<span className="font-bold text-red-400">無法復原</span>，
+              <p className="text-sm text-gray-700">
+                確定要刪除帳號嗎？此操作<span className="font-bold text-red-500">無法復原</span>，
                 您的所有活動記錄、$SC 餘額及個人資料將被永久刪除。
               </p>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 border-neutral-700 text-neutral-300"
+                  className="flex-1 border-gray-200 text-gray-600"
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={isDeleting}
                 >

@@ -48,23 +48,23 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
   const percent = Math.min(100, Math.round((elapsed / totalDays) * 100));
 
   return (
-    <Card className="border-neutral-800 bg-neutral-900">
+    <Card className="border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
+        <CardTitle className="flex items-center justify-between text-sm font-semibold text-gray-700">
           <span>賽季進度 — {season.name}</span>
-          <Badge variant="outline" className="border-yellow-700 bg-yellow-950/50 text-yellow-400 text-xs">
+          <Badge variant="outline" className="border-yellow-500 bg-yellow-50 text-yellow-600 text-xs">
             系統測試期
           </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <p className="text-xs text-yellow-400/80">
+        <p className="text-xs text-yellow-600/80">
           目前為系統測試階段，資料與積分可能會在正式上線時重置。歡迎回報任何問題！
         </p>
-        <Progress value={percent} className="h-2 bg-neutral-800 [&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-orange-500" />
-        <div className="flex justify-between text-xs text-neutral-500">
+        <Progress value={percent} className="h-2 bg-gray-100 [&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-orange-500" />
+        <div className="flex justify-between text-xs text-gray-500">
           <span>{format(start, "MMM d")}</span>
-          <span className="font-medium text-neutral-300">
+          <span className="font-medium text-gray-700">
             <Timer className="mr-1 inline size-3" />
             {daysLeft > 0 ? `剩餘 ${daysLeft} 天` : "賽季已結束"}
           </span>
@@ -77,7 +77,7 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
 
 function LiveTickerBanner() {
   return (
-    <div className="overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900">
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-3 px-4 py-2">
         <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-red-500">
           <Zap className="size-3" />
@@ -85,7 +85,7 @@ function LiveTickerBanner() {
         </span>
         {/* Scrolling ticker */}
         <div className="overflow-hidden flex-1">
-          <div className="animate-marquee whitespace-nowrap text-xs text-neutral-400">
+          <div className="animate-marquee whitespace-nowrap text-xs text-gray-500">
             {TICKER_ITEMS.join("    •    ")}
             {/* Duplicate for seamless loop */}
             &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
@@ -101,14 +101,14 @@ function ActivityRow({ activity }: { activity: Activity }) {
   return (
     <div className="flex items-center justify-between py-2.5">
       <div className="flex items-center gap-3">
-        <div className="flex size-8 items-center justify-center rounded-full bg-neutral-800 text-sm">
+        <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-sm">
           🏃
         </div>
         <div>
-          <p className="text-sm font-medium text-neutral-200">
+          <p className="text-sm font-medium text-gray-800">
             {activity.distance_km.toFixed(2)} km run
           </p>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-gray-500">
             {format(parseISO(activity.start_date), "MMM d, yyyy")}
           </p>
         </div>
@@ -183,13 +183,13 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-20 w-full rounded-xl bg-neutral-800" />
-        <Skeleton className="h-48 w-full rounded-xl bg-neutral-800" />
+        <Skeleton className="h-20 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-48 w-full rounded-xl bg-gray-200" />
         <div className="grid grid-cols-2 gap-4">
-          <Skeleton className="h-24 rounded-xl bg-neutral-800" />
-          <Skeleton className="h-24 rounded-xl bg-neutral-800" />
+          <Skeleton className="h-24 rounded-xl bg-gray-200" />
+          <Skeleton className="h-24 rounded-xl bg-gray-200" />
         </div>
-        <Skeleton className="h-48 w-full rounded-xl bg-neutral-800" />
+        <Skeleton className="h-48 w-full rounded-xl bg-gray-200" />
       </div>
     );
   }
@@ -209,7 +209,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <BodyVersionBadge activities={activities} size="sm" />
         {season && (
-          <span className="text-xs text-neutral-500">
+          <span className="text-xs text-gray-500">
             {season.name}
           </span>
         )}
@@ -226,9 +226,9 @@ export default function DashboardPage() {
       />
 
       {/* Weekly distance chart */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      <Card className="border-gray-200 bg-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
             <TrendingUp className="size-4" />
             近 7 天跑量
           </CardTitle>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
         </Button>
         <Button
           variant="outline"
-          className="h-14 flex-col gap-1 border-neutral-700 bg-neutral-900 font-bold text-white hover:border-neutral-600 hover:bg-neutral-800"
+          className="h-14 flex-col gap-1 border-gray-200 bg-white font-bold text-gray-700 hover:border-gray-300 hover:bg-gray-50 shadow-sm"
           onClick={() => router.push("/betting?tab=pools")}
         >
           <span className="text-lg">🏊</span>
@@ -261,18 +261,18 @@ export default function DashboardPage() {
       <MilestoneTracker activities={activities} />
 
       {/* Recent activities */}
-      <Card className="border-neutral-800 bg-neutral-900">
+      <Card className="border-gray-200 bg-white shadow-sm">
         <CardHeader className="pb-1">
-          <CardTitle className="flex items-center justify-between text-sm font-semibold text-neutral-300">
+          <CardTitle className="flex items-center justify-between text-sm font-semibold text-gray-700">
             <span>最近活動</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="divide-y divide-neutral-800">
+        <CardContent className="divide-y divide-gray-100">
           {recentActivities.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-8">
               <span className="text-3xl">🏃</span>
-              <p className="text-sm text-neutral-400">還沒有活動紀錄</p>
-              <p className="text-xs text-neutral-600">
+              <p className="text-sm text-gray-500">還沒有活動紀錄</p>
+              <p className="text-xs text-gray-400">
                 開始跑步來記錄活動吧！
               </p>
             </div>
