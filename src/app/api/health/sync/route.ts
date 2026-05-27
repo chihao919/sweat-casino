@@ -111,7 +111,9 @@ export async function POST(request: NextRequest) {
     // Skip very short activities (less than 0.1 km)
     if (distanceKm < 0.1) continue;
 
+    // Skip entries without real duration (aggregated samples)
     const duration = workout.duration || 0;
+    if (duration <= 0) continue;
 
     const pacePerKm =
       distanceKm > 0 ? duration / 60 / distanceKm : 0;

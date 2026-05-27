@@ -55,23 +55,8 @@ export function useHealthSync() {
         return;
       }
 
-      // Debug: dump raw HealthKit data to server
-      log("Debug: querying raw workouts...");
-      const { debugQueryAllWorkouts } = await import("@/lib/health/client");
-      const debugData = await Promise.race([
-        debugQueryAllWorkouts(7),
-        new Promise<never[]>(r => setTimeout(() => r([]), 15000)),
-      ]);
-      // Send debug data to server for inspection
-      const supabaseForDebug = createClient();
-      const { data: { session: debugSession } } = await supabaseForDebug.auth.getSession();
-      if (debugSession) {
-        await fetch(`${API_BASE_URL}/api/health/debug`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${debugSession.access_token}` },
-          body: JSON.stringify({ debugData }),
-        }).catch(() => {});
-      }
+      // Debug: log workout data to Supabase for analysis
+      log("Debug: logging workout details...");
 
       log("Reading workouts...");
       const workouts = await Promise.race([
@@ -79,13 +64,27 @@ export function useHealthSync() {
         new Promise<never[]>(r => setTimeout(() => r([]), 10000)),
       ]);
 
+      // Write debug data to Supabase
+      const supabase = createClient();
+      const { data: { user: debugUser } } = await supabase.auth.getUser();
+      if (debugUser) {
+        try {
+          await supabase.from("debug_logs").insert({
+            user_id: debugUser.id,
+            data: { workouts, count: workouts.length },
+          });
+          log(`Debug: wrote ${workouts.length} workouts to debug_logs`);
+        } catch {
+          log("Debug: failed to write debug_logs");
+        }
+      }
+
       if (workouts.length === 0) {
         log("No running workouts in last 7 days");
         return;
       }
 
       log(`Found ${workouts.length} workouts, uploading...`);
-      const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {

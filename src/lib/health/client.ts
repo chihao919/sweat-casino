@@ -73,9 +73,9 @@ export async function checkHealthAuthorization(): Promise<boolean> {
  * Returns an array of workouts with distance in meters and duration in seconds.
  */
 /**
- * Debug: query ALL workouts (no filter) to see raw HealthKit data.
+ * Debug: read raw distance samples to see HealthKit data with source info.
  */
-export async function debugQueryAllWorkouts(
+export async function debugReadSamples(
   daysBack: number = 7
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any[]> {
@@ -86,27 +86,24 @@ export async function debugQueryAllWorkouts(
   startDate.setDate(startDate.getDate() - daysBack);
 
   try {
-    // Query ALL workouts without type filter
-    const allResult = await health.queryWorkouts({
+    const result = await health.readSamples({
+      dataType: "distance",
       startDate: startDate.toISOString(),
       endDate: new Date().toISOString(),
-      limit: 50,
+      limit: 200,
     });
 
-    // Also query with running filter
-    const runResult = await health.queryWorkouts({
-      workoutType: "running",
-      startDate: startDate.toISOString(),
-      endDate: new Date().toISOString(),
-      limit: 50,
-    });
-
-    return [
-      { _label: "ALL_WORKOUTS", count: (allResult.workouts || []).length, data: allResult.workouts || [] },
-      { _label: "RUNNING_ONLY", count: (runResult.workouts || []).length, data: runResult.workouts || [] },
-    ];
+    // Return all samples with source info for inspection
+    return (result.samples || []).map((s) => ({
+      value: s.value,
+      unit: s.unit,
+      startDate: s.startDate,
+      endDate: s.endDate,
+      sourceName: s.sourceName,
+      sourceId: s.sourceId,
+    }));
   } catch (err) {
-    return [{ _label: "ERROR", error: String(err) }];
+    return [{ error: String(err) }];
   }
 }
 
@@ -127,10 +124,7 @@ export async function getRunningWorkouts(
       limit: 100,
     });
 
-    const workouts = result.workouts || [];
-
-    // Return all running workouts — let server handle dedup and validation
-    return workouts.map((w) => ({
+    return (result.workouts || []).map((w) => ({
       startDate: w.startDate,
       endDate: w.endDate,
       duration: w.duration || 0,
