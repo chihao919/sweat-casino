@@ -72,6 +72,44 @@ export async function checkHealthAuthorization(): Promise<boolean> {
  * Query running workouts from the last N days.
  * Returns an array of workouts with distance in meters and duration in seconds.
  */
+/**
+ * Debug: query ALL workouts (no filter) to see raw HealthKit data.
+ */
+export async function debugQueryAllWorkouts(
+  daysBack: number = 7
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any[]> {
+  const health = await getHealthPlugin();
+  if (!health) return [];
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - daysBack);
+
+  try {
+    // Query ALL workouts without type filter
+    const allResult = await health.queryWorkouts({
+      startDate: startDate.toISOString(),
+      endDate: new Date().toISOString(),
+      limit: 50,
+    });
+
+    // Also query with running filter
+    const runResult = await health.queryWorkouts({
+      workoutType: "running",
+      startDate: startDate.toISOString(),
+      endDate: new Date().toISOString(),
+      limit: 50,
+    });
+
+    return [
+      { _label: "ALL_WORKOUTS", count: (allResult.workouts || []).length, data: allResult.workouts || [] },
+      { _label: "RUNNING_ONLY", count: (runResult.workouts || []).length, data: runResult.workouts || [] },
+    ];
+  } catch (err) {
+    return [{ _label: "ERROR", error: String(err) }];
+  }
+}
+
 export async function getRunningWorkouts(
   daysBack: number = 7
 ): Promise<HealthWorkout[]> {
@@ -83,18 +121,16 @@ export async function getRunningWorkouts(
 
   try {
     const result = await health.queryWorkouts({
+      workoutType: "running",
       startDate: startDate.toISOString(),
       endDate: new Date().toISOString(),
+      limit: 100,
     });
 
-    // Filter to running workouts only
-    const runningWorkouts = (result.workouts || []).filter(
-      (w) =>
-        w.workoutType === "running" ||
-        w.workoutType === "runningTreadmill"
-    );
+    const workouts = result.workouts || [];
 
-    return runningWorkouts.map((w) => ({
+    // Return all running workouts — let server handle dedup and validation
+    return workouts.map((w) => ({
       startDate: w.startDate,
       endDate: w.endDate,
       duration: w.duration || 0,

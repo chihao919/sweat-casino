@@ -111,8 +111,10 @@ export async function POST(request: NextRequest) {
     // Skip very short activities (less than 0.1 km)
     if (distanceKm < 0.1) continue;
 
+    const duration = workout.duration || 0;
+
     const pacePerKm =
-      distanceKm > 0 ? workout.duration / 60 / distanceKm : 0;
+      distanceKm > 0 ? duration / 60 / distanceKm : 0;
 
     const scEarned = calculateSCEarned(distanceKm, 1.0, config);
 
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest) {
         strava_activity_id: null,
         name: `Run (${workout.sourceName || "Health"})`,
         distance_km: distanceKm,
-        duration_seconds: workout.duration,
+        duration_seconds: duration,
         pace_per_km: pacePerKm,
         start_date: workout.startDate,
         start_latitude: null,

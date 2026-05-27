@@ -7,9 +7,8 @@ import { API_BASE_URL } from "@/lib/config";
 
 /**
  * Hook that auto-syncs health data when the app is opened on a native device.
- * On web, this is a no-op.
- *
- * Usage: call useHealthSync() in the protected layout to auto-sync on mount.
+ * Reads individual running workouts from HealthKit/Health Connect and sends
+ * them to the server for deduplication and SC reward calculation.
  */
 export function useHealthSync() {
   const [syncing, setSyncing] = useState(false);
@@ -23,7 +22,6 @@ export function useHealthSync() {
     setSyncing(true);
     const log = (msg: string) => {
       setLastSyncResult(msg);
-      // Send log to server so we can debug remotely
       fetch(`${API_BASE_URL}/api/public/players?_healthlog=${encodeURIComponent(msg)}`).catch(() => {});
     };
     try {
@@ -31,7 +29,7 @@ export function useHealthSync() {
       const {
         isHealthAvailable,
         requestHealthAuthorization,
-        getRunningDistance,
+        getRunningWorkouts,
       } = await import("@/lib/health/client");
 
       // Wait for native plugins to be ready
@@ -57,20 +55,36 @@ export function useHealthSync() {
         return;
       }
 
-      log("Reading distance...");
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      const distanceKm = await Promise.race([
-        getRunningDistance(weekAgo),
-        new Promise<number>(r => setTimeout(() => r(0), 5000)),
+      // Debug: dump raw HealthKit data to server
+      log("Debug: querying raw workouts...");
+      const { debugQueryAllWorkouts } = await import("@/lib/health/client");
+      const debugData = await Promise.race([
+        debugQueryAllWorkouts(7),
+        new Promise<never[]>(r => setTimeout(() => r([]), 15000)),
+      ]);
+      // Send debug data to server for inspection
+      const supabaseForDebug = createClient();
+      const { data: { session: debugSession } } = await supabaseForDebug.auth.getSession();
+      if (debugSession) {
+        await fetch(`${API_BASE_URL}/api/health/debug`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${debugSession.access_token}` },
+          body: JSON.stringify({ debugData }),
+        }).catch(() => {});
+      }
+
+      log("Reading workouts...");
+      const workouts = await Promise.race([
+        getRunningWorkouts(7),
+        new Promise<never[]>(r => setTimeout(() => r([]), 10000)),
       ]);
 
-      if (distanceKm === 0) {
-        log("No distance in last 7 days");
+      if (workouts.length === 0) {
+        log("No running workouts in last 7 days");
         return;
       }
 
-      log(`Got ${distanceKm.toFixed(1)} km, uploading...`);
+      log(`Found ${workouts.length} workouts, uploading...`);
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
@@ -85,16 +99,11 @@ export function useHealthSync() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({
-          source: "healthkit",
-          distanceKm,
-          startDate: weekAgo.toISOString(),
-          endDate: new Date().toISOString(),
-        }),
+        body: JSON.stringify({ workouts }),
       });
 
       const data = await res.json();
-      log(data.error ? `Error: ${data.error}` : `Synced ${distanceKm.toFixed(1)} km`);
+      log(data.error ? `Error: ${data.error}` : `Synced ${data.synced} workouts`);
     } catch (err) {
       log(`Sync error: ${err}`);
     } finally {
