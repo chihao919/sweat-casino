@@ -1,1 +1,7 @@
 CAPACITOR_DEBUG = true
+
+// -ObjC forces the linker to keep every Objective-C / @objc class from static
+// libraries, which is required for Capacitor plugin runtime discovery
+// (NSClassFromString("HealthPlugin")). Without it the SPM plugin classes get
+// dead-stripped and JS bridge calls hang forever.
+OTHER_LDFLAGS = $(inherited) -all_load

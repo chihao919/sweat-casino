@@ -1,6 +1,10 @@
 import UIKit
 import WebKit
 import Capacitor
+// CapApp-SPM is the umbrella Swift package that holds all plugin deps;
+// touching one of its symbols here guarantees the linker keeps the module
+// (and transitively the plugin @objc classes) in the final binary.
+import CapApp_SPM
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -8,6 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        _keepPluginsAlive()
         return true
     }
 
