@@ -57,35 +57,35 @@ export function SkinPreviewCard({
       <div className="relative">
         <PixelRunner skinSlug={slug} size={80} animate={isEquipped} />
         {locked && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded">
-            <Lock className="size-5 text-neutral-400" />
+          <div className="absolute inset-0 flex items-center justify-center bg-foreground/40 rounded">
+            <Lock className="size-5 text-muted-foreground" />
           </div>
         )}
       </div>
 
       {/* Name */}
       <div className="text-center">
-        <p className="text-xs font-bold text-neutral-200">{nameCn}</p>
-        <p className="text-[10px] text-neutral-500">{name}</p>
+        <p className="text-xs font-bold text-foreground">{nameCn}</p>
+        <p className="text-[10px] text-muted-foreground">{name}</p>
       </div>
 
       {/* Description */}
-      <p className="text-[10px] text-neutral-500 text-center line-clamp-2">
+      <p className="text-[10px] text-muted-foreground text-center line-clamp-2">
         {description}
       </p>
 
       {/* Action button */}
       {isEquipped ? (
-        <span className="text-[10px] font-bold text-yellow-400 uppercase">Equipped</span>
+        <span className="text-[10px] font-bold text-yellow-600 dark:text-yellow-400 uppercase">Equipped</span>
       ) : isOwned ? (
         <button
           onClick={onEquip}
-          className="w-full rounded-md bg-neutral-700 px-3 py-1.5 text-[11px] font-semibold text-neutral-200 hover:bg-neutral-600 transition-colors"
+          className="w-full rounded-md bg-secondary px-3 py-1.5 text-[11px] font-semibold text-secondary-foreground hover:bg-accent transition-colors"
         >
           Equip
         </button>
       ) : locked ? (
-        <span className="text-[10px] text-neutral-500">{lockReason || "Locked"}</span>
+        <span className="text-[10px] text-muted-foreground">{lockReason || "Locked"}</span>
       ) : isPurchasable ? (
         <button
           onClick={onBuy}
@@ -101,7 +101,7 @@ export function SkinPreviewCard({
           {priceSc} $SC
         </button>
       ) : (
-        <span className="text-[10px] text-neutral-500">Not for sale</span>
+        <span className="text-[10px] text-muted-foreground">Not for sale</span>
       )}
     </div>
   );

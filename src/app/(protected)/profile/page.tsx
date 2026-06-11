@@ -102,11 +102,11 @@ function calculateStats(activities: Activity[]): ProfileStats {
 
 function StatCard({ label, value, unit }: { label: string; value: string | number; unit?: string }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
-      <p className="text-[11px] uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="mt-1 text-2xl font-black tabular-nums text-gray-900">
+    <div className="rounded-lg border border-border bg-card p-4 text-center shadow-sm">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-1 text-2xl font-black tabular-nums text-foreground">
         {value}
-        {unit && <span className="ml-1 text-sm font-normal text-gray-400">{unit}</span>}
+        {unit && <span className="ml-1 text-sm font-normal text-muted-foreground">{unit}</span>}
       </p>
     </div>
   );
@@ -249,10 +249,10 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-32 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-32 w-full rounded-xl bg-muted" />
         <div className="grid grid-cols-2 gap-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 rounded-xl bg-gray-200" />
+            <Skeleton key={i} className="h-20 rounded-xl bg-muted" />
           ))}
         </div>
       </div>
@@ -274,12 +274,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-5">
       {/* Profile card */}
-      <Card className="border-gray-200 bg-white shadow-sm">
+      <Card className="border-border bg-card shadow-sm">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
           <div className="relative">
-            <Avatar className="size-20 ring-2 ring-red-500 ring-offset-2 ring-offset-white">
+            <Avatar className="size-20 ring-2 ring-red-500 ring-offset-2 ring-offset-background">
               <AvatarImage src={profile.avatar_url ?? undefined} />
-              <AvatarFallback className="bg-gray-100 text-2xl font-black text-gray-700">
+              <AvatarFallback className="bg-muted text-2xl font-black text-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -309,18 +309,18 @@ export default function ProfilePage() {
           </div>
 
           <div className="text-center">
-            <h2 className="text-xl font-black text-gray-900">
+            <h2 className="text-xl font-black text-foreground">
               {profile.display_name ?? profile.username ?? "Anonymous Athlete"}
             </h2>
             {profile.username && profile.display_name && (
-              <p className="text-sm text-gray-500">@{profile.username}</p>
+              <p className="text-sm text-muted-foreground">@{profile.username}</p>
             )}
           </div>
 
           {teamInfo ? (
             <TeamBadge team={teamInfo} size="lg" />
           ) : (
-            <Badge variant="outline" className="border-gray-300 text-gray-500">
+            <Badge variant="outline" className="border-border text-muted-foreground">
               未分配隊伍
             </Badge>
           )}
@@ -332,7 +332,7 @@ export default function ProfilePage() {
 
       {/* Stats grid */}
       <div>
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           統計數據
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -371,18 +371,18 @@ export default function ProfilePage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-muted-foreground">
             每成功邀請 1 位朋友加入，你可以獲得 <span className="font-bold text-yellow-600">50 $SC</span> 獎勵！
           </p>
           <div className="flex gap-2">
             <Input
               readOnly
               value={typeof window !== "undefined" ? `${window.location.origin}/invite?ref=${profile.id}` : ""}
-              className="border-gray-200 bg-gray-50 text-gray-600 text-xs"
+              className="border-border bg-muted text-muted-foreground text-xs"
             />
             <Button
               variant="outline"
-              className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 shrink-0"
+              className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:bg-yellow-500/15 shrink-0"
               onClick={() => {
                 navigator.clipboard.writeText(`${window.location.origin}/invite?ref=${profile.id}`);
                 toast.success("邀請連結已複製！分享給朋友吧！");
@@ -392,7 +392,7 @@ export default function ProfilePage() {
             </Button>
           </div>
           {profile.referral_count > 0 && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               已成功邀請 <span className="font-bold text-yellow-600">{profile.referral_count}</span> 位朋友
             </p>
           )}
@@ -400,16 +400,16 @@ export default function ProfilePage() {
       </Card>
 
       {/* Edit profile */}
-      <Card className="border-gray-200 bg-white shadow-sm">
+      <Card className="border-border bg-card shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <User className="size-4" />
             編輯個人資料
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="display-name" className="text-xs text-gray-500">
+            <Label htmlFor="display-name" className="text-xs text-muted-foreground">
               顯示名稱（建議跟 LINE 名稱一致，方便辨識）
             </Label>
             <div className="flex gap-2">
@@ -418,7 +418,7 @@ export default function ProfilePage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="您的公開名稱"
-                className="border-gray-200 bg-white text-gray-800 placeholder:text-gray-400 focus-visible:ring-red-500"
+                className="border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:ring-red-500"
               />
               <Button
                 onClick={handleSaveDisplayName}
@@ -430,18 +430,18 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <Separator className="bg-gray-100" />
+          <Separator className="bg-muted" />
 
           <div className="space-y-1">
-            <Label className="text-xs text-gray-500">電子郵件</Label>
-            <p className="text-sm text-gray-700">{userEmail || "—"}</p>
-            <p className="text-xs text-gray-400">電子郵件無法在此變更。</p>
+            <Label className="text-xs text-muted-foreground">電子郵件</Label>
+            <p className="text-sm text-foreground">{userEmail || "—"}</p>
+            <p className="text-xs text-muted-foreground">電子郵件無法在此變更。</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Danger zone: account deletion */}
-      <Card className="border-red-200 bg-white shadow-sm">
+      <Card className="border-red-200 bg-card shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-sm font-semibold text-red-400">
             <Trash2 className="size-4" />
@@ -451,14 +451,14 @@ export default function ProfilePage() {
         <CardContent>
           {showDeleteConfirm ? (
             <div className="space-y-3">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-foreground">
                 確定要刪除帳號嗎？此操作<span className="font-bold text-red-500">無法復原</span>，
                 您的所有活動記錄、$SC 餘額及個人資料將被永久刪除。
               </p>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 border-gray-200 text-gray-600"
+                  className="flex-1 border-border text-muted-foreground"
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={isDeleting}
                 >

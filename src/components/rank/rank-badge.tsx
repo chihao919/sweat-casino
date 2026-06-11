@@ -37,7 +37,7 @@ export function RankBadge({
         <div className="ml-2 flex-1 max-w-[80px]">
           <Progress
             value={progress}
-            className="h-1 bg-gray-200 [&>div]:bg-current"
+            className="h-1 bg-muted [&>div]:bg-current"
           />
         </div>
       )}

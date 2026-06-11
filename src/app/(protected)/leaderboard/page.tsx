@@ -29,9 +29,9 @@ type TimePeriod = "weekly" | "all-time";
 
 // Medal emoji/styling for top 3
 const RANK_CONFIG: Record<number, { medal: string; rowClass: string }> = {
-  1: { medal: "🥇", rowClass: "border-yellow-300 bg-yellow-50" },
-  2: { medal: "🥈", rowClass: "border-gray-300 bg-gray-50" },
-  3: { medal: "🥉", rowClass: "border-orange-200 bg-orange-50" },
+  1: { medal: "🥇", rowClass: "border-yellow-500/40 bg-yellow-500/10" },
+  2: { medal: "🥈", rowClass: "border-border bg-muted" },
+  3: { medal: "🥉", rowClass: "border-orange-500/40 bg-orange-500/10" },
 };
 
 function getInitials(profile: Profile): string {
@@ -69,8 +69,8 @@ function LeaderboardRow({
         "flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors",
         rankConf
           ? rankConf.rowClass
-          : "border-gray-200 bg-white hover:bg-gray-50 shadow-sm",
-        isCurrentUser && !rankConf && "border-red-200 bg-red-50"
+          : "border-border bg-card hover:bg-accent shadow-sm",
+        isCurrentUser && !rankConf && "border-red-500/40 bg-red-500/10"
       )}
     >
       {/* Rank */}
@@ -78,24 +78,24 @@ function LeaderboardRow({
         {rankConf ? (
           <span className="text-xl">{rankConf.medal}</span>
         ) : (
-          <span className="text-base font-black text-gray-400">#{rank}</span>
+          <span className="text-base font-black text-muted-foreground">#{rank}</span>
         )}
       </div>
 
       {/* Avatar */}
-      <Avatar className="size-9 ring-1 ring-gray-200">
+      <Avatar className="size-9 ring-1 ring-border">
         <AvatarImage src={entry.profile.avatar_url ?? undefined} />
-        <AvatarFallback className="bg-gray-100 text-xs font-bold text-gray-600">
+        <AvatarFallback className="bg-muted text-xs font-bold text-foreground">
           {getInitials(entry.profile)}
         </AvatarFallback>
       </Avatar>
 
       {/* Name + team */}
       <div className="min-w-0 flex-1">
-        <p className={cn("truncate text-sm font-semibold", isCurrentUser ? "text-red-600" : "text-gray-800")}>
+        <p className={cn("truncate text-sm font-semibold", isCurrentUser ? "text-red-600 dark:text-red-400 dark:text-red-400" : "text-foreground")}>
           {entry.profile.display_name ?? entry.profile.username ?? "選手"}
           {isCurrentUser && (
-            <span className="ml-1.5 text-[10px] font-normal text-gray-400">（我）</span>
+            <span className="ml-1.5 text-[10px] font-normal text-muted-foreground">（我）</span>
           )}
         </p>
         {teamInfo && (
@@ -107,8 +107,8 @@ function LeaderboardRow({
 
       {/* Value */}
       <div className="text-right">
-        <p className="text-lg font-black tabular-nums text-gray-900">{value}</p>
-        <p className="text-[10px] text-gray-500">{unit}</p>
+        <p className="text-lg font-black tabular-nums text-foreground">{value}</p>
+        <p className="text-[10px] text-muted-foreground">{unit}</p>
       </div>
     </div>
   );
@@ -235,9 +235,9 @@ export default function LeaderboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-10 w-full rounded-lg bg-gray-200" />
+        <Skeleton className="h-10 w-full rounded-lg bg-muted" />
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-lg bg-gray-200" />
+          <Skeleton key={i} className="h-16 w-full rounded-lg bg-muted" />
         ))}
       </div>
     );
@@ -249,11 +249,11 @@ export default function LeaderboardPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="size-5 text-yellow-500" />
-          <h1 className="text-lg font-black text-gray-900">排行榜</h1>
+          <h1 className="text-lg font-black text-foreground">排行榜</h1>
         </div>
 
         {/* Weekly / All-time toggle */}
-        <div className="flex rounded-lg border border-gray-200 bg-white p-1 gap-1 shadow-sm">
+        <div className="flex rounded-lg border border-border bg-card p-1 gap-1 shadow-sm">
           {(["weekly", "all-time"] as TimePeriod[]).map((period) => (
             <button
               key={period}
@@ -262,7 +262,7 @@ export default function LeaderboardPage() {
                 "rounded-md px-3 py-1 text-xs font-semibold capitalize transition-colors",
                 timePeriod === period
                   ? "bg-red-600 text-white"
-                  : "text-gray-500 hover:text-gray-800"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {period === "weekly" ? "本週" : "總累計"}
@@ -280,14 +280,14 @@ export default function LeaderboardPage() {
             variant="outline"
             onClick={() => setTeamFilter(f)}
             className={cn(
-              "border-gray-200 text-sm font-medium capitalize",
+              "border-border text-sm font-medium capitalize",
               teamFilter === f
                 ? f === "red"
-                  ? "border-red-400 bg-red-50 text-red-600"
+                  ? "border-red-400 bg-red-500/10 text-red-600 dark:text-red-400 dark:text-red-400"
                   : f === "white"
-                  ? "border-gray-400 bg-gray-50 text-gray-700"
-                  : "border-gray-400 bg-gray-100 text-gray-800"
-                : "bg-white text-gray-500 hover:text-gray-800"
+                  ? "border-border bg-muted text-foreground"
+                  : "border-border bg-accent text-foreground"
+                : "bg-card text-muted-foreground hover:text-foreground"
             )}
           >
             {f === "all" ? "全部" : f === "red" ? "🐂 紅牛隊" : "🐻‍❄️ 白熊隊"}
@@ -297,7 +297,7 @@ export default function LeaderboardPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="distance">
-        <TabsList className="w-full border border-gray-200 bg-white shadow-sm">
+        <TabsList className="w-full border border-border bg-card shadow-sm">
           <TabsTrigger
             value="distance"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
@@ -320,8 +320,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="distance" className="mt-4">
           {sortedByDistance.length === 0 ? (
-            <Card className="border-gray-200 bg-white">
-              <CardContent className="py-10 text-center text-sm text-gray-500">
+            <Card className="border-border bg-card">
+              <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 暫無資料
               </CardContent>
             </Card>
@@ -343,8 +343,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="sc-earned" className="mt-4">
           {sortedBySC.length === 0 ? (
-            <Card className="border-gray-200 bg-white">
-              <CardContent className="py-10 text-center text-sm text-gray-500">
+            <Card className="border-border bg-card">
+              <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 暫無資料
               </CardContent>
             </Card>
@@ -366,8 +366,8 @@ export default function LeaderboardPage() {
 
         <TabsContent value="streak" className="mt-4">
           {sortedByStreak.length === 0 ? (
-            <Card className="border-gray-200 bg-white">
-              <CardContent className="py-10 text-center text-sm text-gray-500">
+            <Card className="border-border bg-card">
+              <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 暫無資料
               </CardContent>
             </Card>

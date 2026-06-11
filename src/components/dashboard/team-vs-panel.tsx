@@ -29,11 +29,11 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
   const redIsLeading = redTeam.weeklyKm >= whiteTeam.weeklyKm;
 
   return (
-    <Card className={cn("border-gray-200 bg-white shadow-sm overflow-hidden", className)}>
+    <Card className={cn("border-border bg-card shadow-sm overflow-hidden", className)}>
       <CardContent className="p-0">
         {/* Header */}
-        <div className="border-b border-gray-100 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold">
+        <div className="border-b border-border px-4 py-3">
+          <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
             本週 — 隊伍對決
           </p>
         </div>
@@ -48,16 +48,16 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
             <span className="text-4xl drop-shadow-[0_0_12px_rgba(239,68,68,0.6)]">
               {redTeam.emoji}
             </span>
-            <span className="text-xs font-semibold text-gray-700">{redTeam.name}</span>
+            <span className="text-xs font-semibold text-foreground">{redTeam.name}</span>
 
             <div className="mt-1 text-center">
-              <p className="text-4xl font-black tabular-nums text-gray-900 leading-none">
+              <p className="text-4xl font-black tabular-nums text-foreground leading-none">
                 {formatKm(redTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-gray-500">本週公里數</p>
+              <p className="text-xs text-muted-foreground">本週公里數</p>
             </div>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {redTeam.activityCount} 次活動
             </p>
 
@@ -71,9 +71,9 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
 
           {/* VS divider */}
           <div className="flex flex-col items-center gap-1 px-2">
-            <div className="h-16 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
-            <span className="text-xs font-black text-gray-400 tracking-widest">VS</span>
-            <div className="h-16 w-px bg-gradient-to-b from-gray-300 via-gray-300 to-transparent" />
+            <div className="h-16 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+            <span className="text-xs font-black text-muted-foreground tracking-widest">VS</span>
+            <div className="h-16 w-px bg-gradient-to-b from-border via-border to-transparent" />
           </div>
 
           {/* White Bears side */}
@@ -84,16 +84,16 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
             <span className="text-4xl drop-shadow-[0_0_12px_rgba(148,163,184,0.5)]">
               {whiteTeam.emoji}
             </span>
-            <span className="text-xs font-semibold text-gray-700">{whiteTeam.name}</span>
+            <span className="text-xs font-semibold text-foreground">{whiteTeam.name}</span>
 
             <div className="mt-1 text-center">
-              <p className="text-4xl font-black tabular-nums text-gray-900 leading-none">
+              <p className="text-4xl font-black tabular-nums text-foreground leading-none">
                 {formatKm(whiteTeam.weeklyKm)}
               </p>
-              <p className="text-xs text-gray-500">本週公里數</p>
+              <p className="text-xs text-muted-foreground">本週公里數</p>
             </div>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {whiteTeam.activityCount} 次活動
             </p>
 
@@ -117,7 +117,7 @@ export function TeamVsPanel({ redTeam, whiteTeam, className }: TeamVsPanelProps)
               style={{ width: `${whitePercent}%` }}
             />
           </div>
-          <div className="mt-1.5 flex justify-between text-[10px] text-gray-500">
+          <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
             <span>{redPercent}%</span>
             <span>{whitePercent}%</span>
           </div>

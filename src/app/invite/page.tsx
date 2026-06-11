@@ -69,7 +69,7 @@ export default function InvitePage() {
         {/* 100% Free banner */}
         <Card className="mt-8 border-green-300 dark:border-green-900/50 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/50 dark:to-zinc-900">
           <CardContent className="py-5 text-center">
-            <p className="text-4xl font-black text-green-600 dark:text-green-400">💰 完全免費</p>
+            <p className="text-4xl font-black text-green-600 dark:text-green-400 dark:text-green-400">💰 完全免費</p>
             <p className="mt-2 text-lg text-muted-foreground">
               不用花一毛錢！遊戲內貨幣，全部免費
             </p>
@@ -117,7 +117,7 @@ export default function InvitePage() {
               <div className="flex items-start gap-3">
                 <span className="text-3xl">⌚</span>
                 <div>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">手錶自動同步，跑完即上傳</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">手錶自動同步，跑完即上傳</p>
                   <p className="text-base text-muted-foreground">
                     串聯 Apple Watch、Garmin 或手機，跑完自動同步到遊戲，不用手動操作！
                   </p>
@@ -126,7 +126,7 @@ export default function InvitePage() {
               <div className="flex items-start gap-3">
                 <span className="text-3xl">💰</span>
                 <div>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">每公里賺 $SC，累積虛擬貨幣</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">每公里賺 $SC，累積虛擬貨幣</p>
                   <p className="text-base text-muted-foreground">
                     每跑 1km = 10 $SC｜惡劣天氣跑步 = 1.5 倍獎勵！
                   </p>
@@ -135,7 +135,7 @@ export default function InvitePage() {
               <div className="flex items-start gap-3">
                 <span className="text-3xl">⚔️</span>
                 <div>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">紅白對決，團隊 PK</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">紅白對決，團隊 PK</p>
                   <p className="text-base text-muted-foreground">
                     自動分成紅牛隊 🐂 vs 白熊隊 🐻‍❄️，每週比拼誰跑得多！
                   </p>
@@ -144,7 +144,7 @@ export default function InvitePage() {
               <div className="flex items-start gap-3">
                 <span className="text-3xl">🎲</span>
                 <div>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">下注對賭，挑戰自己</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">下注對賭，挑戰自己</p>
                   <p className="text-base text-muted-foreground">
                     用 $SC 對自己下注：「這週我要跑 20km」。成功加倍奉還，失敗全部沒收！
                   </p>
@@ -153,7 +153,7 @@ export default function InvitePage() {
               <div className="flex items-start gap-3">
                 <span className="text-3xl">💀</span>
                 <div>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">不跑就扣錢！生存淘汰稅</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">不跑就扣錢！生存淘汰稅</p>
                   <p className="text-base text-muted-foreground">
                     每週跑不到 20km？扣 5% $SC！逼你出門動起來
                   </p>
@@ -209,7 +209,7 @@ export default function InvitePage() {
                   <p className="font-bold text-xl">登入汗水賭場</p>
                   <p className="mt-1 text-base text-muted-foreground">
                     用 Apple 帳號登入，允許讀取 Apple Health 跑步資料。
-                    <span className="text-green-600 dark:text-green-400 font-semibold"> 之後跑步完成就自動計分！</span>
+                    <span className="text-green-600 dark:text-green-400 dark:text-green-400 font-semibold"> 之後跑步完成就自動計分！</span>
                   </p>
                   <Link
                     href="/login"

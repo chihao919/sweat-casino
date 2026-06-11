@@ -48,20 +48,20 @@ function FAQItem({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-gray-200 last:border-0">
+    <div className="border-b border-border last:border-0">
       <button
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between py-4 text-left text-white hover:text-red-400 transition-colors"
       >
         <span className="font-medium">{question}</span>
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-gray-400 transition-transform ${
+          className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
       {open && (
-        <div className="pb-4 text-gray-500 leading-relaxed">{answer}</div>
+        <div className="pb-4 text-muted-foreground leading-relaxed">{answer}</div>
       )}
     </div>
   );
@@ -92,7 +92,7 @@ function FlowStep({
         </span>
       </div>
       {!isLast && (
-        <ArrowRight className="mx-2 h-5 w-5 shrink-0 text-gray-400" />
+        <ArrowRight className="mx-2 h-5 w-5 shrink-0 text-muted-foreground" />
       )}
     </div>
   );
@@ -120,11 +120,11 @@ function SetupStep({
         >
           {step}
         </div>
-        <div className="mt-2 h-full w-px bg-gray-200" />
+        <div className="mt-2 h-full w-px bg-muted" />
       </div>
       <div className="pb-8">
         <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <div className="mt-2 text-gray-500 leading-relaxed">{children}</div>
+        <div className="mt-2 text-muted-foreground leading-relaxed">{children}</div>
       </div>
     </div>
   );
@@ -135,7 +135,7 @@ function SetupStep({
 // -----------------------------------------------------------------------
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-gray-900">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Ambient glow */}
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.12)_0%,_transparent_60%)]" />
 
@@ -145,7 +145,7 @@ export default function GuidePage() {
           <h1 className="text-4xl font-black tracking-tight">
             🎰 RunRun Guide
           </h1>
-          <p className="mt-3 text-lg text-gray-500">
+          <p className="mt-3 text-lg text-muted-foreground">
             Your sweat. Your stakes. Your game.
           </p>
           <div className="mt-6 flex justify-center gap-3">
@@ -157,7 +157,7 @@ export default function GuidePage() {
             <Link href="/dashboard">
               <Button
                 variant="outline"
-                className="border-zinc-700 text-gray-700 hover:bg-gray-100 hover:text-white"
+                className="border-zinc-700 text-foreground hover:bg-muted hover:text-white"
               >
                 Dashboard
               </Button>
@@ -175,7 +175,7 @@ export default function GuidePage() {
           </div>
 
           {/* Horizontal flow */}
-          <Card className="border-gray-200 bg-white overflow-x-auto">
+          <Card className="border-border bg-card overflow-x-auto">
             <CardContent className="py-6">
               <div className="flex items-center justify-center min-w-[600px]">
                 <FlowStep
@@ -205,7 +205,7 @@ export default function GuidePage() {
                   isLast
                 />
               </div>
-              <p className="mt-4 text-center text-sm text-gray-400">
+              <p className="mt-4 text-center text-sm text-muted-foreground">
                 No manual upload. Just run.
               </p>
             </CardContent>
@@ -223,14 +223,14 @@ export default function GuidePage() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {/* SC Economy */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Coins className="h-5 w-5 text-yellow-500" />
                   $SC Sweat Coins
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p>
                   Earn <Badge className="bg-yellow-600/20 text-yellow-400">10 $SC</Badge> per{" "}
                   <Badge variant="secondary">1 km</Badge> run.
@@ -244,14 +244,14 @@ export default function GuidePage() {
             </Card>
 
             {/* Weather Bonus */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <CloudRain className="h-5 w-5 text-blue-400" />
                   Weather Bonus 1.5x
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p className="mb-2">Run in bad weather, earn 1.5x rewards!</p>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline" className="border-blue-800 text-blue-400">
@@ -274,14 +274,14 @@ export default function GuidePage() {
             </Card>
 
             {/* Survival Tax */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Skull className="h-5 w-5 text-red-500" />
                   Survival Tax
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p>
                   Run less than <Badge variant="secondary">5 km</Badge> per week?
                   Lose <span className="font-semibold text-red-400">5%</span> of your balance.
@@ -291,14 +291,14 @@ export default function GuidePage() {
             </Card>
 
             {/* Team Battle */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Swords className="h-5 w-5 text-orange-500" />
                   Team Battle
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p>
                   <span className="font-semibold text-red-400">🐂 Red Bulls</span>{" "}
                   vs{" "}
@@ -307,21 +307,21 @@ export default function GuidePage() {
                 <p className="mt-2">
                   <span className="font-medium text-white">Score</span> = Total KM × Activity Rate
                 </p>
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Every teammate counts. It&apos;s not just about the top runners.
                 </p>
               </CardContent>
             </Card>
 
             {/* Personal Bets */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <Target className="h-5 w-5 text-green-500" />
                   Personal Bets
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p>Bet on yourself: &quot;I&apos;ll run 20km this week.&quot;</p>
                 <p className="mt-2">
                   Win:{" "}
@@ -332,14 +332,14 @@ export default function GuidePage() {
             </Card>
 
             {/* Betting Pools */}
-            <Card className="border-gray-200 bg-white">
+            <Card className="border-border bg-card">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg text-white">
                   <TrendingUp className="h-5 w-5 text-purple-500" />
                   Betting Pools
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-gray-500">
+              <CardContent className="text-muted-foreground">
                 <p>Predict: &quot;Will Red Bulls run 500km this week?&quot;</p>
                 <p className="mt-2">
                   Pick <span className="text-green-400">Long</span> or{" "}
@@ -351,14 +351,14 @@ export default function GuidePage() {
           </div>
 
           {/* Season */}
-          <Card className="mt-4 border-gray-200 bg-white">
+          <Card className="mt-4 border-border bg-card">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 <Trophy className="h-5 w-5 text-yellow-500" />
                 Seasons
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-gray-500">
+            <CardContent className="text-muted-foreground">
               <p>
                 Each season lasts <span className="font-semibold text-white">3 months</span>.
                 The winning team earns bonus $SC. Your balance carries over.
@@ -367,7 +367,7 @@ export default function GuidePage() {
           </Card>
         </section>
 
-        <Separator className="mb-16 bg-gray-100" />
+        <Separator className="mb-16 bg-muted" />
 
         {/* ============================================================= */}
         {/* SETUP GUIDE — Flow Diagrams                                   */}
@@ -379,19 +379,19 @@ export default function GuidePage() {
           </div>
 
           {/* Apple Watch Flow */}
-          <Card className="mb-6 border-gray-200 bg-white">
+          <Card className="mb-6 border-border bg-card">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 ⌚ Apple Watch
               </CardTitle>
-              <p className="text-sm text-gray-400">Zero setup needed</p>
+              <p className="text-sm text-muted-foreground">Zero setup needed</p>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-center overflow-x-auto py-4 min-w-[400px]">
                 <FlowStep
                   icon={<Watch className="h-5 w-5 text-white" />}
                   label="Run with Apple Watch"
-                  color="border-zinc-700 bg-gray-100"
+                  color="border-zinc-700 bg-muted"
                 />
                 <FlowStep
                   icon={<Heart className="h-5 w-5 text-pink-400" />}
@@ -405,26 +405,26 @@ export default function GuidePage() {
                   isLast
                 />
               </div>
-              <p className="text-center text-sm text-gray-400">
+              <p className="text-center text-sm text-muted-foreground">
                 Apple Watch automatically writes to Apple Health. Nothing to configure.
               </p>
             </CardContent>
           </Card>
 
           {/* Garmin Flow */}
-          <Card className="mb-6 border-gray-200 bg-white">
+          <Card className="mb-6 border-border bg-card">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 🏃 Garmin
               </CardTitle>
-              <p className="text-sm text-gray-400">One-time setup required</p>
+              <p className="text-sm text-muted-foreground">One-time setup required</p>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-center overflow-x-auto py-4 min-w-[500px]">
                 <FlowStep
                   icon={<Watch className="h-5 w-5 text-white" />}
                   label="Run with Garmin"
-                  color="border-zinc-700 bg-gray-100"
+                  color="border-zinc-700 bg-muted"
                 />
                 <FlowStep
                   icon={<Download className="h-5 w-5 text-blue-400" />}
@@ -444,7 +444,7 @@ export default function GuidePage() {
                 />
               </div>
 
-              <Separator className="my-4 bg-gray-100" />
+              <Separator className="my-4 bg-muted" />
 
               <div className="ml-1">
                 <SetupStep step={1} title="Install Garmin Connect" color="bg-blue-600">
@@ -456,12 +456,12 @@ export default function GuidePage() {
                 <SetupStep step={2} title="Enable Apple Health Sync" color="bg-blue-600">
                   <p>Open Garmin Connect:</p>
                   <div className="mt-2 flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="border-zinc-600 text-gray-700">More (⋯)</Badge>
-                    <ArrowRight className="h-3 w-3 text-gray-400" />
-                    <Badge variant="outline" className="border-zinc-600 text-gray-700">Settings</Badge>
-                    <ArrowRight className="h-3 w-3 text-gray-400" />
-                    <Badge variant="outline" className="border-zinc-600 text-gray-700">Health</Badge>
-                    <ArrowRight className="h-3 w-3 text-gray-400" />
+                    <Badge variant="outline" className="border-zinc-600 text-foreground">More (⋯)</Badge>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                    <Badge variant="outline" className="border-zinc-600 text-foreground">Settings</Badge>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                    <Badge variant="outline" className="border-zinc-600 text-foreground">Health</Badge>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
                     <Badge variant="outline" className="border-green-700 text-green-400">Enable Apple Health</Badge>
                   </div>
                   <p className="mt-2">Allow all permissions when prompted.</p>
@@ -478,7 +478,7 @@ export default function GuidePage() {
           </Card>
 
           {/* No Watch */}
-          <Card className="border-gray-200 bg-white">
+          <Card className="border-border bg-card">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-lg text-white">
                 📱 No Watch? No Problem.
@@ -489,7 +489,7 @@ export default function GuidePage() {
                 <FlowStep
                   icon={<Smartphone className="h-5 w-5 text-white" />}
                   label="Run with any app"
-                  color="border-zinc-700 bg-gray-100"
+                  color="border-zinc-700 bg-muted"
                 />
                 <FlowStep
                   icon={<Heart className="h-5 w-5 text-pink-400" />}
@@ -503,14 +503,14 @@ export default function GuidePage() {
                   isLast
                 />
               </div>
-              <p className="text-center text-sm text-gray-400">
+              <p className="text-center text-sm text-muted-foreground">
                 Use Nike Run Club, Adidas Running, or any app that writes to Apple Health / Health Connect.
               </p>
             </CardContent>
           </Card>
         </section>
 
-        <Separator className="mb-16 bg-gray-100" />
+        <Separator className="mb-16 bg-muted" />
 
         {/* ============================================================= */}
         {/* GETTING STARTED                                               */}
@@ -522,7 +522,7 @@ export default function GuidePage() {
           </div>
 
           {/* Onboarding flow */}
-          <Card className="mb-6 border-gray-200 bg-white overflow-x-auto">
+          <Card className="mb-6 border-border bg-card overflow-x-auto">
             <CardContent className="py-6">
               <div className="flex items-center justify-center min-w-[500px]">
                 <FlowStep
@@ -533,7 +533,7 @@ export default function GuidePage() {
                 <FlowStep
                   icon={<ArrowRight className="h-5 w-5 text-white" />}
                   label="Google Login"
-                  color="border-zinc-700 bg-gray-100"
+                  color="border-zinc-700 bg-muted"
                 />
                 <FlowStep
                   icon={<Heart className="h-5 w-5 text-pink-400" />}
@@ -579,7 +579,7 @@ export default function GuidePage() {
           </div>
         </section>
 
-        <Separator className="mb-16 bg-gray-100" />
+        <Separator className="mb-16 bg-muted" />
 
         {/* ============================================================= */}
         {/* FAQ                                                           */}
@@ -590,7 +590,7 @@ export default function GuidePage() {
             <h2 className="text-2xl font-bold">FAQ</h2>
           </div>
 
-          <Card className="border-gray-200 bg-white">
+          <Card className="border-border bg-card">
             <CardContent className="px-6 py-2">
               <FAQItem
                 question="Can I convert $SC to real money?"
@@ -642,7 +642,7 @@ export default function GuidePage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 text-center text-sm text-gray-400">
+        <div className="mt-16 text-center text-sm text-muted-foreground">
           <p>RunRun © 2026 — Your Sweat, Your Stakes</p>
         </div>
       </div>

@@ -106,8 +106,8 @@ export default function SetupPage() {
     <div className="mx-auto max-w-lg space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-black text-gray-900">歡迎加入汗水賭場 🎰</h1>
-        <p className="mt-2 text-base text-gray-500">
+        <h1 className="text-3xl font-black text-foreground">歡迎加入汗水賭場 🎰</h1>
+        <p className="mt-2 text-base text-muted-foreground">
           完成以下設定，準備開始你的汗水賭局！
         </p>
       </div>
@@ -127,7 +127,7 @@ export default function SetupPage() {
                     ? "bg-green-500 text-white"
                     : isCurrent
                       ? "bg-red-600 text-white"
-                      : "bg-gray-100 text-gray-400"
+                      : "bg-muted text-muted-foreground"
                 }`}
               >
                 {isCompleted ? (
@@ -139,7 +139,7 @@ export default function SetupPage() {
               {i < STEPS.length - 1 && (
                 <div
                   className={`h-0.5 w-6 ${
-                    isCompleted ? "bg-green-500" : "bg-gray-200"
+                    isCompleted ? "bg-green-500" : "bg-muted"
                   }`}
                 />
               )}
@@ -147,18 +147,18 @@ export default function SetupPage() {
           );
         })}
       </div>
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-sm text-muted-foreground">
         步驟 {currentStep} / {STEPS.length}：{STEPS[currentStep - 1].title}
       </p>
 
       {/* Step 1: Set display name */}
       {currentStep === 1 && (
-        <Card className="border-gray-200 bg-white shadow-sm">
+        <Card className="border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl text-gray-900">
+            <CardTitle className="text-xl text-foreground">
               👤 設定你的暱稱
             </CardTitle>
-            <CardDescription className="text-gray-500">
+            <CardDescription className="text-muted-foreground">
               建議跟 LINE 名稱一致，方便大家辨識你是誰！
             </CardDescription>
           </CardHeader>
@@ -167,7 +167,7 @@ export default function SetupPage() {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="例如：跑步小王子"
-              className="h-14 border-gray-200 bg-white text-lg text-gray-800 placeholder:text-gray-400"
+              className="h-14 border-border bg-background text-lg text-foreground placeholder:text-muted-foreground"
               maxLength={20}
             />
             <Button
@@ -183,24 +183,24 @@ export default function SetupPage() {
 
       {/* Step 2: Ready to go */}
       {currentStep === 2 && (
-        <Card className="border-gray-200 bg-white shadow-sm">
+        <Card className="border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl text-gray-900">
+            <CardTitle className="text-xl text-foreground">
               🏃 準備開始跑步！
             </CardTitle>
-            <CardDescription className="text-gray-500">
+            <CardDescription className="text-muted-foreground">
               RunRun 會自動從 Apple Health 讀取你的跑步紀錄
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="rounded-xl border border-green-200 bg-green-50 p-5 text-center">
-              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl">
+            <div className="rounded-xl border border-green-500/40 bg-green-500/10 p-5 text-center">
+              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 text-3xl">
                 ✅
               </div>
-              <h3 className="text-lg font-bold text-green-600">
+              <h3 className="text-lg font-bold text-green-600 dark:text-green-400 dark:text-green-400">
                 設定完成！
               </h3>
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-2 text-sm text-muted-foreground">
                 用 Apple Watch、Garmin 或任何跑步 App 跑步，資料會自動同步到 Apple Health，RunRun 會自動讀取計分。每公里可賺取 10 $SC！
               </p>
             </div>

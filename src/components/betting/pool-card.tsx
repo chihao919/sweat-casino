@@ -24,17 +24,17 @@ const poolTypeLabel: Record<string, string> = {
 };
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  open:      { label: "開放中", className: "bg-green-500/20 text-green-400 border-green-500/30" },
-  locked:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
-  closed:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
-  settled:   { label: "已結算", className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
-  resolved:  { label: "已結算", className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
-  cancelled: { label: "已取消", className: "bg-red-500/20 text-red-400 border-red-500/30" },
+  open:      { label: "開放中", className: "bg-green-500/20 text-green-600 dark:text-green-400 dark:text-green-400 border-green-500/30" },
+  locked:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30" },
+  closed:    { label: "已關閉", className: "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30" },
+  settled:   { label: "已結算", className: "bg-muted text-muted-foreground border-border" },
+  resolved:  { label: "已結算", className: "bg-muted text-muted-foreground border-border" },
+  cancelled: { label: "已取消", className: "bg-red-500/20 text-red-600 dark:text-red-400 dark:text-red-400 border-red-500/30" },
 };
 
 const DEFAULT_STATUS = {
   label: "未知",
-  className: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30",
+  className: "bg-muted text-muted-foreground border-border",
 };
 
 function calculateOdds(total: number, side: number): number {
@@ -60,14 +60,14 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
   const oddsB = calculateOdds(total, pool.side_b_total);
 
   return (
-    <Card className="border-gray-200 bg-white shadow-sm">
+    <Card className="border-border bg-card shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
                 variant="outline"
-                className="border-gray-200 text-xs text-gray-500"
+                className="border-border text-xs text-muted-foreground"
               >
                 {poolTypeLabel[pool.pool_type] || pool.pool_type}
               </Badge>
@@ -78,11 +78,11 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
                 {status.label}
               </Badge>
             </div>
-            <CardTitle className="text-sm font-semibold leading-snug text-gray-800">
+            <CardTitle className="text-sm font-semibold leading-snug text-foreground">
               {pool.title}
             </CardTitle>
             {pool.description && (
-              <p className="text-xs text-gray-500">{pool.description}</p>
+              <p className="text-xs text-muted-foreground">{pool.description}</p>
             )}
           </div>
         </div>
@@ -109,31 +109,31 @@ export function PoolCard({ pool, onJoin }: PoolCardProps) {
           {/* Side labels with odds */}
           <div className="flex items-center justify-between text-xs">
             <div className="space-y-0.5">
-              <p className="font-medium text-gray-700">{pool.side_a_label}</p>
+              <p className="font-medium text-foreground">{pool.side_a_label}</p>
               <div className="flex items-center gap-1.5">
                 <OddsDisplay odds={oddsA} size="sm" />
-                <span className="text-gray-400">({formatSC(pool.side_a_total)})</span>
+                <span className="text-muted-foreground">({formatSC(pool.side_a_total)})</span>
               </div>
             </div>
             <div className="text-right space-y-0.5">
-              <p className="font-medium text-gray-700">{pool.side_b_label}</p>
+              <p className="font-medium text-foreground">{pool.side_b_label}</p>
               <div className="flex items-center justify-end gap-1.5">
                 <OddsDisplay odds={oddsB} size="sm" />
-                <span className="text-gray-400">({formatSC(pool.side_b_total)})</span>
+                <span className="text-muted-foreground">({formatSC(pool.side_b_total)})</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Pool total and resolve time */}
-        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+        <div className="flex items-center justify-between border-t border-border pt-3">
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-gray-500">總賭池</p>
-            <p className="text-sm font-bold text-gray-900">{formatSC(pool.total_pool)}</p>
+            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">總賭池</p>
+            <p className="text-sm font-bold text-foreground">{formatSC(pool.total_pool)}</p>
           </div>
           <div className="text-right">
-            <p className="text-[11px] uppercase tracking-wide text-gray-500">結算</p>
-            <p className="text-xs text-gray-600">{resolveTime}</p>
+            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">結算</p>
+            <p className="text-xs text-muted-foreground">{resolveTime}</p>
           </div>
         </div>
 

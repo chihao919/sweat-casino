@@ -59,31 +59,31 @@ interface JoinPoolFormState {
 function UnderBetBlockDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-emerald-200 bg-white text-gray-800">
+      <DialogContent className="border-emerald-500/40 bg-card text-foreground">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg font-black text-emerald-700">
+          <DialogTitle className="flex items-center gap-2 text-lg font-black text-emerald-700 dark:text-emerald-400 dark:text-emerald-300">
             <Heart className="size-5 text-emerald-500" />
             我們不接受看空自己
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-2">
-          <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 space-y-3">
-            <p className="text-sm leading-relaxed text-emerald-800">
+          <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-4 space-y-3">
+            <p className="text-sm leading-relaxed text-emerald-800 dark:text-emerald-400 dark:text-emerald-200">
               在汗水賭場，我們相信每一個人都有超越自己的潛力。
             </p>
-            <p className="text-sm leading-relaxed text-emerald-800">
+            <p className="text-sm leading-relaxed text-emerald-800 dark:text-emerald-400 dark:text-emerald-200">
               賭自己會失敗？這不是我們的風格。
             </p>
-            <p className="text-sm font-semibold leading-relaxed text-emerald-700">
+            <p className="text-sm font-semibold leading-relaxed text-emerald-700 dark:text-emerald-400 dark:text-emerald-300">
               與其懷疑自己，不如降低目標，然後全力以赴去達成它。
               就算只跑了 1 公里，那也是昨天的你做不到的事。
             </p>
           </div>
-          <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
-            <p className="text-center text-xs text-gray-500">
+          <div className="rounded-lg bg-muted border border-border p-3">
+            <p className="text-center text-xs text-muted-foreground">
               「奇蹟不是我跑完了全程，奇蹟是我有勇氣踏出第一步。」
             </p>
-            <p className="text-center text-xs text-gray-400 mt-1">— John Bingham</p>
+            <p className="text-center text-xs text-muted-foreground mt-1">— John Bingham</p>
           </div>
           <Button
             onClick={() => onOpenChange(false)}
@@ -201,22 +201,22 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="border-gray-200 bg-white text-gray-800 shadow-xl">
+        <DialogContent className="border-border bg-card text-foreground shadow-xl">
           <DialogHeader>
-            <DialogTitle className="text-lg font-black text-gray-900">跟自己對賭</DialogTitle>
+            <DialogTitle className="text-lg font-black text-foreground">跟自己對賭</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-2">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-500">賭注類型</Label>
+              <Label className="text-xs text-muted-foreground">賭注類型</Label>
               <Select
                 value={form.betType}
                 onValueChange={handleBetTypeChange}
               >
-                <SelectTrigger className="border-gray-200 bg-white text-gray-800">
+                <SelectTrigger className="border-border bg-background text-foreground">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="border-gray-200 bg-white text-gray-800">
+                <SelectContent className="border-border bg-popover text-popover-foreground">
                   <SelectItem value={BetType.OVER}>看多 — 我會跑超過目標距離</SelectItem>
                   <SelectItem value={BetType.UNDER}>看空 — 我會跑不到目標距離</SelectItem>
                   <SelectItem value={BetType.EXACT}>精準 — 我會跑到剛好目標距離</SelectItem>
@@ -225,7 +225,7 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-gray-500">目標距離 (km)</Label>
+              <Label className="text-xs text-muted-foreground">目標距離 (km)</Label>
               <Input
                 type="number"
                 step="0.1"
@@ -233,12 +233,12 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
                 placeholder="例如 30"
                 value={form.targetKm}
                 onChange={(e) => setForm((f) => ({ ...f, targetKm: e.target.value }))}
-                className="border-gray-200 bg-white text-gray-800 placeholder:text-gray-400"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-gray-500">賭注金額 ($SC)</Label>
+              <Label className="text-xs text-muted-foreground">賭注金額 ($SC)</Label>
               <Input
                 type="number"
                 step="1"
@@ -246,7 +246,7 @@ function NewBetDialog({ onCreated }: { onCreated: () => void }) {
                 placeholder="例如 50"
                 value={form.stakeAmount}
                 onChange={(e) => setForm((f) => ({ ...f, stakeAmount: e.target.value }))}
-                className="border-gray-200 bg-white text-gray-800 placeholder:text-gray-400"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground"
               />
             </div>
 
@@ -335,7 +335,7 @@ function CreatePoolDialog({ onCreated }: { onCreated: () => void }) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="border-gray-200 bg-white text-gray-700 hover:bg-gray-50 shadow-sm"
+          className="border-border bg-card text-foreground hover:bg-accent shadow-sm"
           size="sm"
         >
           <Plus className="mr-1.5 size-4" />
@@ -343,19 +343,19 @@ function CreatePoolDialog({ onCreated }: { onCreated: () => void }) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="border-gray-200 bg-white text-gray-800 shadow-xl">
+      <DialogContent className="border-border bg-card text-foreground shadow-xl">
         <DialogHeader>
-          <DialogTitle className="text-lg font-black text-gray-900">建立賭池</DialogTitle>
+          <DialogTitle className="text-lg font-black text-foreground">建立賭池</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-2">
-            <Label className="text-xs text-gray-500">賭池標題</Label>
+            <Label className="text-xs text-muted-foreground">賭池標題</Label>
             <Input
               placeholder="例如：這週誰會贏？"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="border-gray-200 bg-white text-gray-800 placeholder:text-gray-400"
+              className="border-border bg-background text-foreground placeholder:text-muted-foreground"
             />
           </div>
           <Button
@@ -373,10 +373,10 @@ function CreatePoolDialog({ onCreated }: { onCreated: () => void }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <Card className="border-gray-200 bg-white shadow-sm">
+    <Card className="border-border bg-card shadow-sm">
       <CardContent className="flex flex-col items-center gap-3 py-12">
-        <Dices className="size-10 text-gray-300" />
-        <p className="text-sm text-gray-500">{message}</p>
+        <Dices className="size-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">{message}</p>
       </CardContent>
     </Card>
   );
@@ -384,7 +384,7 @@ function EmptyState({ message }: { message: string }) {
 
 export default function BettingPage() {
   return (
-    <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full rounded-lg bg-gray-200" /></div>}>
+    <Suspense fallback={<div className="space-y-4"><Skeleton className="h-10 w-full rounded-lg bg-muted" /></div>}>
       <BettingPageContent />
     </Suspense>
   );
@@ -443,10 +443,10 @@ function BettingPageContent() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-10 w-full rounded-lg bg-gray-200" />
+        <Skeleton className="h-10 w-full rounded-lg bg-muted" />
         <div className="grid gap-4 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-40 rounded-xl bg-gray-200" />
+            <Skeleton key={i} className="h-40 rounded-xl bg-muted" />
           ))}
         </div>
       </div>
@@ -456,7 +456,7 @@ function BettingPageContent() {
   return (
     <div className="space-y-4">
       <Tabs defaultValue={defaultTab}>
-        <TabsList className="w-full border border-gray-200 bg-white shadow-sm">
+        <TabsList className="w-full border border-border bg-card shadow-sm">
           <TabsTrigger
             value="my-bets"
             className="flex-1 data-[state=active]:bg-red-600 data-[state=active]:text-white"
@@ -474,7 +474,7 @@ function BettingPageContent() {
         {/* My Bets tab */}
         <TabsContent value="my-bets" className="mt-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-gray-700">
+            <h2 className="text-sm font-semibold text-foreground">
               進行中 ({activeBets.length})
             </h2>
             <NewBetDialog onCreated={fetchData} />
@@ -492,7 +492,7 @@ function BettingPageContent() {
 
           {completedBets.length > 0 && (
             <>
-              <h2 className="pt-2 text-sm font-semibold text-gray-700">
+              <h2 className="pt-2 text-sm font-semibold text-foreground">
                 已結束 ({completedBets.length})
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -507,7 +507,7 @@ function BettingPageContent() {
         {/* Betting Pools tab */}
         <TabsContent value="pools" className="mt-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-gray-700">
+            <h2 className="text-sm font-semibold text-foreground">
               開放中 ({openPools.length})
             </h2>
             <CreatePoolDialog onCreated={fetchData} />
@@ -525,7 +525,7 @@ function BettingPageContent() {
 
           {otherPools.length > 0 && (
             <>
-              <h2 className="pt-2 text-sm font-semibold text-gray-700">
+              <h2 className="pt-2 text-sm font-semibold text-foreground">
                 過往賭池 ({otherPools.length})
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">

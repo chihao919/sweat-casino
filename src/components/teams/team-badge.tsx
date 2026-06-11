@@ -35,12 +35,12 @@ export function TeamBadge({ team, size = "md", className }: TeamBadgeProps) {
     return (
       <span
         className={cn(
-          "inline-flex items-center rounded-full border border-gray-200 bg-gray-100 font-medium text-gray-500",
+          "inline-flex items-center rounded-full border border-border bg-muted font-medium text-muted-foreground",
           sizeClasses[size],
           className
         )}
       >
-        <span className={cn("rounded-full bg-gray-300", dotSizeClasses[size])} />
+        <span className={cn("rounded-full bg-muted-foreground/40", dotSizeClasses[size])} />
         未加入隊伍
       </span>
     );

@@ -35,7 +35,7 @@ export function BottomNav({ teamColor = null }: BottomNavProps) {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 backdrop-blur-sm shadow-[0_-1px_3px_rgba(0,0,0,0.06)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-sm shadow-[0_-1px_3px_rgba(0,0,0,0.06)]">
       <div className="grid grid-cols-5">
         {tabs.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + "/");
@@ -49,7 +49,7 @@ export function BottomNav({ teamColor = null }: BottomNavProps) {
                 "flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors",
                 isActive
                   ? cn("opacity-100", activeColorClass)
-                  : "text-gray-400 hover:text-gray-600"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               <Icon

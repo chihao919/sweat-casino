@@ -21,11 +21,11 @@ export function MotivationalBanner() {
       </span>
 
       <div className="relative z-10 flex flex-col items-center text-center gap-3 px-2">
-        <p className="text-lg sm:text-xl font-bold leading-relaxed tracking-wide text-emerald-800">
+        <p className="text-lg sm:text-xl font-bold leading-relaxed tracking-wide text-emerald-800 dark:text-emerald-400">
           {quote.text}
         </p>
         {quote.author && (
-          <p className="text-sm font-medium text-emerald-600">
+          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
             &mdash; {quote.author}
           </p>
         )}

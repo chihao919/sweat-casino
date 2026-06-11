@@ -20,7 +20,7 @@ export function ComebackBanner({ activities }: ComebackBannerProps) {
           <Gift className="size-5 text-amber-500" />
         </div>
         <div>
-          <p className="text-sm font-bold text-amber-700">
+          <p className="text-sm font-bold text-amber-700 dark:text-amber-300">
             {status.bonusMultiplier}x 回歸加成！
           </p>
           <p className="text-xs text-amber-600">

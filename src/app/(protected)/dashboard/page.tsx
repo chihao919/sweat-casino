@@ -48,23 +48,23 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
   const percent = Math.min(100, Math.round((elapsed / totalDays) * 100));
 
   return (
-    <Card className="border-gray-200 bg-white shadow-sm">
+    <Card className="border-border bg-card shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-sm font-semibold text-gray-700">
+        <CardTitle className="flex items-center justify-between text-sm font-semibold text-foreground">
           <span>賽季進度 — {season.name}</span>
-          <Badge variant="outline" className="border-yellow-500 bg-yellow-50 text-yellow-600 text-xs">
+          <Badge variant="outline" className="border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 text-xs">
             系統測試期
           </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <p className="text-xs text-yellow-600/80">
+        <p className="text-xs text-yellow-600/80 dark:text-yellow-400/80">
           目前為系統測試階段，資料與積分可能會在正式上線時重置。歡迎回報任何問題！
         </p>
-        <Progress value={percent} className="h-2 bg-gray-100 [&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-orange-500" />
-        <div className="flex justify-between text-xs text-gray-500">
+        <Progress value={percent} className="h-2 bg-muted [&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-orange-500" />
+        <div className="flex justify-between text-xs text-muted-foreground">
           <span>{format(start, "MMM d")}</span>
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-foreground">
             <Timer className="mr-1 inline size-3" />
             {daysLeft > 0 ? `剩餘 ${daysLeft} 天` : "賽季已結束"}
           </span>
@@ -77,7 +77,7 @@ function SeasonProgressCard({ season }: { season: Season | null }) {
 
 function LiveTickerBanner() {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="flex items-center gap-3 px-4 py-2">
         <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-red-500">
           <Zap className="size-3" />
@@ -85,7 +85,7 @@ function LiveTickerBanner() {
         </span>
         {/* Scrolling ticker */}
         <div className="overflow-hidden flex-1">
-          <div className="animate-marquee whitespace-nowrap text-xs text-gray-500">
+          <div className="animate-marquee whitespace-nowrap text-xs text-muted-foreground">
             {TICKER_ITEMS.join("    •    ")}
             {/* Duplicate for seamless loop */}
             &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
@@ -101,20 +101,20 @@ function ActivityRow({ activity }: { activity: Activity }) {
   return (
     <div className="flex items-center justify-between py-2.5">
       <div className="flex items-center gap-3">
-        <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-sm">
+        <div className="flex size-8 items-center justify-center rounded-full bg-muted text-sm">
           🏃
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-800">
+          <p className="text-sm font-medium text-foreground">
             {activity.distance_km.toFixed(2)} km run
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {format(parseISO(activity.start_date), "MMM d, yyyy")}
           </p>
         </div>
       </div>
       <div className="text-right">
-        <p className="text-sm font-bold text-green-400">+{formatSC(activity.sc_earned)}</p>
+        <p className="text-sm font-bold text-green-600 dark:text-green-400 dark:text-green-400">+{formatSC(activity.sc_earned)}</p>
         {activity.weather_multiplier > 1 && (
           <p className="text-[10px] text-yellow-500">
             {activity.weather_multiplier}x 天氣加成
@@ -183,13 +183,13 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-20 w-full rounded-xl bg-gray-200" />
-        <Skeleton className="h-48 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-20 w-full rounded-xl bg-muted" />
+        <Skeleton className="h-48 w-full rounded-xl bg-muted" />
         <div className="grid grid-cols-2 gap-4">
-          <Skeleton className="h-24 rounded-xl bg-gray-200" />
-          <Skeleton className="h-24 rounded-xl bg-gray-200" />
+          <Skeleton className="h-24 rounded-xl bg-muted" />
+          <Skeleton className="h-24 rounded-xl bg-muted" />
         </div>
-        <Skeleton className="h-48 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-48 w-full rounded-xl bg-muted" />
       </div>
     );
   }
@@ -209,7 +209,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <BodyVersionBadge activities={activities} size="sm" />
         {season && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {season.name}
           </span>
         )}
@@ -226,9 +226,9 @@ export default function DashboardPage() {
       />
 
       {/* Weekly distance chart */}
-      <Card className="border-gray-200 bg-white shadow-sm">
+      <Card className="border-border bg-card shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <TrendingUp className="size-4" />
             近 7 天跑量
           </CardTitle>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
         </Button>
         <Button
           variant="outline"
-          className="h-14 flex-col gap-1 border-gray-200 bg-white font-bold text-gray-700 hover:border-gray-300 hover:bg-gray-50 shadow-sm"
+          className="h-14 flex-col gap-1 border-border bg-card font-bold text-foreground hover:bg-accent shadow-sm"
           onClick={() => router.push("/betting?tab=pools")}
         >
           <span className="text-lg">🏊</span>
@@ -261,18 +261,18 @@ export default function DashboardPage() {
       <MilestoneTracker activities={activities} />
 
       {/* Recent activities */}
-      <Card className="border-gray-200 bg-white shadow-sm">
+      <Card className="border-border bg-card shadow-sm">
         <CardHeader className="pb-1">
-          <CardTitle className="flex items-center justify-between text-sm font-semibold text-gray-700">
+          <CardTitle className="flex items-center justify-between text-sm font-semibold text-foreground">
             <span>最近活動</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="divide-y divide-gray-100">
+        <CardContent className="divide-y divide-border">
           {recentActivities.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-8">
               <span className="text-3xl">🏃</span>
-              <p className="text-sm text-gray-500">還沒有活動紀錄</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-sm text-muted-foreground">還沒有活動紀錄</p>
+              <p className="text-xs text-muted-foreground">
                 開始跑步來記錄活動吧！
               </p>
             </div>

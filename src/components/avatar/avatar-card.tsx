@@ -48,11 +48,11 @@ export function AvatarCard({
       {/* Name + Title */}
       <div className="text-center">
         {title && (
-          <p className="text-[10px] font-medium text-gray-500">
+          <p className="text-[10px] font-medium text-muted-foreground">
             {title}
           </p>
         )}
-        <p className="text-sm font-bold text-gray-800">{displayName}</p>
+        <p className="text-sm font-bold text-foreground">{displayName}</p>
       </div>
 
       {/* Rank badge */}
@@ -63,13 +63,13 @@ export function AvatarCard({
 
       {/* Team */}
       {teamName && (
-        <p className="text-[11px] text-gray-500">
+        <p className="text-[11px] text-muted-foreground">
           {teamEmoji} {teamName}
         </p>
       )}
 
       {/* Distance */}
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-muted-foreground">
         {totalKm.toFixed(1)} km
       </p>
 
@@ -78,9 +78,9 @@ export function AvatarCard({
         <div className="w-full space-y-1">
           <Progress
             value={progress}
-            className="h-1.5 bg-gray-200 [&>div]:bg-gradient-to-r [&>div]:from-current [&>div]:to-current"
+            className="h-1.5 bg-muted [&>div]:bg-gradient-to-r [&>div]:from-current [&>div]:to-current"
           />
-          <div className="flex justify-between text-[10px] text-gray-500">
+          <div className="flex justify-between text-[10px] text-muted-foreground">
             <span>{rank.icon} {rank.nameCn}</span>
             <span>{nextRank.icon} {nextRank.nameCn} ({nextRank.minKm} km)</span>
           </div>

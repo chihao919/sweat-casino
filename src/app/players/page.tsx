@@ -98,7 +98,7 @@ export default function PlayersPage() {
           <CardContent className="py-5 text-center">
             {daysUntilStart > 0 ? (
               <>
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                <p className="text-2xl font-bold text-red-600 dark:text-red-400 dark:text-red-400">
                   🔥 距離開賽還有 {daysUntilStart} 天
                 </p>
                 <p className="mt-2 text-base text-muted-foreground">
@@ -108,7 +108,7 @@ export default function PlayersPage() {
                 </p>
               </>
             ) : (
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 dark:text-green-400">
                 🎮 遊戲已經開始！
               </p>
             )}
@@ -141,8 +141,8 @@ export default function PlayersPage() {
                   key={team.id}
                   className={
                     team.color === "red"
-                      ? "border-red-300 dark:border-red-900/50 bg-red-50 dark:bg-red-950/40"
-                      : "border-blue-300 dark:border-blue-900/50 bg-blue-50 dark:bg-zinc-800/60"
+                      ? "border-red-300 dark:border-red-900/50 bg-red-50 dark:bg-red-500/15 dark:bg-red-950/40"
+                      : "border-blue-300 dark:border-blue-500/40 bg-blue-50 dark:bg-blue-500/15 dark:bg-blue-500/15"
                   }
                 >
                   <CardContent className="py-4 text-center">
@@ -158,9 +158,9 @@ export default function PlayersPage() {
             </div>
 
             {/* Notice */}
-            <Card className="mb-6 border-amber-300 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-950/20">
+            <Card className="mb-6 border-amber-300 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-500/15 dark:bg-amber-950/20">
               <CardContent className="py-4">
-                <p className="text-center text-base text-amber-700 dark:text-amber-300">
+                <p className="text-center text-base text-amber-700 dark:text-amber-300 dark:text-amber-300">
                   📢 系統會在開賽前自動完成分隊，確保紅白兩隊人數均衡！
                 </p>
               </CardContent>
@@ -172,7 +172,7 @@ export default function PlayersPage() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-xl">
                     {group.team ? (
-                      <span className={group.team.color === "red" ? "text-red-600 dark:text-red-400" : ""}>
+                      <span className={group.team.color === "red" ? "text-red-600 dark:text-red-400 dark:text-red-400" : ""}>
                         {group.team.emoji} {group.team.name}
                       </span>
                     ) : (
@@ -232,8 +232,8 @@ export default function PlayersPage() {
                             <span
                               className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
                                 player.team.color === "red"
-                                  ? "bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-300"
-                                  : "bg-blue-100 text-blue-700 dark:bg-zinc-700 dark:text-zinc-200"
+                                  ? "bg-red-100 text-red-700 dark:text-red-400 dark:bg-red-900/60 dark:text-red-300"
+                                  : "bg-blue-100 text-blue-700 dark:text-blue-400 dark:bg-blue-500/15 dark:text-blue-300"
                               }`}
                             >
                               {player.team.emoji} {player.team.name}

@@ -8,19 +8,19 @@ export const metadata: Metadata = {
 
 export default function DeleteAccountPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-gray-900">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.08)_0%,_transparent_60%)]" />
 
       <div className="relative mx-auto max-w-2xl px-6 py-14">
         <Link
           href="/"
-          className="mb-6 inline-block text-sm text-gray-400 hover:text-gray-700 transition-colors"
+          className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           &larr; Back to RunRun
         </Link>
 
         <h1 className="text-4xl font-black tracking-tight">Delete Account</h1>
-        <p className="mt-2 text-gray-400">RunRun — Sweat Casino</p>
+        <p className="mt-2 text-muted-foreground">RunRun — Sweat Casino</p>
 
         <div className="mt-10 space-y-8">
           {/* Steps */}
@@ -28,8 +28,8 @@ export default function DeleteAccountPage() {
             <h2 className="text-xl font-bold text-white mb-4">
               How to Delete Your Account
             </h2>
-            <div className="rounded-lg border border-gray-200 bg-white p-6 space-y-4">
-              <p className="text-gray-500 leading-relaxed">
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
                 You can delete your RunRun account directly from the app or by
                 contacting us via email. Follow one of the methods below:
               </p>
@@ -38,7 +38,7 @@ export default function DeleteAccountPage() {
                 <h3 className="text-base font-semibold text-zinc-200">
                   Method 1: In-App Deletion
                 </h3>
-                <ol className="list-decimal pl-5 space-y-2 text-gray-500 leading-relaxed">
+                <ol className="list-decimal pl-5 space-y-2 text-muted-foreground leading-relaxed">
                   <li>Open the RunRun app on your device.</li>
                   <li>
                     Tap <strong className="text-white">Profile</strong> (bottom
@@ -65,7 +65,7 @@ export default function DeleteAccountPage() {
                 <h3 className="text-base font-semibold text-zinc-200">
                   Method 2: Email Request
                 </h3>
-                <p className="text-gray-500 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   Send an email to{" "}
                   <a
                     href="mailto:chihaohuang@gmail.com?subject=Delete%20Account%20Request%20%E2%80%94%20RunRun"
@@ -90,12 +90,12 @@ export default function DeleteAccountPage() {
             <h2 className="text-xl font-bold text-white mb-4">
               What Data Is Deleted
             </h2>
-            <div className="rounded-lg border border-gray-200 bg-white p-6 space-y-4">
-              <p className="text-gray-500 leading-relaxed">
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
                 When you delete your account, the following data is{" "}
                 <strong className="text-white">permanently deleted</strong>:
               </p>
-              <ul className="list-disc pl-5 space-y-1 text-gray-500">
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
                 <li>Your profile information (display name, avatar, email)</li>
                 <li>All running activity records</li>
                 <li>Sweat Currency ($SC) balance and transaction history</li>
@@ -104,12 +104,12 @@ export default function DeleteAccountPage() {
                 <li>Referral records</li>
               </ul>
 
-              <p className="text-gray-500 leading-relaxed mt-4">
+              <p className="text-muted-foreground leading-relaxed mt-4">
                 The following data may be{" "}
                 <strong className="text-white">retained</strong> for a limited
                 period:
               </p>
-              <ul className="list-disc pl-5 space-y-1 text-gray-500">
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
                 <li>
                   Server access logs (Vercel) — retained for up to{" "}
                   <strong className="text-white">30 days</strong> for
@@ -120,7 +120,7 @@ export default function DeleteAccountPage() {
                 </li>
               </ul>
 
-              <p className="text-gray-500 leading-relaxed mt-4">
+              <p className="text-muted-foreground leading-relaxed mt-4">
                 Account deletion is{" "}
                 <strong className="text-red-400">irreversible</strong>. Once
                 deleted, your data cannot be recovered.
@@ -131,7 +131,7 @@ export default function DeleteAccountPage() {
           {/* Contact */}
           <section>
             <h2 className="text-xl font-bold text-white mb-4">Contact</h2>
-            <div className="rounded-lg border border-gray-200 bg-white px-5 py-4 text-gray-700">
+            <div className="rounded-lg border border-border bg-card px-5 py-4 text-foreground">
               <p className="font-semibold text-white">RunRun Support</p>
               <p className="mt-1">
                 Email:{" "}
@@ -152,13 +152,13 @@ export default function DeleteAccountPage() {
           <div className="mt-2 flex justify-center gap-4">
             <Link
               href="/privacy"
-              className="hover:text-gray-500 transition-colors"
+              className="hover:text-muted-foreground transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="/support"
-              className="hover:text-gray-500 transition-colors"
+              className="hover:text-muted-foreground transition-colors"
             >
               Support
             </Link>

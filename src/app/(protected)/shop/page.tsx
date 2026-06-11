@@ -104,8 +104,8 @@ export default function ShopPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-16 w-full rounded-xl bg-gray-200" />
-        <Skeleton className="h-64 w-full rounded-xl bg-gray-200" />
+        <Skeleton className="h-16 w-full rounded-xl bg-muted" />
+        <Skeleton className="h-64 w-full rounded-xl bg-muted" />
       </div>
     );
   }
@@ -116,24 +116,24 @@ export default function ShopPage() {
   return (
     <div className="space-y-4 pb-20">
       {/* Balance header */}
-      <Card className="border-gray-200 bg-gradient-to-r from-slate-50 to-white shadow-sm">
+      <Card className="border-border bg-gradient-to-r from-slate-50 to-white shadow-sm">
         <CardContent className="flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
             <ShoppingBag className="size-5 text-yellow-500" />
             <div>
-              <p className="text-xs text-gray-500">SC Shop</p>
-              <p className="text-lg font-black text-gray-900">SC Store</p>
+              <p className="text-xs text-muted-foreground">SC Shop</p>
+              <p className="text-lg font-black text-foreground">SC Store</p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500">Balance</p>
-            <p className="text-lg font-black text-green-600">{formatSC(balance)}</p>
+            <p className="text-xs text-muted-foreground">Balance</p>
+            <p className="text-lg font-black text-green-600 dark:text-green-400">{formatSC(balance)}</p>
           </div>
         </CardContent>
       </Card>
 
       <Tabs defaultValue="skins" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-white border border-gray-200 shadow-sm">
+        <TabsList className="grid w-full grid-cols-3 bg-card border border-border shadow-sm">
           <TabsTrigger value="skins" className="text-xs data-[state=active]:bg-red-600 data-[state=active]:text-white">
             <Sparkles className="mr-1 size-3" />
             Skins
@@ -150,7 +150,7 @@ export default function ShopPage() {
 
         {/* SKINS TAB */}
         <TabsContent value="skins" className="space-y-3 mt-3">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Purchase skins to customize your runner avatar.
           </p>
           <div className="grid grid-cols-2 gap-3">
@@ -173,13 +173,13 @@ export default function ShopPage() {
           </div>
 
           {/* Mythic skin teaser */}
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-red-50 dark:bg-red-500/15">
             <CardContent className="flex flex-col items-center gap-2 py-4">
-              <Badge variant="outline" className="border-red-400 text-red-600 text-[10px]">
+              <Badge variant="outline" className="border-red-400 text-red-600 dark:text-red-400 text-[10px]">
                 MYTHIC
               </Badge>
-              <p className="text-sm font-bold text-red-700">Marathon God</p>
-              <p className="text-[11px] text-gray-500 text-center">
+              <p className="text-sm font-bold text-red-700 dark:text-red-400">Marathon God</p>
+              <p className="text-[11px] text-muted-foreground text-center">
                 Run 1,000 km to unlock. Cannot be purchased.
               </p>
             </CardContent>
@@ -188,7 +188,7 @@ export default function ShopPage() {
 
         {/* ITEMS TAB */}
         <TabsContent value="items" className="space-y-3 mt-3">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Consumable items to boost your game.
           </p>
           <div className="space-y-2">
@@ -202,12 +202,12 @@ export default function ShopPage() {
                   <span className="text-2xl">{item.icon}</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-gray-800">{item.nameCn}</p>
+                      <p className="text-sm font-bold text-foreground">{item.nameCn}</p>
                       <span className={`text-[10px] font-bold uppercase ${rarityConf.color}`}>
                         {rarityConf.labelCn}
                       </span>
                     </div>
-                    <p className="text-[11px] text-gray-500">{item.description}</p>
+                    <p className="text-[11px] text-muted-foreground">{item.description}</p>
                   </div>
                   <button
                     className="shrink-0 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition-colors"
@@ -223,7 +223,7 @@ export default function ShopPage() {
 
         {/* MERCH TAB */}
         <TabsContent value="merch" className="space-y-3 mt-3">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Use $SC to get discounts on real running gear.
           </p>
           <div className="grid grid-cols-2 gap-3">
@@ -258,12 +258,12 @@ export default function ShopPage() {
               emoji="🏁"
             />
           </div>
-          <Card className="border-yellow-200 bg-yellow-50">
+          <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-500/15">
             <CardContent className="py-4 text-center">
-              <p className="text-sm font-semibold text-yellow-700">
+              <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300">
                 Merch Store Opening Soon!
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 We are partnering with running brands. Stay tuned for exclusive $SC discounts.
               </p>
             </CardContent>
