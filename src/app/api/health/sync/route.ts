@@ -96,15 +96,20 @@ export async function POST(request: NextRequest) {
     .select("start_date")
     .eq("user_id", user.id);
 
+  // Compare as epoch millis: the client sends "...T23:04:12.000Z" while
+  // Postgres returns "...T23:04:12+00:00", so string equality never matches
+  // (this caused every sync to re-insert all workouts and re-award SC).
   const existingDates = new Set(
-    (existingActivities || []).map((a) => a.start_date)
+    (existingActivities || []).map((a) => new Date(a.start_date).getTime())
   );
 
   let synced = 0;
 
   for (const workout of workouts) {
     // Skip duplicates by matching start_date
-    if (existingDates.has(workout.startDate)) continue;
+    const startMs = new Date(workout.startDate).getTime();
+    if (Number.isNaN(startMs) || existingDates.has(startMs)) continue;
+    existingDates.add(startMs); // also dedupe within this batch
 
     const distanceKm = workout.distance / 1000;
 
